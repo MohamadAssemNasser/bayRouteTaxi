@@ -21,8 +21,7 @@ app.use(websiteRoutes)
 app.use(apiRoutes)
 
 app.get('/', function(req, res) {
-        res.send('Hello World')
-    }) //hello
-
+    res.send('Hello World')
+})
 
 mongoConnect(() => app.listen(3000))
