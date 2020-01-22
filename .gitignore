@@ -1,1 +1,2 @@
-/[Nn]ode_modules/
+node_modules/*
+
