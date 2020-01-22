@@ -1,0 +1,6 @@
+{
+    "trip": "tripID",
+    "numberOfAvailableSeats": 34,
+    "date": "DATE",
+    "passengers": []
+}

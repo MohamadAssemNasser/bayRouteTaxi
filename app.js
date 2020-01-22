@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
+const subdomain = require('express-subdomain')
 
 const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user')
@@ -18,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(websiteRoutes)
-app.use(apiRoutes)
+app.use(subdomain('api', apiRoutes))
 
 app.get('/', function(req, res) {
     res.send('Hello World')

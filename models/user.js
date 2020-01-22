@@ -18,10 +18,10 @@ class User {
         this._id = options._id;
     }
 
-    static async findById(userId) {
+    static async findById(id) {
         const db = getDb();
         try {
-            let u = await db.collection('users').findOne({ _id: new ObjectId(userId) })
+            let u = await db.collection('users').findOne({ _id: new ObjectId(id) })
             return u;
         } catch (err) {
             console.log(err);
