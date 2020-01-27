@@ -10,7 +10,7 @@ router.post('/signup', controller.signup)
 
 router.post('/forgotPassword', controller.forgotPassword)
 
-router.post('/tickets', controller.postTickets)
+router.post('/tickets/create', controller.postTickets)
 
 router.post('/schedule', )
 

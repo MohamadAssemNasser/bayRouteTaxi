@@ -1,4 +1,4 @@
-const getDb = require('../util/database').getDb;
+const getDb = require('../util/database').getDb
 
 class User {
     constructor(options) {
@@ -11,20 +11,32 @@ class User {
         this.name = options.name
         this.password = options.password
         this.email = options.email
+        this.phone = options.phone
         this.token = options.token
         this.tripsCount = options.tripsCount
         this.points = options.points
         this.tickets = options.tickets
-        this._id = options._id;
+        this._id = options._id
     }
 
-    static async findById(id) {
-        const db = getDb();
-        try {
-            let u = await db.collection('users').findOne({ _id: new ObjectId(id) })
-            return u;
-        } catch (err) {
-            console.log(err);
+    static async findBy(options) {
+
+        if (options.id !== undefined) {
+            const db = getDb()
+            try {
+                let u = await db.collection('users').findOne({ _id: new ObjectId(options.id) })
+                return u
+            } catch (err) {
+                console.log(err)
+            }
+        } else {
+            const db = getDb()
+            try {
+                let u = await db.collection('users').findOne({ email: options.email })
+                return u
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 }

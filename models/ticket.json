@@ -1,9 +1,0 @@
-{
-    "_id": "mondoID",
-    "from": "place1",
-    "to": "place2",
-    "type": "Standard or Express",
-    "deck": "upper or lower",
-    "ticketPrice": 1000,
-    "capacity": 20
-}

@@ -9,6 +9,12 @@ let db
 
 exports.login = async(req, res, next) => {
     db = getDb()
+    if (!req.body.password && !req.body.email) {
+        return res.send({
+            error: true,
+            errorMessage: 'Missing request parameters'
+        })
+    }
     try {
         let email = req.body.email
         let password = req.body.password
@@ -17,7 +23,7 @@ exports.login = async(req, res, next) => {
         if (!user) {
             return res.status(500).send({ // status needed --important--
                 error: true,
-                errorMessage: 'No account found associated with this email address!'
+                errorMessage: 'No account found associated with this email address'
             })
         }
         user = new User(user)
@@ -35,7 +41,7 @@ exports.login = async(req, res, next) => {
         } else {
             return res.send({ // status needed --important--
                 error: true,
-                errorMessage: 'The password you entered is incorrect.'
+                errorMessage: 'The password you entered is incorrect'
             })
         }
     } catch (err) {
@@ -48,6 +54,12 @@ exports.login = async(req, res, next) => {
 
 exports.signup = async(req, res, next) => {
     db = getDb()
+    if (!req.body.name && !req.body.password && !req.body.email) {
+        return res.send({
+            error: true,
+            errorMessage: 'Missing request parameters'
+        })
+    }
     try {
         let user = new User({ // validate data --important--
                 name: req.body.name,
@@ -59,7 +71,7 @@ exports.signup = async(req, res, next) => {
         if (u) {
             return res.status(500).send({ // status needed --important--
                 error: true,
-                errorMessage: 'An account with the same email address already exists!'
+                errorMessage: 'An account with the same email address already exists'
             })
         }
         // password hashing
@@ -77,7 +89,7 @@ exports.signup = async(req, res, next) => {
             // response
         return res.status(200).send({
             error: false,
-            message: 'User created successfully!'
+            message: 'User created successfully'
         })
     } catch (err) {
         return res.status(500).send({
@@ -88,7 +100,22 @@ exports.signup = async(req, res, next) => {
 }
 
 exports.forgotPassword = async(req, res, next) => {
-
+    db = getDb()
+    if (!req.body.email) {
+        return res.send({
+            error: true,
+            errorMessage: 'Missing request parameters'
+        })
+    }
+    try {
+        let user = User.findBy({ email: req.body.email })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            error: true,
+            errorMessage: 'Internal Database Error'
+        })
+    }
 }
 
 exports.postTickets = async(req, res, next) => {

@@ -15,7 +15,8 @@
         "express": "^4.17.1",
         "express-subdomain": "^1.0.5",
         "jsonwebtoken": "^8.5.1",
-        "mongodb": "^3.5.2"
+        "mongodb": "^3.5.2",
+        "nodemailer": "^6.4.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.2"

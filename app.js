@@ -7,7 +7,7 @@ const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express()
 
-// view enginesa
+// view engines
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
