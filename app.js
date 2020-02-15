@@ -24,14 +24,15 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api router
-app.use(subdomain('api', apiRoutes))
+//app.use(subdomain('api', apiRoutes))
+app.use('/api', apiRoutes)
 
 // admin router
 //app.use(subdomain('admin', adminRoutes))
-app.use(adminRoutes)
+//app.use(adminRoutes)
 
 // standard router
-app.use(websiteRoutes)
+//app.use(websiteRoutes)
 
 // default router
 app.get('/', function (req, res) {

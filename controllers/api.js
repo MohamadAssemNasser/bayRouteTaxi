@@ -75,7 +75,7 @@ exports.signup = async(req, res, next) => {
             })
         }
         // password hashing
-        bcrypt.hash(user.password, process.env.salt,
+        bcrypt.hash(user.password, 8,
                 async(err, hash) => {
                     if (err) {
                         throw err
