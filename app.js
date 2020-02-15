@@ -12,22 +12,29 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 // routers
-const websiteRoutes = require('./routers/website')
-const apiRoutes = require('./routers/api')
+const websiteRoutes = require('./routes/website')
+const apiRoutes = require('./routes/api')
+const adminRoutes = require('./routes/admin')
 
 // helpers
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api router
 app.use(subdomain('api', apiRoutes))
 
+// admin router
+//app.use(subdomain('admin', adminRoutes))
+app.use(adminRoutes)
+
 // standard router
 app.use(websiteRoutes)
 
 // default router
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.send('Hello World')
 })
 
