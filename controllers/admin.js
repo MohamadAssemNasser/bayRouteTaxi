@@ -2,8 +2,9 @@ const mongodb = require('mongodb')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {
+    check,
     validationResult
-} = require('express-validator/check')
+} = require('express-validator')
 
 const User = require('../models/user')
 const getDb = require('../util/database').getDb
@@ -31,62 +32,84 @@ exports.getLogin = async (req, res, next) => {
 
 exports.postLogin = async (req, res, next) => {
     db = getDb()
-    if (!req.body.password && !req.body.email) {
+    let username = req.body.username
+    let password = req.body.password
+    const errors = validationResult(req)
+    console.log('Errors' + errors.array()[0])
+    if (!req.body.password && !req.body.username) {
         return res.render('admin/login', { // status needed --important --
-            error: true,
-            errorMessage: 'Missing request parameters'
+            path: '/login',
+              pageTitle: 'Login',
+              errorMessage: 'Fill in all the inputs',
+              oldInput: {
+                username: username,
+                password: password
+              },
+              validationErrors: []
         })
     }
+    console.log('postLogin')
     try {
-        let email = req.body.email
-        let password = req.body.password
+        console.log('Errorsssss' , errors)
+        if (!errors.isEmpty()) {
+            return res.status(422).render('auth/login', {
+              path: '/login',
+              pageTitle: 'Login',
+              errorMessage: errors.array()[0].msg,
+              oldInput: {
+                username: username,
+                password: password
+              },
+              validationErrors: errors.array()
+            })
+          }
+          // console.log(errors)
         // check if email exists
-        let user = await db.collection('users').findOne({
-            email: {
-                $eq: email
-            }
-        })
+        let user = await User.findBy({username : username})
         if (!user) {
-            return res.status(500).send({ // status needed --important--
-                error: true,
-                errorMessage: 'No account found associated with this email address'
+            return res.status(422).render('admin/login', {
+              path: '/login',
+              pageTitle: 'Login',
+              errorMessage: 'Invalid username or password.',
+              oldInput: {
+                username: username,
+                password: password
+              },
+              validationErrors: []
             })
         }
         user = new User(user)
         // check password
-        if (await bcrypt.compare(password, user.password)) {
-            // generating token
-            if (!user.token) {
-                user.token = await jwt.sign({
-                    userId: user._id
-                }, process.env.privateKey, {
-                    algorithm: 'HS256'
-                }) // need to be changed to RS with ssl --important--
-                await db.collection('users').updateOne({
-                    email: {
-                        $eq: email
-                    }
-                }, {
-                    $set: {
-                        token: user.token
-                    }
-                })
-            }
-            return res.status(200).send({ // status needed --important--
-                error: false,
-                token: user.token
+        bcrypt
+        .compare(password, user.password)
+        .then(doMatch => {
+          if (doMatch) {
+            req.session.isLoggedIn = true
+            req.session.user = user
+            return req.session.save(err => {
+              console.log(err)
+              res.redirect('/bbc')
             })
-        } else {
-            return res.send({ // status needed --important--
-                error: true,
-                errorMessage: 'The password you entered is incorrect'
-            })
-        }
-    } catch (err) {
-        return res.status(500).send({
-            error: true,
-            errorMessage: err
+          }
+          return res.status(422).render('admin/login', {
+            path: '/login',
+            pageTitle: 'Login',
+            errorMessage: 'Invalid username or password.',
+            oldInput: {
+              username: username,
+              password: password
+            },
+            validationErrors: []
+          })
         })
+        .catch(err => {
+          console.log(err)
+          res.redirect('/login')
+        })
+    } catch (err) {
+        const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     }
 }
 

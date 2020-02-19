@@ -17,7 +17,14 @@
         "express-validator": "^6.4.0",
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.5.2",
-        "nodemailer": "^6.4.2"
+        "nodemailer": "^6.4.2",
+        "connect-flash": "^0.1.1",
+        "connect-mongodb-session": "^2.3.0",
+        "cookie-parser": "^1.4.4",
+        "cookieparser": "^0.1.0",
+        "csurf": "^1.11.0",
+        "ejs": "^3.0.1",
+        "express-session": "^1.17.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.2"

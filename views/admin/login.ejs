@@ -9,32 +9,38 @@
 
     <title><%= pageTitle %> </title>
     <!-- Favicon-->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <!-- Custom Css -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.min.css">
+    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/style.min.css">
 </head>
 
 <body class="theme-orange">
-
     <div class="authentication">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-sm-12">
                     <form class="card auth_form" method="POST" action="/login">
                         <div class="header">
-                            <img class="logo" src="assets/images/logo.svg" alt="Company Logo">
+                            <img class="logo" src="/assets/images/logo.svg" alt="Company Logo">
                             <h5>Log in</h5>
                         </div>
                         <div class="body">
+                            <div>Error Message 
+                                <%= errorMessage %>
+                            </div>
+                            <div>
+                                Validation Errors 
+                                <%= validationErrors %>
+                            </div>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Username" name="username">
+                                <input value="<%= oldInput.username %>" type="text" class="form-control" placeholder="Username" name="username">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="zmdi zmdi-account-circle"></i></span>
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Password" name="password">
+                                <input value="<%= oldInput.password %>" type="text" class="form-control" placeholder="Password" name="password">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
                                         <a href="forgot-password.html" class="forgot" title="Forgot Password">
@@ -47,6 +53,7 @@
                                 <input id="remember_me" type="checkbox">
                                 <label for="remember_me">Remember Me</label>
                             </div>
+                            <input type="hidden" value="<%= csrfToken %>" name="_csrf"/>
                             <input type="submit" value="SIGN IN" class="btn btn-primary btn-block waves-effect waves-light"/>
                         </div>
                     </form>
@@ -60,7 +67,7 @@
                 </div>
                 <div class="col-lg-8 col-sm-12">
                     <div class="card">
-                        <img src="assets/images/signin.svg" alt="Sign In" />
+                        <img src="/assets/images/signin.svg" alt="Sign In" />
                     </div>
                 </div>
             </div>
@@ -68,8 +75,8 @@
     </div>
 
     <!-- Jquery Core Js -->
-    <script src="assets/bundles/libscripts.bundle.js"></script>
-    <script src="assets/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
+    <script src="/assets/bundles/libscripts.bundle.js"></script>
+    <script src="/assets/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
 </body>
 
 </html>
