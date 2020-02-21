@@ -1,6 +1,5 @@
 const express = require('express')
 const {
-    check,
     body
 } = require('express-validator');
 
@@ -9,9 +8,17 @@ const auth = require('../middlewares/auth')
 
 const router = express.Router();
 
+// -------------- GET --------------
+router.get('/', auth.proceedIfLoggedIn, controller.getDashboard)
+
 router.get('/login', auth.preventIfLoggedIn, controller.getLogin)
 
-router.post('/login', auth.proceedIfLoggedIn, [
+router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
+
+// -------------- POST --------------
+router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
+
+router.post('/login', [
     body('email')
     .isLength({
         min:1, // change to email only -- imoprtant --
@@ -23,5 +30,9 @@ router.post('/login', auth.proceedIfLoggedIn, [
     })
     .trim()
 ], controller.postLogin)
+
+router.post('/register-panel-user', controller.registerPanelUser)
+
+router.get('*', (req, res) => res.redirect('/'))
 
 module.exports = router

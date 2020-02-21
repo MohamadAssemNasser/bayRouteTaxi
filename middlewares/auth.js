@@ -12,3 +12,10 @@ exports.preventIfLoggedIn = (req, res, next) => {
     next()
 }
 
+exports.isAdmin = (req, res, next) => {
+    if(req.user.role !== 'Administrator'){
+        return res.redirect('/')
+    }
+    next()
+}
+

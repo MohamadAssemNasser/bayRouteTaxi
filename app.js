@@ -9,7 +9,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const flash = require('connect-flash')
 const mongoConnect = require('./util/database').mongoConnect
 
-const User = require('./models/user')
+const User = require('./models/panel-user')
 
 const app = express()
 
@@ -19,8 +19,8 @@ const store = new MongoDBStore({
 })
 
 // view engines
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set('view engine', 'ejs')
+app.set('views', 'views')
 
 // static folders
 app.use(express.static(path.join(__dirname, 'public')))

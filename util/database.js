@@ -6,7 +6,7 @@ let _db
 
 const mongoConnect = async(callback) => {
     try {
-        const client = await MongoClient.connect(process.env.DB_URI)
+        const client = await MongoClient.connect(process.env.DB_URI, {useUnifiedTopology: true})
         console.log(`-----   Connected to Database.   -----`)
         _db = client.db()
         callback()
