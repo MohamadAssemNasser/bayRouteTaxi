@@ -1,4 +1,7 @@
+const mongodb = require('mongodb')
 const getDb = require('../util/database').getDb
+
+const ObjectId = mongodb.ObjectId
 
 class User {
     constructor(options) {
@@ -29,7 +32,8 @@ class User {
             } catch (err) {
                 console.log(err)
             }
-        } else {
+        }
+        if(options.email !== undefined) {
             const db = getDb()
             try {
                 let u = await db.collection('users').findOne({ email: options.email })
@@ -37,6 +41,9 @@ class User {
             } catch (err) {
                 console.log(err)
             }
+        }
+        else {
+            return 0;
         }
     }
 }

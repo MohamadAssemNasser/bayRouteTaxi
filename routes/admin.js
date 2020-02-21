@@ -5,22 +5,22 @@ const {
 } = require('express-validator');
 
 const controller = require('../controllers/admin')
+const auth = require('../middlewares/auth')
 
 const router = express.Router();
 
-router.get('/login', controller.getLogin)
+router.get('/login', auth.preventIfLoggedIn, controller.getLogin)
 
-router.post('/login',[
-    body('username')
+router.post('/login', auth.proceedIfLoggedIn, [
+    body('email')
     .isLength({
-        min:3,
+        min:1, // change to email only -- imoprtant --
     })
     .trim(),
     body('password')
     .isLength({
-        min: 8,
+        min: 1, // change to 8 -- important --
     })
-    .isAlphanumeric()
     .trim()
 ], controller.postLogin)
 

@@ -1,10 +1,7 @@
 const mongodb = require('mongodb')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const {
-    check,
-    validationResult
-} = require('express-validator')
+const { validationResult } = require('express-validator')
 
 const User = require('../models/user')
 const getDb = require('../util/database').getDb
@@ -23,8 +20,7 @@ exports.getLogin = async (req, res, next) => {
         pageTitle: 'ISM :: Admin Panel',
         errorMessage: message,
         oldInput: {
-            email: '',
-            password: ''
+            email: ''
         },
         validationErrors: []
     })
@@ -32,48 +28,33 @@ exports.getLogin = async (req, res, next) => {
 
 exports.postLogin = async (req, res, next) => {
     db = getDb()
-    let username = req.body.username
+    let email = req.body.email
     let password = req.body.password
     const errors = validationResult(req)
     console.log('Errors' + errors.array()[0])
-    if (!req.body.password && !req.body.username) {
-        return res.render('admin/login', { // status needed --important --
-            path: '/login',
-              pageTitle: 'Login',
-              errorMessage: 'Fill in all the inputs',
-              oldInput: {
-                username: username,
-                password: password
-              },
-              validationErrors: []
-        })
-    }
-    console.log('postLogin')
     try {
         console.log('Errorsssss' , errors)
         if (!errors.isEmpty()) {
-            return res.status(422).render('auth/login', {
+            return res.status(422).render('admin/login', {
               path: '/login',
               pageTitle: 'Login',
               errorMessage: errors.array()[0].msg,
               oldInput: {
-                username: username,
-                password: password
+                email: email
               },
               validationErrors: errors.array()
             })
           }
           // console.log(errors)
         // check if email exists
-        let user = await User.findBy({username : username})
+        let user = await User.findBy({email : email})
         if (!user) {
             return res.status(422).render('admin/login', {
               path: '/login',
               pageTitle: 'Login',
-              errorMessage: 'Invalid username or password.',
+              errorMessage: 'Invalid email or password.',
               oldInput: {
-                username: username,
-                password: password
+                email: email
               },
               validationErrors: []
             })
@@ -94,10 +75,9 @@ exports.postLogin = async (req, res, next) => {
           return res.status(422).render('admin/login', {
             path: '/login',
             pageTitle: 'Login',
-            errorMessage: 'Invalid username or password.',
+            errorMessage: 'Invalid email or password.',
             oldInput: {
-              username: username,
-              password: password
+              email: email
             },
             validationErrors: []
           })

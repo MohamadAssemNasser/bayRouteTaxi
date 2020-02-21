@@ -26,42 +26,43 @@
                             <h5>Log in</h5>
                         </div>
                         <div class="body">
-                            <div>Error Message 
-                                <%= errorMessage %>
-                            </div>
+                            <% if(errorMessage) { %>
                             <div>
-                                Validation Errors 
-                                <%= validationErrors %>
+                                <p class="text-danger">
+                                    <%= errorMessage %> 
+                                </p>
                             </div>
+                            <% } %>
                             <div class="input-group mb-3">
-                                <input value="<%= oldInput.username %>" type="text" class="form-control" placeholder="Username" name="username">
+                                <input
+                                value="<%= oldInput.email %>" 
+                                type="text"
+                                class="<%= (validationErrors.find(e => e.param === 'username') || errorMessage) ? 'form-control-danger' : '' %> form-control"
+                                class="form-control-danger"
+                                placeholder="email"
+                                name="email">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="zmdi zmdi-account-circle"></i></span>
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <input value="<%= oldInput.password %>" type="text" class="form-control" placeholder="Password" name="password">
+                                <input
+                                type="text"
+                                class="<%= (validationErrors.find(e => e.param === 'password') || errorMessage) ? 'form-control-danger' : '' %> form-control"
+                                placeholder="Password"
+                                name="password">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
-                                        <a href="forgot-password.html" class="forgot" title="Forgot Password">
-                                            <i class="zmdi zmdi-lock"></i>
-                                        </a>
+                                        <i class="zmdi zmdi-lock"></i>
                                     </span>
                                 </div>
-                            </div>
-                            <div class="checkbox">
-                                <input id="remember_me" type="checkbox">
-                                <label for="remember_me">Remember Me</label>
                             </div>
                             <input type="hidden" value="<%= csrfToken %>" name="_csrf"/>
                             <input type="submit" value="SIGN IN" class="btn btn-primary btn-block waves-effect waves-light"/>
                         </div>
                     </form>
                     <div class="copyright text-center">
-                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>,
+                        &copy; <%= new Date().getFullYear() %> ,
                         <span>Designed by <a href="https://thememakker.com/" target="_blank">ThemeMakker</a></span>
                     </div>
                 </div>
