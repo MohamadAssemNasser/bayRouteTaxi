@@ -45,6 +45,10 @@ app.use(
     })
 )
 
+// api router
+//app.use(subdomain('api', apiRoutes))
+app.use('/api', apiRoutes)
+
 app.use(csrf())
 app.use(flash())
 
@@ -71,10 +75,6 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken()
     next()
 })
-
-// api router
-//app.use(subdomain('api', apiRoutes))
-app.use('/api', apiRoutes)
 
 // admin router
 //app.use(subdomain('admin', adminRoutes))

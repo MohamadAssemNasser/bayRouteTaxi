@@ -108,7 +108,6 @@ exports.postLogin = async (req, res, next) => {
 
 // GET DASHBOARD '/'
 exports.getDashboard = async (req, res, next) => {
-  console.log(req.user)
   return res.render('admin/dashboard', {
     pageTitle: 'BayRoute Taxi :: Dashboard',
     path: '/',
@@ -131,24 +130,39 @@ exports.getUsers = async (req, res, next) => {
   })
 }
 
+// ------------- APIs -------------
+
+// GET ALL USERS
+exports.getAllPanelUsers = async (req, res, next) => {
+  db = getDb()
+  try{
+    let u = await db.collection('panel-users').find().toArray()
+    res.status(200).send(u)
+  } catch(err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
 // POST SIGNUP
-exports.registerPanelUser = async (req, res) => {
+exports.addPanelUser = async (req, res) => {
   db = getDb()
   const errors = validationResult(req)
   try {
     // validate req data
     if (!errors.isEmpty()) {
-      return res.status(422).render('admin/login', {
-        path: '/login',
-        pageTitle: 'Login',
-        errorMessage: errors.array()[0].msg,
+      return res.json({
+        error: true,
         validationErrors: errors.array()
       })
     }
+    console.log(req.body)
     let user = new User({ // validate data --important--
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       password: req.body.password,
+      phone: req.body.phone,
       email: req.body.email,
       role: req.body.role
     })
@@ -159,9 +173,14 @@ exports.registerPanelUser = async (req, res) => {
       }
     })
     if (u) {
-      return res.send({ // status needed --important--
+      return res.json({ // status needed --important--
         error: true,
-        errorMessage: 'An account with the same email address already exists'
+        validationErrors: [
+          {
+            param: 'email',
+            msg: 'An account with the same email address already exists'
+          }
+        ] 
       })
     }
     // password hashing
@@ -177,12 +196,12 @@ exports.registerPanelUser = async (req, res) => {
         console.log(user)
       })
     // response
-    return res.status(200).send({
+    return res.status(200).json({
       error: false,
       message: 'User created successfully'
     })
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
       error: true,
       errorMessage: err
     })
