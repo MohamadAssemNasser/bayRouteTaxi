@@ -18,22 +18,27 @@
     <!-- Custom Css -->
     <link rel="stylesheet" href="/assets/css/style.min.css">
     <style>
-        .swal-overlay {
-            background-color: #1cbfd0;
-        }
-
-        .swal-title {
-            margin: 0px;
-            font-size: 16px;
-            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
-            margin-bottom: 28px;
-        }
-
-        .swal-footer {
-            background-color: rgb(245, 248, 250);
-            margin-top: 32px;
-            border-top: 1px solid #E9EEF1;
+        .loader-wrapper {
+            z-index: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #eee;
+            opacity: 0.5;
             overflow: hidden;
+            text-align: center;
+        }
+
+        .loader-wrapper p {
+            font-size: 13px;
+            font-weight: 700;
+            color: #777;
+            margin-top: 10px
+        }
+
+        .loader-wrapper .loader {
+            position: relative;
+            top: calc(40% - 30px)
         }
     </style>
 </head>
@@ -98,9 +103,7 @@
                                                 <th>ACTIONS</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-
-                                        </tbody>
+                                        <tbody style="position: relative;"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -115,7 +118,15 @@
     <!-- Modal Dialogs ====== -->
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
+            <div class="loader-wrapper" style="display: none; position: absolute;">
+                <div class="loader">
+                    <div class="m-t-30"><img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48"
+                            alt="Aero"></div>
+                    <p>Please wait...</p>
+                </div>
+            </div>
             <div class="modal-content">
+
                 <div class="modal-header text-center">
                     <h4 class="title text-center" id="defaultModalLabel">Add a User</h4>
                 </div>
@@ -140,7 +151,7 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                                <div id="phoneError"></div>
+                            <div id="phoneError"></div>
                             <div class="input-group masked-input mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="zmdi zmdi-smartphone"></i></span>
@@ -153,7 +164,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="zmdi zmdi-email"></i></span>
                                 </div>
-                                <input id="userEmail" type="text" class="form-control email" placeholder="Ex: example@example.com">
+                                <input id="userEmail" type="text" class="form-control email"
+                                    placeholder="Ex: example@example.com">
                             </div>
                             <div id="passwordError"></div>
                             <div class="input-group masked-input mb-3">
@@ -180,17 +192,7 @@
         </div>
     </div>
     <!-- Jquery Core Js -->
-    <script src="/ajax/jquery-3.4.1.min.js"></script>
-    <script src="/ajax/axios.min.js"></script>
-    <script src="/assets/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
-    <script src="/assets/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
-    <script src="/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script> <!-- Input Mask Plugin Js -->
-    <script src="/assets/plugins/sweetalert/sweetalert.min.js"></script> <!-- SweetAlert Plugin Js -->
-    <script src="/assets/bundles/mainscripts.bundle.js"></script>
-    <script src="/assets/js/pages/ui/sweetalert.js"></script>
-    <script src="/assets/plugins/select2/select2.min.js"></script> <!-- Select2 Js -->
-    <script src="/assets/js/pages/forms/advanced-form-elements.js"></script>
-    <script src="/ajax/users.js"></script>
+    <%- include('../includes/bottom-scripts.ejs') %>
 </body>
 
 </html>

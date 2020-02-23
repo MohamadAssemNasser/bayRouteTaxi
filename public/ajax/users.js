@@ -3,13 +3,29 @@ $(document).ready(function () {
 })
 
 function loadPanelUsers() {
-    axios.get('http://localhost:3000/site/all-panel-users')
-        .then((response) => {
-            let users = response.data
-            console.log(users)
-            let tbody = ''
-            $.each(users, (index, user) => {
-                tbody += `
+    $('#usersTable > tbody').html('')
+    $('#usersTable > tbody').html(`
+    <tr>
+        <td colspan="6">
+            <div class="loader-wrapper" style="display: none;">
+                <div class="loader">
+                    <div class="m-t-30">
+                        <img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48" alt="Aero">
+                    </div>
+                    <p>Please wait...</p>
+                </div>
+            </div>
+        </td>
+    </tr>
+    `)
+    $('#usersTable .loader-wrapper').css('display', 'block')
+    setTimeout(function () {
+        axios.get('http://localhost:3000/site/all-panel-users')
+            .then((response) => {
+                let users = response.data
+                let tbody = ''
+                $.each(users, (index, user) => {
+                    tbody += `
                 <tr>
                     <th scope="row">${index + 1}</th>
                     <td>${user.firstName}</td>
@@ -18,17 +34,20 @@ function loadPanelUsers() {
                     <td>${user.phone}</td>
                     <td style="padding-top: 0pt;padding-bottom: 0pt; vertical-align: middle; text-align: center;">
                         <button onclick="editDialog(${index})" class="btn btn-sm btn-warning"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> EDIT</button>
-                        <button onclick="deleteDialog(${index})" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
+                        <button onclick="deleteUser('${user.email}')" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
                     </td>
                 </tr>
                 `
+                })
+                $('#usersTable .loader-wrapper').css('display', 'none')
+                $('#usersTable > tbody').html(tbody)
             })
-            $('#usersTable > tbody').html(tbody)
-        })
-        .catch((error) => {
-            // handle error
-            console.log(error);
-        })
+            .catch((error) => {
+                // handle error
+                console.log(error)
+            })
+    }, 2000);
+
 }
 
 function validateUser() {
@@ -84,6 +103,7 @@ function addUser() {
     password = $('#userPassword').val()
     role = $('#userRole').val()
     csrfToken = $('#csrfToken').val()
+    $('#addUserModal .loader-wrapper').css('display', 'block')
     clearErrors()
     axios.post('http://localhost:3000/site/add-panel-user', {
             firstName: firstName,
@@ -94,10 +114,9 @@ function addUser() {
             role: role,
             _csrf: csrfToken
         })
-        .then(function (response) {
-            console.log(response)
+        .then((response) => {
             let data = response.data
-            console.log(data)
+            $('#addUserModal .loader-wrapper').css('display', 'none')
             if (data.error) {
                 return showErrors(data.validationErrors)
             }
@@ -106,12 +125,47 @@ function addUser() {
                 icon: "success",
             }).then(loadPanelUsers())
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.log(error)
-        });
+        })
 }
 
-
+function deleteUser(email) {
+    swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this User!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                return axios.delete('http://localhost:3000/site/delete-panel-user', {
+                    email: email,
+                    _csrf: csrfToken
+                })
+            }
+        })
+        .then((response) => {
+            let data = response.data
+            if(data.error){
+                swal("Oh noes!", data.validationErrors[0].msg, "error");
+            }
+            swal('User deleted Successfully!', {
+                icon: "success",
+            })
+        })
+        .then(loadPanelUsers())
+        .catch((err) => {
+            if (err) {
+                swal("Oh noes!", "The AJAX request failed!", "error");
+            } else {
+                swal.stopLoading();
+                swal.close();
+            }
+            console.log(err)
+        })
+}
 
 // $.ajax({
 //     url: 'http://18.188.194.167/removebus',
