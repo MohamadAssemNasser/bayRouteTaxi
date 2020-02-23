@@ -8,6 +8,8 @@ const {
 const User = require('../models/panel-user')
 const getDb = require('../util/database').getDb
 
+const ObjectId = mongodb.ObjectId
+
 let db
 
 // POST LOGOUT
@@ -136,7 +138,7 @@ exports.getUsers = async (req, res, next) => {
 exports.getAllPanelUsers = async (req, res, next) => {
   db = getDb()
   try{
-    let u = await db.collection('panel-users').find().toArray()
+    let u = await db.collection('panel-users').find({ role : { $ne: 'Administrator' } }).toArray()
     res.status(200).send(u)
   } catch(err) {
     return res.status(500).send({
@@ -145,7 +147,20 @@ exports.getAllPanelUsers = async (req, res, next) => {
   }
 }
 
-// POST SIGNUP
+// GET PANEL USER
+exports.getPanelUser = async (req, res, next) => {
+  db = getDb()
+  try{
+    let u = await db.collection('panel-users').findOne({ _id : new ObjectId(req.params.userId)})
+    res.json(u)
+  } catch(err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+// POST RGISTER USERS
 exports.addPanelUser = async (req, res) => {
   db = getDb()
   const errors = validationResult(req)
@@ -158,7 +173,7 @@ exports.addPanelUser = async (req, res) => {
       })
     }
     console.log(req.body)
-    let user = new User({ // validate data --important--
+    let user = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       password: req.body.password,
@@ -180,7 +195,7 @@ exports.addPanelUser = async (req, res) => {
             param: 'email',
             msg: 'An account with the same email address already exists'
           }
-        ] 
+        ]
       })
     }
     // password hashing
@@ -203,6 +218,20 @@ exports.addPanelUser = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       error: true,
+      errorMessage: err
+    })
+  }
+}
+
+exports.deletePanelUser = async (req, res, next) => {
+  db = getDb()
+  try{
+    console.log(req.body._id)
+    let u = await db.collection('panel-users').deleteOne({ _id: new ObjectId(req.body._id) })
+    console.log(u)
+    res.status(200).send(u)
+  } catch(err) {
+    return res.status(500).send({
       errorMessage: err
     })
   }

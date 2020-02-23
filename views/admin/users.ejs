@@ -83,9 +83,8 @@
                                 <h2><strong>All</strong> Users</h2>
                                 <ul class="header-dropdown">
                                     <li class="remove">
-                                        <button id="addUser" type="submit" class="btn btn-info"
-                                            style="position:relative;top:-1rem" data-toggle="modal"
-                                            data-target="#addUserModal">
+                                        <button id="addUser" class="btn btn-info"
+                                            style="position:relative;top:-1rem">
                                             <i style="color: white;" class="zmdi zmdi-hc-fw"></i> ADD</button>
                                     </li>
                                 </ul>
@@ -100,6 +99,7 @@
                                                 <th>LAST NAME</th>
                                                 <th>EMAIL</th>
                                                 <th>PHONE</th>
+                                                <th>ROLE</th>
                                                 <th>ACTIONS</th>
                                             </tr>
                                         </thead>
@@ -116,7 +116,7 @@
     </section>
 
     <!-- Modal Dialogs ====== -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="loader-wrapper" style="display: none; position: absolute;">
                 <div class="loader">

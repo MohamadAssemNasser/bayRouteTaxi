@@ -42,6 +42,7 @@ let panelUserValidation = [
     }) => (value === 'Check In' || value === 'Data Entry'))
 ]
 
+
 // -------------- GET --------------
 router.get('/', auth.proceedIfLoggedIn, controller.getDashboard)
 
@@ -74,11 +75,23 @@ router.get('/site/all-panel-users',
     controller.getAllPanelUsers
 )
 
+router.get('/site/panel-user/:userId',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.getPanelUser
+)
+
 router.post('/site/add-panel-user',
     panelUserValidation,
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.addPanelUser
+)
+
+router.delete('/site/delete-panel-user',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.deletePanelUser
 )
 
 router.get('*', (req, res) => res.redirect('/'))
