@@ -23,7 +23,6 @@ exports.postLogout = (req, res, next) => {
 // GET LOGIN
 exports.getLogin = async (req, res, next) => {
   let message = req.flash('error')
-  console.log(message)
   if (message.length > 0) {
     message = message[0]
   } else {
@@ -59,8 +58,18 @@ exports.postLogin = async (req, res, next) => {
       })
     }
     // check if email exists
-    let user = await User.findBy({
-      email: email
+    let user = await db.collection('panel-users').findOne({
+      $and: [{
+          email: {
+            $eq: email
+          }
+        },
+        {
+          role: {
+            $ne: 'Check In'
+          }
+        }
+      ]
     })
     if (!user) {
       return res.status(422).render('admin/login', {
@@ -74,7 +83,6 @@ exports.postLogin = async (req, res, next) => {
       })
     }
     user = new User(user)
-    console.log('logggg')
     // check password
     bcrypt
       .compare(password, user.password)
@@ -83,7 +91,6 @@ exports.postLogin = async (req, res, next) => {
           req.session.isLoggedIn = true
           req.session.user = user
           return req.session.save(err => {
-            console.log('logedIn')
             res.redirect('/')
           })
         }
@@ -137,10 +144,14 @@ exports.getUsers = async (req, res, next) => {
 // GET ALL USERS
 exports.getAllPanelUsers = async (req, res, next) => {
   db = getDb()
-  try{
-    let u = await db.collection('panel-users').find({ role : { $ne: 'Administrator' } }).toArray()
+  try {
+    let u = await db.collection('panel-users').find({
+      role: {
+        $ne: 'Administrator'
+      }
+    }).toArray()
     res.status(200).send(u)
-  } catch(err) {
+  } catch (err) {
     return res.status(500).send({
       errorMessage: err
     })
@@ -150,10 +161,12 @@ exports.getAllPanelUsers = async (req, res, next) => {
 // GET PANEL USER
 exports.getPanelUser = async (req, res, next) => {
   db = getDb()
-  try{
-    let u = await db.collection('panel-users').findOne({ _id : new ObjectId(req.params.userId)})
+  try {
+    let u = await db.collection('panel-users').findOne({
+      _id: new ObjectId(req.params.userId)
+    })
     res.json(u)
-  } catch(err) {
+  } catch (err) {
     return res.status(500).send({
       errorMessage: err
     })
@@ -172,7 +185,6 @@ exports.addPanelUser = async (req, res) => {
         validationErrors: errors.array()
       })
     }
-    console.log(req.body)
     let user = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -190,12 +202,10 @@ exports.addPanelUser = async (req, res) => {
     if (u) {
       return res.json({ // status needed --important--
         error: true,
-        validationErrors: [
-          {
-            param: 'email',
-            msg: 'An account with the same email address already exists'
-          }
-        ]
+        validationErrors: [{
+          param: 'email',
+          msg: 'An account with the same email address already exists'
+        }]
       })
     }
     // password hashing
@@ -208,7 +218,6 @@ exports.addPanelUser = async (req, res) => {
         // adding user
         user = await db.collection('panel-users').insertOne(user)
         user = user.ops[0]
-        console.log(user)
       })
     // response
     return res.status(200).json({
@@ -225,12 +234,67 @@ exports.addPanelUser = async (req, res) => {
 
 exports.deletePanelUser = async (req, res, next) => {
   db = getDb()
-  try{
-    console.log(req.body._id)
-    let u = await db.collection('panel-users').deleteOne({ _id: new ObjectId(req.body._id) })
-    console.log(u)
+  const errors = validationResult(req)
+  try {
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+    let u = await db.collection('panel-users').deleteOne({
+      _id: new ObjectId(req.body._id)
+    })
     res.status(200).send(u)
-  } catch(err) {
+  } catch (err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+exports.updatePanelUser = async (req, res, next) => {
+  db = getDb()
+  try {
+    let u = await db.collection('panel-users').updateOne({
+      _id: new ObjectId(req.body._id)
+    }, {
+      $set: {
+        firstName : req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phone: req.body.phone,
+        role: req.body.role
+      }
+    })
+    res.status(200).send(u)
+  } catch (err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+exports.resetPanelUserPassword = async (req, res, next) => {
+  db = getDb()
+  try {
+    // password hashing
+    bcrypt.hash('12345678', 12,
+      async (err, hash) => {
+        if (err) {
+          throw err
+        }
+        let u = await db.collection('panel-users').updateOne({
+          _id: new ObjectId(req.body._id)
+        }, {
+          $set: {
+            password: hash
+          }
+        })
+      })
+    res.status(200).send(u)
+  } catch (err) {
     return res.status(500).send({
       errorMessage: err
     })

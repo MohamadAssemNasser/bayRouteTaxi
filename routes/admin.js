@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth')
 
 const router = express.Router();
 
-let panelUserValidation = [
+let addPanelUserValidation = [
     body('firstName')
     .trim()
     .isLength({
@@ -36,6 +36,35 @@ let panelUserValidation = [
     .isLength({
         min: 8, // change to 8 -- important --
     }),
+    body('role', 'Invalid Role')
+    .custom((value, {
+        req
+    }) => (value === 'Check In' || value === 'Data Entry'))
+]
+
+let updatePanelUserValidation = [
+    body('firstName')
+    .trim()
+    .isLength({
+        min: 2,
+    }),
+    body('lastName')
+    .trim()
+    .isLength({
+        min: 2,
+    }),
+    body('phone', 'Invalid phone number')
+    .trim()
+    .isLength({
+        min: 8,
+    })
+    .isNumeric(),
+    body('email', 'Invalid email address')
+    .trim()
+    .isLength({
+        min: 7,
+    })
+    .isEmail(),
     body('role', 'Invalid Role')
     .custom((value, {
         req
@@ -82,10 +111,23 @@ router.get('/site/panel-user/:userId',
 )
 
 router.post('/site/add-panel-user',
-    panelUserValidation,
+    addPanelUserValidation,
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.addPanelUser
+)
+
+router.put('/site/update-panel-user',
+    updatePanelUserValidation,
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.updatePanelUser
+)
+
+router.put('/site/reset-password',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.resetPanelUserPassword
 )
 
 router.delete('/site/delete-panel-user',
