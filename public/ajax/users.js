@@ -1,3 +1,6 @@
+// http://3.20.90.158 for production
+// http://localhost:3000 for development
+
 $(document).ready(function () {
     loadPanelUsers()
     $('#addUser').click(() => {
@@ -7,6 +10,7 @@ $(document).ready(function () {
         $('.filter-option.pull-left').html('Data Entry')
         $('.modal-header .title').html('Add a User')
         $('#userModal').modal('toggle')
+        addUser()
     })
 })
 
@@ -27,7 +31,7 @@ async function editUserModal(id) {
     clearModalValues()
     $('#userModal').modal('toggle')
     $('#userModal .loader-wrapper').css('display', 'block')
-    let response = await axios.get(`http://localhost:3000/site/panel-user/${id}`)
+    let response = await axios.get(`http://3.20.90.158/site/panel-user/${id}`)
     let data = response.data
     $('#userFirstName').val(data.firstName)
     $('#userLastName').val(data.lastName)
@@ -56,7 +60,7 @@ function loadPanelUsers() {
     </tr>
     `)
     $('#usersTable .loader-wrapper').css('display', 'block')
-    axios.get('http://localhost:3000/site/all-panel-users')
+    axios.get('http://3.20.90.158/site/all-panel-users')
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -144,7 +148,7 @@ function addUser() {
         clearErrors()
         axios({
                 method: 'post',
-                url: 'http://localhost:3000/site/add-panel-user',
+                url: 'http://3.20.90.158/site/add-panel-user',
                 data: {
                     firstName: firstName,
                     lastName: lastName,
@@ -186,7 +190,7 @@ function updateUser() {
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://localhost:3000/site/add-panel-user',
+            url: 'http://3.20.90.158/site/add-panel-user',
             data: {
                 firstName: firstName,
                 lastName: lastName,
@@ -226,7 +230,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://localhost:3000/site/delete-panel-user',
+                    url: 'http://3.20.90.158/site/delete-panel-user',
                     data: {
                         _id: _id,
                         _csrf: csrfToken
