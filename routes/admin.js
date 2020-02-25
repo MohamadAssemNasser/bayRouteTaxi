@@ -79,6 +79,8 @@ router.get('/login', auth.preventIfLoggedIn, controller.getLogin)
 
 router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
 
+router.get('/trips', auth.proceedIfLoggedIn, controller.getTrips)
+
 // -------------- POST --------------
 router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
 

@@ -347,3 +347,14 @@ exports.resetPanelUserPassword = async (req, res, next) => {
     })
   }
 }
+
+exports.getTrips = async (req, res, next) => {
+  return res.render('admin/trips', {
+    pageTitle: 'BayRoute Taxi :: Trips',
+    path: '/trips',
+    user: {
+      firstName: req.user.firstName,
+      role: req.user.role,
+    }
+  })
+}
