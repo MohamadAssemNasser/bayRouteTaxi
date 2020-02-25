@@ -243,10 +243,19 @@ exports.deletePanelUser = async (req, res, next) => {
         validationErrors: errors.array()
       })
     }
-    let u = await db.collection('panel-users').deleteOne({
-      _id: new ObjectId(req.body._id)
-    })
-    res.status(200).send(u)
+    try {
+      let u = await db.collection('panel-users').deleteOne({
+        _id: new ObjectId(req.body._id)
+      })
+      res.status(200).json(u)
+    }catch(error){
+      console.log(err)
+      res.status(500).json({
+        error: true,
+        errorMessage: 'Internal server error'
+      })
+    }
+    
   } catch (err) {
     return res.status(500).send({
       errorMessage: err
@@ -256,21 +265,49 @@ exports.deletePanelUser = async (req, res, next) => {
 
 exports.updatePanelUser = async (req, res, next) => {
   db = getDb()
+  const errors = validationResult(req)
   try {
-    let u = await db.collection('panel-users').updateOne({
-      _id: new ObjectId(req.body._id)
-    }, {
-      $set: {
-        firstName : req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        phone: req.body.phone,
-        role: req.body.role
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+    try {
+      // Update User
+      let u = await db.collection('panel-users').findOneAndUpdate({
+        _id: {
+          $eq: new ObjectId(req.body._id)
+        }
+      }, {
+        $set: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          phone: req.body.phone,
+          role: req.body.role
+        }
+      })
+      if(u.value === null){
+        // response
+        return res.json({ // status needed --important--
+          error: false,
+          message: 'User not found'
+        })
       }
+    } catch (err) {
+      console.log(err)
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'User updated successfully'
     })
-    res.status(200).send(u)
   } catch (err) {
-    return res.status(500).send({
+    console.log(err)
+    return res.status(500).json({
+      error: true,
       errorMessage: err
     })
   }
@@ -285,15 +322,25 @@ exports.resetPanelUserPassword = async (req, res, next) => {
         if (err) {
           throw err
         }
-        let u = await db.collection('panel-users').updateOne({
-          _id: new ObjectId(req.body._id)
-        }, {
-          $set: {
-            password: hash
-          }
-        })
+        try {
+          let u = await db.collection('panel-users').findOneAndUpdate({
+            _id: {
+              $eq: new ObjectId(req.body._id)
+            }
+          }, {
+            $set: {
+              password: hash
+            }
+          })
+          return res.status(200).json(u)
+        } catch(error) {
+          console.log(error)
+          res.status(500).json({
+            error: true,
+            errorMessage: 'Internal server error'
+          })
+        }
       })
-    res.status(200).send(u)
   } catch (err) {
     return res.status(500).send({
       errorMessage: err

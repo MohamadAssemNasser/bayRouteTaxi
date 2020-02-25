@@ -26,16 +26,6 @@ class Trip {
         this.availableSeats = options.availableSeats
         this.passengers = options.passengers
     }
-
-    static async findById(id) {
-        const db = getDb();
-        try {
-            let u = await db.collection('trips').findOne({ _id: new ObjectId(id) })
-            return u;
-        } catch (err) {
-            console.log(err);
-        }
-    }
 }
 
 module.exports = User

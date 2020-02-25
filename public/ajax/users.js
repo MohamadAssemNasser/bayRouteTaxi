@@ -5,12 +5,12 @@ $(document).ready(function () {
     loadPanelUsers()
     $('#addUser').click(() => {
         clearModalValues()
+        $('.modal-footer .btn-primary').click(addUser())
         $('.modal-footer .btn-primary').html('Add User')
         $('#hideme').css('display', 'flex')
         $('.filter-option.pull-left').html('Data Entry')
         $('.modal-header .title').html('Add a User')
         $('#userModal').modal('toggle')
-        addUser()
     })
 })
 
@@ -22,25 +22,6 @@ function clearModalValues() {
     $('#userEmail').val('')
     $('#userPassword').val('')
     $('.filter-option.pull-left').html('')
-}
-
-async function editUserModal(id) {
-    $('.modal-footer .btn-primary').html('Save Changes')
-    $('#hideme').css('display', 'none')
-    $('.modal-header .title').html('Edit User')
-    clearModalValues()
-    $('#userModal').modal('toggle')
-    $('#userModal .loader-wrapper').css('display', 'block')
-    let response = await axios.get(`http://3.20.90.158/site/panel-user/${id}`)
-    let data = response.data
-    $('#userFirstName').val(data.firstName)
-    $('#userLastName').val(data.lastName)
-    $('#userPhone').val(data.phone)
-    $('#userEmail').val(data.email)
-    $('#userPassword').val('')
-    $('.filter-option.pull-left').html(data.role)
-    $('#userRole').val(data.role)
-    $('#userModal .loader-wrapper').css('display', 'none')
 }
 
 function loadPanelUsers() {
@@ -60,7 +41,7 @@ function loadPanelUsers() {
     </tr>
     `)
     $('#usersTable .loader-wrapper').css('display', 'block')
-    axios.get('http://3.20.90.158/site/all-panel-users')
+    axios.get('http://localhost:3000/site/all-panel-users')
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -74,6 +55,7 @@ function loadPanelUsers() {
                     <td>${user.phone}</td>
                     <td>${user.role}</td>
                     <td style="padding-top: 0pt;padding-bottom: 0pt; vertical-align: middle; text-align: center;">
+                        <button onclick="resetPassword('${user._id}')" class="btn btn-sm btn-info"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> RESET PASSWORD</button>
                         <button onclick="editUserModal('${user._id}')" class="btn btn-sm btn-warning"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> EDIT</button>
                         <button onclick="deleteUser('${user._id}')" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
                     </td>
@@ -88,6 +70,46 @@ function loadPanelUsers() {
             console.log(error)
         })
 
+}
+
+async function resetPassword(id) {
+    swal({
+        title: "Are you sure?",
+        text: "The password will be reset to '12345678'",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willReset) => {
+        if (willReset) {
+            return axios({
+                method: 'put',
+                url: 'http://localhost:3000/site/reset-password',
+                data: {
+                    _id: id,
+                    _csrf: $('#csrfToken').val()
+                },
+            })
+        } else {
+            return false;
+        }
+    })
+    .then((response) => {
+        if (response === false)
+            return;
+        let data = response.data
+        console.log(data['ok'])
+        if (data['ok'] !== 1) {
+            return swal("Oh noes!", "No User was found.", "error");
+        }
+        swal('Password reset successfully!', {
+            icon: "success",
+        }).then(loadPanelUsers())
+    })
+    .catch((err) => {
+        swal("Oh noes!", "The AJAX request failed!", "error")
+        console.log(err)
+    })
 }
 
 function validateUser() {
@@ -148,7 +170,7 @@ function addUser() {
         clearErrors()
         axios({
                 method: 'post',
-                url: 'http://3.20.90.158/site/add-panel-user',
+                url: 'http://localhost:3000/site/add-panel-user',
                 data: {
                     firstName: firstName,
                     lastName: lastName,
@@ -176,45 +198,60 @@ function addUser() {
     })
 }
 
-function updateUser() {
+function updateUser(id) {
     validateUser()
-    let firstName, lastName, phone, email, password, role, csrfToken;
-    firstName = $('#userFirstName').val()
-    lastName = $('#userLastName').val()
-    phone = $('#userPhone').val()
-    email = $('#userEmail').val()
-    password = $('#userPassword').val()
-    role = $('#userRole').val()
-    csrfToken = $('#csrfToken').val()
     $('#userModal .loader-wrapper').css('display', 'block')
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://3.20.90.158/site/add-panel-user',
+            url: 'http://localhost:3000/site/update-panel-user',
             data: {
-                firstName: firstName,
-                lastName: lastName,
-                phone: phone,
-                email: email,
-                password: password,
-                role: role,
-                _csrf: csrfToken
+                _id: id,
+                firstName: $('#userFirstName').val(),
+                lastName: $('#userLastName').val(),
+                phone: $('#userPhone').val(),
+                email: $('#userEmail').val(),
+                role: $('#userRole').val(),
+                _csrf: $('#csrfToken').val()
             }
         })
-        .then((response) => {
-            let data = response.data
+        .then(async (response) => {
             $('#userModal .loader-wrapper').css('display', 'none')
-            if (data.error) {
+            if (response.error) {
                 return showErrors(data.validationErrors)
             }
-            $('#userModal').modal('toggle')
+            await $('#userModal').modal('toggle')
+            console.log('toggled update')
             swal("The User was updated successfully!", {
                 icon: "success",
             }).then(loadPanelUsers())
         })
         .catch((error) => {
+            swal("Oh noes!", "The AJAX request failed!", "error")
             console.log(error)
         })
+}
+
+async function editUserModal(id) {
+    $('.modal-footer .btn-primary').html('Save Changes')
+    $('.modal-footer .btn-primary').click(() => {
+        updateUser(id)
+    })
+    $('#hideme').css('display', 'none')
+    $('.modal-header .title').html('Edit User')
+    clearModalValues()
+    $('#userModal').modal('toggle')
+    $('#userModal .loader-wrapper').css('display', 'block')
+    let data = await axios.get(`http://localhost:3000/site/panel-user/${id}`)
+    data = data.data
+    $('#userFirstName').val(data.firstName)
+    $('#userLastName').val(data.lastName)
+    $('#userPhone').val(data.phone)
+    $('#userEmail').val(data.email)
+    $('#userPassword').val('')
+    $('.filter-option.pull-left').html(data.role)
+    $('#userRole').val(data.role)
+    $('#userModal .loader-wrapper').css('display', 'none')
 }
 
 function deleteUser(_id) {
@@ -230,7 +267,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://3.20.90.158/site/delete-panel-user',
+                    url: 'http://localhost:3000/site/delete-panel-user',
                     data: {
                         _id: _id,
                         _csrf: csrfToken
@@ -253,9 +290,7 @@ function deleteUser(_id) {
             }).then(loadPanelUsers())
         })
         .catch((err) => {
-            if (err) {
-                swal("Oh noes!", "The AJAX request failed!", "error")
-                console.log(err)
-            }
+            swal("Oh noes!", "The AJAX request failed!", "error")
+            console.log(err)
         })
 }
