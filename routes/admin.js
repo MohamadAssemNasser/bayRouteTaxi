@@ -81,6 +81,8 @@ router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
 
 router.get('/trips', auth.proceedIfLoggedIn, controller.getTrips)
 
+router.get('/stations', auth.proceedIfLoggedIn, controller.getStations)
+
 // -------------- POST --------------
 router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
 
@@ -100,6 +102,9 @@ router.post('/login', [
 
 // -------------- ADMIN APIs --------------
 
+
+// ------- GET -------
+
 router.get('/site/all-panel-users',
     auth.proceedIfLoggedIn,
     auth.isAdmin,
@@ -112,12 +117,41 @@ router.get('/site/panel-user/:userId',
     controller.getPanelUser
 )
 
+router.get('/site/all-stations',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.getAllStations
+)
+
+router.get('/site/station/:stationId',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.getStation
+)
+// ------- POST -------
+
 router.post('/site/add-panel-user',
     addPanelUserValidation,
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.addPanelUser
 )
+
+router.post('/site/add-station',
+    [
+        body('name')
+        .trim()
+        .isLength({
+            min: 3
+        })
+    ],
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.addStation
+)
+
+
+// ------- PUT -------
 
 router.put('/site/update-panel-user',
     updatePanelUserValidation,
@@ -132,10 +166,31 @@ router.put('/site/reset-password',
     controller.resetPanelUserPassword
 )
 
+router.put('/site/update-station',
+    [
+        body('name')
+        .trim()
+        .isLength({
+            min: 3
+        })
+    ],
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.updateStation
+)
+
+// ------- DELETE -------
+
 router.delete('/site/delete-panel-user',
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.deletePanelUser
+)
+
+router.delete('/site/delete-station',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.deleteStation
 )
 
 router.get('*', (req, res) => res.redirect('/'))

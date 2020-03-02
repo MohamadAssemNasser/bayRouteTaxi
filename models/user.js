@@ -46,6 +46,18 @@ class User {
             return 0;
         }
     }
+
+    static async getAll() {
+        const db = getDb()
+        try {
+            let users = await db.collection('users').find({})
+            console.log(users)
+            return users
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    }
 }
 
 module.exports = User

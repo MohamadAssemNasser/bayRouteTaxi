@@ -6,6 +6,8 @@ const {
 } = require('express-validator')
 
 const User = require('../models/panel-user')
+const Station = require('../models/station')
+
 const getDb = require('../util/database').getDb
 
 const ObjectId = mongodb.ObjectId
@@ -127,11 +129,35 @@ exports.getDashboard = async (req, res, next) => {
   })
 }
 
+// GET TRIPS
+exports.getTrips = async (req, res, next) => {
+  return res.render('admin/trips', {
+    pageTitle: 'BayRoute Taxi :: Trips',
+    path: '/trips',
+    user: {
+      firstName: req.user.firstName,
+      role: req.user.role,
+    }
+  })
+}
+
 // GET USERS
 exports.getUsers = async (req, res, next) => {
   return res.render('admin/users', {
     pageTitle: 'BayRoute Taxi :: Users',
     path: '/users',
+    user: {
+      firstName: req.user.firstName,
+      role: req.user.role
+    }
+  })
+}
+
+// GET STATIONS
+exports.getStations = async (req, res, next) => {
+  return res.render('admin/stations', {
+    pageTitle: 'BayRoute Taxi :: Stations',
+    path: '/stations',
     user: {
       firstName: req.user.firstName,
       role: req.user.role
@@ -173,7 +199,38 @@ exports.getPanelUser = async (req, res, next) => {
   }
 }
 
-// POST RGISTER USERS
+// GET STATIONS
+exports.getAllStations = async (req, res, next) => {
+  db = getDb()
+  try {
+    let stations = await Station.getAll()
+    res.json(stations)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}
+
+// GET STATION
+exports.getStation = async (req, res, next) => {
+  db = getDb()
+  try {
+    let s = await db.collection('stations').findOne({
+      _id: new ObjectId(req.params.stationId)
+    })
+    res.json(s)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+// POST REGISTER USERS
 exports.addPanelUser = async (req, res) => {
   db = getDb()
   const errors = validationResult(req)
@@ -234,28 +291,25 @@ exports.addPanelUser = async (req, res) => {
 
 exports.deletePanelUser = async (req, res, next) => {
   db = getDb()
-  const errors = validationResult(req)
   try {
-    // validate req data
-    if (!errors.isEmpty()) {
-      return res.json({
-        error: true,
-        validationErrors: errors.array()
-      })
-    }
-    try {
-      let u = await db.collection('panel-users').deleteOne({
-        _id: new ObjectId(req.body._id)
-      })
-      res.status(200).json(u)
-    }catch(error){
-      console.log(err)
-      res.status(500).json({
-        error: true,
-        errorMessage: 'Internal server error'
-      })
-    }
-    
+    let u = await db.collection('panel-users').deleteOne({
+      _id: new ObjectId(req.body._id)
+    })
+    res.status(200).json(u)
+  } catch (err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+exports.deleteStation = async (req, res, next) => {
+  db = getDb()
+  try {
+    let s = await db.collection('stations').deleteOne({
+      _id: new ObjectId(req.body._id)
+    })
+    res.status(200).json(s)
   } catch (err) {
     return res.status(500).send({
       errorMessage: err
@@ -274,6 +328,24 @@ exports.updatePanelUser = async (req, res, next) => {
         validationErrors: errors.array()
       })
     }
+    let u = await db.collection('panel-users').findOne({
+      email: {
+        $eq: req.body.email
+      },
+      _id: {
+        $ne: new ObjectId(req.body._id)
+      }
+    })
+    if (u) {
+      return res.json({ // status needed --important--
+        error: true,
+        validationErrors: [{
+          param: 'email',
+          msg: 'An account with the same email address already exists'
+        }]
+      })
+    }
+
     try {
       // Update User
       let u = await db.collection('panel-users').findOneAndUpdate({
@@ -289,7 +361,7 @@ exports.updatePanelUser = async (req, res, next) => {
           role: req.body.role
         }
       })
-      if(u.value === null){
+      if (u.value === null) {
         // response
         return res.json({ // status needed --important--
           error: false,
@@ -303,6 +375,71 @@ exports.updatePanelUser = async (req, res, next) => {
     return res.status(200).json({
       error: false,
       message: 'User updated successfully'
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}
+
+exports.updateStation = async (req, res, next) => {
+  db = getDb()
+  const errors = validationResult(req)
+  try {
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+
+    let s = await db.collection('stations').findOne({
+      email: {
+        $eq: req.body.email
+      },
+      _id: {
+        $ne: new ObjectId(req.body._id)
+      }
+    })
+    if (s) {
+      return res.json({ // status needed --important--
+        error: true,
+        validationErrors: [{
+          param: 'name',
+          msg: 'An Station with the same name already exists'
+        }]
+      })
+    }
+
+    try {
+      // Update Station
+      let u = await db.collection('stations').findOneAndUpdate({
+        _id: {
+          $eq: new ObjectId(req.body._id)
+        }
+      }, {
+        $set: {
+          name: req.body.name,
+        }
+      })
+      if (u.value === null) {
+        // response
+        return res.json({ // status needed --important--
+          error: false,
+          message: 'Station not found'
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'Station updated successfully'
     })
   } catch (err) {
     console.log(err)
@@ -333,7 +470,7 @@ exports.resetPanelUserPassword = async (req, res, next) => {
             }
           })
           return res.status(200).json(u)
-        } catch(error) {
+        } catch (error) {
           console.log(error)
           res.status(500).json({
             error: true,
@@ -348,13 +485,52 @@ exports.resetPanelUserPassword = async (req, res, next) => {
   }
 }
 
-exports.getTrips = async (req, res, next) => {
-  return res.render('admin/trips', {
-    pageTitle: 'BayRoute Taxi :: Trips',
-    path: '/trips',
-    user: {
-      firstName: req.user.firstName,
-      role: req.user.role,
+// POST ADD STATION
+exports.addStation = async (req, res, next) => {
+  db = getDb()
+  const errors = validationResult(req)
+  try {
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
     }
-  })
+    let station = new Station({
+      name: req.body.name
+    })
+    // check if email exists
+    let s = await db.collection('stations').findOne({
+      name: {
+        $eq: station.name
+      }
+    })
+    if (s) {
+      return res.json({ // status needed --important--
+        error: true,
+        validationErrors: [{
+          param: 'name',
+          msg: 'A station with the same name already exists'
+        }]
+      })
+    }
+    try {
+      station = await db.collection('stations').insertOne(station)
+      station = station.ops[0]
+    } catch (err) {
+      console.log(err)
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'Station added successfully'
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
 }

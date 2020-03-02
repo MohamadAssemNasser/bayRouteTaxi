@@ -188,7 +188,7 @@ function addUser() {
                     return showErrors(data.validationErrors)
                 }
                 $('#userModal').modal('toggle')
-                swal("The bus was deleted successfully!", {
+                swal("The User was deleted successfully!", {
                     icon: "success",
                 }).then(loadPanelUsers())
             })
@@ -216,8 +216,10 @@ function updateUser(id) {
             }
         })
         .then(async (response) => {
+            let data = response.data
+            console.log(data)
             $('#userModal .loader-wrapper').css('display', 'none')
-            if (response.error) {
+            if (data.error) {
                 return showErrors(data.validationErrors)
             }
             await $('#userModal').modal('toggle')
