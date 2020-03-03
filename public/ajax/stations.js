@@ -36,7 +36,7 @@ function loadPanelStations() {
     </tr>
     `)
     $('#stationsTable .loader-wrapper').css('display', 'block')
-    axios.get('http://localhost:3000/site/all-stations')
+    axios.get('http://3.20.90.158/site/all-stations')
         .then((response) => {
             console.log(response)
             let stations = response.data
@@ -91,7 +91,7 @@ function addStation() {
         clearErrors()
         axios({
                 method: 'post',
-                url: 'http://localhost:3000/site/add-station',
+                url: 'http://3.20.90.158/site/add-station',
                 data: {
                     name: name,
                     _csrf: csrfToken
@@ -121,7 +121,7 @@ function updateStation(id) {
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://localhost:3000/site/update-station',
+            url: 'http://3.20.90.158/site/update-station',
             data: {
                 _id: id,
                 name: $('#stationName').val(),
@@ -155,7 +155,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://localhost:3000/site/station/${id}`)
+    let data = await axios.get(`http://3.20.90.158/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -174,7 +174,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://localhost:3000/site/delete-station',
+                    url: 'http://3.20.90.158/site/delete-station',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

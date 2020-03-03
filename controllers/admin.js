@@ -345,7 +345,6 @@ exports.updatePanelUser = async (req, res, next) => {
         }]
       })
     }
-
     try {
       // Update User
       let u = await db.collection('panel-users').findOneAndUpdate({
@@ -389,7 +388,7 @@ exports.updateStation = async (req, res, next) => {
   db = getDb()
   const errors = validationResult(req)
   try {
-    // validate req data
+    // * validate req data
     if (!errors.isEmpty()) {
       return res.json({
         error: true,
