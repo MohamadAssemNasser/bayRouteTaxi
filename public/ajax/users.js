@@ -5,7 +5,7 @@ $(document).ready(function () {
     loadPanelUsers()
     $('#addUser').click(() => {
         clearModalValues()
-        $('.modal-footer .btn-primary').click(addUser())
+        $('.modal-footer .btn-primary').attr('onClick', 'addUser()')
         $('.modal-footer .btn-primary').html('Add User')
         $('#hideme').css('display', 'flex')
         $('.filter-option.pull-left').html('Data Entry')
@@ -41,7 +41,7 @@ function loadPanelUsers() {
     </tr>
     `)
     $('#usersTable .loader-wrapper').css('display', 'block')
-    axios.get('http://assem-nasser.com/site/all-panel-users')
+    axios.get('http://localhost:3000/site/all-panel-users')
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -74,42 +74,42 @@ function loadPanelUsers() {
 
 async function resetPassword(id) {
     swal({
-        title: "Are you sure?",
-        text: "The password will be reset to '12345678'",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willReset) => {
-        if (willReset) {
-            return axios({
-                method: 'put',
-                url: 'http://assem-nasser.com/site/reset-password',
-                data: {
-                    _id: id,
-                    _csrf: $('#csrfToken').val()
-                },
-            })
-        } else {
-            return false;
-        }
-    })
-    .then((response) => {
-        if (response === false)
-            return;
-        let data = response.data
-        console.log(data['ok'])
-        if (data['ok'] !== 1) {
-            return swal("Oh noes!", "No User was found.", "error");
-        }
-        swal('Password reset successfully!', {
-            icon: "success",
-        }).then(loadPanelUsers())
-    })
-    .catch((err) => {
-        swal("Oh noes!", "The AJAX request failed!", "error")
-        console.log(err)
-    })
+            title: "Are you sure?",
+            text: "The password will be reset to '12345678'",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willReset) => {
+            if (willReset) {
+                return axios({
+                    method: 'put',
+                    url: 'http://localhost:3000/site/reset-password',
+                    data: {
+                        _id: id,
+                        _csrf: $('#csrfToken').val()
+                    },
+                })
+            } else {
+                return false;
+            }
+        })
+        .then((response) => {
+            if (response === false)
+                return;
+            let data = response.data
+            console.log(data['ok'])
+            if (data['ok'] !== 1) {
+                return swal("Oh noes!", "No User was found.", "error");
+            }
+            swal('Password reset successfully!', {
+                icon: "success",
+            }).then(loadPanelUsers())
+        })
+        .catch((err) => {
+            swal("Oh noes!", "The AJAX request failed!", "error")
+            console.log(err)
+        })
 }
 
 function validateUser() {
@@ -156,12 +156,12 @@ function clearErrors() {
 }
 
 function addUser() {
-    $('.modal-footer .btn-primary').click(() => {
         validateUser()
         let firstName, lastName, phone, email, password, role, csrfToken;
         firstName = $('#userFirstName').val()
         lastName = $('#userLastName').val()
         phone = $('#userPhone').val()
+        phone = phone.split(/\s/).join('')
         email = $('#userEmail').val()
         password = $('#userPassword').val()
         role = $('#userRole').val()
@@ -170,7 +170,7 @@ function addUser() {
         clearErrors()
         axios({
                 method: 'post',
-                url: 'http://assem-nasser.com/site/add-panel-user',
+                url: 'http://localhost:3000/site/add-panel-user',
                 data: {
                     firstName: firstName,
                     lastName: lastName,
@@ -195,16 +195,16 @@ function addUser() {
             .catch((error) => {
                 console.log(error)
             })
-    })
 }
 
-function updateUser(id) {
+async function updateUser(id) {
     validateUser()
     $('#userModal .loader-wrapper').css('display', 'block')
     clearErrors()
-    axios({
+    try {
+        let data = await axios({
             method: 'put',
-            url: 'http://assem-nasser.com/site/update-panel-user',
+            url: 'http://localhost:3000/site/update-panel-user',
             data: {
                 _id: id,
                 firstName: $('#userFirstName').val(),
@@ -215,36 +215,30 @@ function updateUser(id) {
                 _csrf: $('#csrfToken').val()
             }
         })
-        .then(async (response) => {
-            let data = response.data
-            console.log(data)
-            $('#userModal .loader-wrapper').css('display', 'none')
-            if (data.error) {
-                return showErrors(data.validationErrors)
-            }
-            await $('#userModal').modal('toggle')
-            console.log('toggled update')
-            swal("The User was updated successfully!", {
-                icon: "success",
-            }).then(loadPanelUsers())
-        })
-        .catch((error) => {
-            swal("Oh noes!", "The AJAX request failed!", "error")
-            console.log(error)
-        })
+        data = data.data
+        $('#userModal .loader-wrapper').css('display', 'none')
+        if (data.error) {
+            return showErrors(data.validationErrors)
+        }
+        await $('#userModal').modal('toggle')
+        swal("The User was updated successfully!", {
+            icon: "success",
+        }).then(loadPanelUsers())
+    } catch (error) {
+        swal("Oh noes!", "The AJAX request failed!", "error")
+        console.log(error)
+    }
 }
 
 async function editUserModal(id) {
     $('.modal-footer .btn-primary').html('Save Changes')
-    $('.modal-footer .btn-primary').click(() => {
-        updateUser(id)
-    })
+    $('.modal-footer .btn-primary').attr('onClick', `updateUser("${id}")`)
     $('#hideme').css('display', 'none')
     $('.modal-header .title').html('Edit User')
     clearModalValues()
     $('#userModal').modal('toggle')
     $('#userModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://assem-nasser.com/site/panel-user/${id}`)
+    let data = await axios.get(`http://localhost:3000/site/panel-user/${id}`)
     data = data.data
     $('#userFirstName').val(data.firstName)
     $('#userLastName').val(data.lastName)
@@ -269,7 +263,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://assem-nasser.com/site/delete-panel-user',
+                    url: 'http://localhost:3000/site/delete-panel-user',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

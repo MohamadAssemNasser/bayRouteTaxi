@@ -18,24 +18,24 @@
             <li class="<%= (path === '/profile') ? 'active open' : '' %>"><a href="/profile"><i class="zmdi zmdi-account"></i><span>My Profile</span></a></li>
             <li class="<%= (path === '/trips') ? 'active open' : '' %>"><a href="/trips"><i class="zmdi zmdi-hc-fw"></i><span>Trips</span></a></li>
             <% if (user.role === 'Administrator') { %>
+                <li class="<%= (path === '/tripTypes') ? 'active open' : '' %>"> <a href="/tripTypes"><i class="zmdi zmdi-tag-more"></i><span>Trip Types</span></a></li>
                 <li class="<%= (path === '/stations') ? 'active open' : '' %>"> <a href="/stations"><i class="zmdi zmdi-store-24"></i><span>Stations</span></a></li>
                 <li class="<%= (path === '/users') ? 'active open' : '' %>"> <a href="/users"><i class="zmdi zmdi-assignment"></i><span>Users</span></a></li>
             <% } %>
-            <li class="<%= (path === '/s') ? 'active open' : '' %> "> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>File Manager</span></a>
+            <!-- <li class="<%= (path === '/s') ? 'active open' : '' %> "> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>File Manager</span></a>
                 <ul class="ml-menu">
                     <li><a href="file-dashboard.html">All File</a></li>
                     <li><a href="file-documents.html">Documents</a></li>
                     <li><a href="file-images.html">Images</a></li>
                     <li><a href="file-media.html">Media</a></li>
                 </ul>
-            </li>
+            </li> -->
             <li>
                 <form action="/logout" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input id="csrfToken" type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="btn btn-warning w-100 btn-round mr-1"><i class="zmdi zmdi-hc-fw"></i>    Log Out</button>
                 </form>
             </li>
         </ul>
     </div>
 </aside>
-<input id="csrfToken" type="hidden" value="<%= csrfToken %>"/>

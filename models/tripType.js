@@ -8,7 +8,8 @@ class TripType {
         if (options._id === undefined) options._id = null
         this._id = options._id
         this.name = options.name // Express or Standard
-        this.level = options.level
+        this.deck = options.deck // lower, upper, deck
+        this.price = options.price
         this.numberOfSeats = options.numberOfSeats
     }
 

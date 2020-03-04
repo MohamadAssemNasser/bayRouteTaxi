@@ -165,6 +165,18 @@ exports.getStations = async (req, res, next) => {
   })
 }
 
+// * GET TRIP TYPES
+exports.getTripTypes = async (req, res, next) => {
+  return res.render('admin/tripTypes', {
+    pageTitle: 'BayRoute Taxi :: Trip Types',
+    path: '/tripTypes',
+    user: {
+      firstName: req.user.firstName,
+      role: req.user.role
+    }
+  })
+}
+
 // ------------- APIs -------------
 
 // GET ALL USERS
@@ -329,13 +341,21 @@ exports.updatePanelUser = async (req, res, next) => {
       })
     }
     let u = await db.collection('panel-users').findOne({
-      email: {
-        $eq: req.body.email
-      },
-      _id: {
-        $ne: new ObjectId(req.body._id)
-      }
+      $and: [
+        {
+          email: {
+            $eq: req.body.email
+          }
+        },
+        {
+          _id: {
+            $ne: new ObjectId(req.body._id)
+          }
+        }
+      ]
     })
+    console.log(u)
+    console.log(req.body._id)
     if (u) {
       return res.json({ // status needed --important--
         error: true,
@@ -397,19 +417,25 @@ exports.updateStation = async (req, res, next) => {
     }
 
     let s = await db.collection('stations').findOne({
-      email: {
-        $eq: req.body.email
-      },
-      _id: {
-        $ne: new ObjectId(req.body._id)
-      }
+      $and: [
+        {
+          name: {
+            $eq: req.body.name
+          }
+        },
+        {
+          _id: {
+            $ne: new ObjectId(req.body._id)
+          }
+        }
+      ]
     })
     if (s) {
-      return res.json({ // status needed --important--
+      return res.json({ // ! status needed --important--
         error: true,
         validationErrors: [{
           param: 'name',
-          msg: 'An Station with the same name already exists'
+          msg: 'A Station with the same name already exists'
         }]
       })
     }
@@ -519,6 +545,10 @@ exports.addStation = async (req, res, next) => {
       station = station.ops[0]
     } catch (err) {
       console.log(err)
+      return res.status(500).json({
+        error: true,
+        errorMessage: err
+      })
     }
     // response
     return res.status(200).json({

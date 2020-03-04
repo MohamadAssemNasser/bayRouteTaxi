@@ -1,11 +1,11 @@
-// http://3.20.90.158 for production
+// http://assem-nasser.com for production
 // http://localhost:3000 for development
 
 $(document).ready(function () {
     loadPanelStations()
     $('#addStation').click(() => {
         clearModalValues()
-        $('.modal-footer .btn-primary').click(addStation())
+        $('.modal-footer .btn-primary').attr('onClick', 'addStation()')
         $('.modal-footer .btn-primary').html('Add Station')
         $('#hideme').css('display', 'flex')
         $('.filter-option.pull-left').html('Data Entry')
@@ -36,7 +36,7 @@ function loadPanelStations() {
     </tr>
     `)
     $('#stationsTable .loader-wrapper').css('display', 'block')
-    axios.get('http://assem-nasser.com/site/all-stations')
+    axios.get('http://localhost:3000/site/all-stations')
         .then((response) => {
             console.log(response)
             let stations = response.data
@@ -81,68 +81,64 @@ function clearErrors() {
     $('#stationNameError').html('')
 }
 
-function addStation() {
-    $('.modal-footer .btn-primary').click(() => {
+async function addStation() {
         validateStation()
         let name, csrfToken;
         name = $('#stationName').val()
         csrfToken = $('#csrfToken').val()
         $('#stationModal .loader-wrapper').css('display', 'block')
         clearErrors()
-        axios({
+        try {
+            let data = await axios({
                 method: 'post',
-                url: 'http://assem-nasser.com/site/add-station',
+                url: 'http://localhost:3000/site/add-station',
                 data: {
                     name: name,
                     _csrf: csrfToken
                 }
             })
-            .then((response) => {
-                let data = response.data
-                console.log(data)
-                $('#stationModal .loader-wrapper').css('display', 'none')
-                if (data.error) {
-                    return showErrors(data.validationErrors)
-                }
-                $('#stationModal').modal('toggle')
-                swal("The Station was deleted successfully!", {
-                    icon: "success",
-                }).then(loadPanelStations())
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    })
+            data = data.data
+            console.log(data)
+            $('#stationModal .loader-wrapper').css('display', 'none')
+            if (data.error) {
+                return showErrors(data.validationErrors)
+            }
+            $('#stationModal').modal('toggle')
+            swal("The Station was deleted successfully!", {
+                icon: "success",
+            }).then(loadPanelStations())
+        } catch (error) {
+            console.log(error)
+        }
 }
 
-function updateStation(id) {
+async function updateStation(id) {
     validateStation()
     $('#stationModal .loader-wrapper').css('display', 'block')
     clearErrors()
-    axios({
+    try {
+        let data = await axios({
             method: 'put',
-            url: 'http://assem-nasser.com/site/update-station',
+            url: 'http://localhost:3000/site/update-station',
             data: {
                 _id: id,
                 name: $('#stationName').val(),
                 _csrf: $('#csrfToken').val()
             }
         })
-        .then(async (response) => {
-            $('#stationModal .loader-wrapper').css('display', 'none')
-            if (response.error) {
-                return showErrors(data.validationErrors)
-            }
-            await $('#stationModal').modal('toggle')
-            console.log('toggled update')
-            swal("The Station was updated successfully!", {
-                icon: "success",
-            }).then(loadPanelStations())
-        })
-        .catch((error) => {
-            swal("Oh noes!", "The AJAX request failed!", "error")
-            console.log(error)
-        })
+        data = data.data
+        $('#stationModal .loader-wrapper').css('display', 'none')
+        if (data.error) {
+            return showErrors(data.validationErrors)
+        }
+        await $('#stationModal').modal('toggle')
+        swal("The Station was updated successfully!", {
+            icon: "success",
+        }).then(loadPanelStations())
+    } catch (error) {
+        swal("Oh noes!", "The AJAX request failed!", "error")
+        console.log(error)
+    }
 }
 
 async function editStationModal(id) {
@@ -155,7 +151,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://assem-nasser.com/site/station/${id}`)
+    let data = await axios.get(`http://localhost:3000/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -174,7 +170,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://assem-nasser.com/site/delete-station',
+                    url: 'http://localhost:3000/site/delete-station',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

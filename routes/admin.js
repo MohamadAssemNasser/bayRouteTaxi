@@ -20,11 +20,13 @@ let addPanelUserValidation = [
         min: 2,
     }),
     body('phone', 'Invalid phone number')
-    .trim()
+    .blacklist(' ')
     .isLength({
         min: 8,
     })
-    .isNumeric(),
+    .withMessage('Should be at least 8 digits')
+    .isNumeric()
+    .withMessage('Should be numeric only'),
     body('email', 'Invalid email address')
     .trim()
     .isLength({
@@ -54,7 +56,7 @@ let updatePanelUserValidation = [
         min: 2,
     }),
     body('phone', 'Invalid phone number')
-    .trim()
+    .blacklist(' ')
     .isLength({
         min: 8,
     })
@@ -81,7 +83,9 @@ router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
 
 router.get('/trips', auth.proceedIfLoggedIn, controller.getTrips)
 
-router.get('/stations', auth.proceedIfLoggedIn, controller.getStations)
+router.get('/stations', auth.proceedIfLoggedIn, auth.isAdmin, controller.getStations)
+
+router.get('/tripTypes', auth.proceedIfLoggedIn, auth.isAdmin, controller.getTripTypes)
 
 // -------------- POST --------------
 router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
