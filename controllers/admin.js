@@ -7,6 +7,7 @@ const {
 
 const User = require('../models/panel-user')
 const Station = require('../models/station')
+const TripType = require('../models/tripType')
 
 const getDb = require('../util/database').getDb
 
@@ -226,12 +227,42 @@ exports.getAllStations = async (req, res, next) => {
   }
 }
 
+exports.getAllTripTypes = async (req, res, next) => {
+  db = getDb()
+  try {
+    let tripTypes = await TripType.getAll()
+    console.log(tripTypes)
+    res.json(tripTypes)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}
+
 // GET STATION
 exports.getStation = async (req, res, next) => {
   db = getDb()
   try {
     let s = await db.collection('stations').findOne({
       _id: new ObjectId(req.params.stationId)
+    })
+    res.json(s)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
+exports.getTripType = async (req, res, next) => {
+  db = getDb()
+  try {
+    let s = await db.collection('tripTypes').findOne({
+      _id: new ObjectId(req.params.tripTypeId)
     })
     res.json(s)
   } catch (err) {
@@ -329,6 +360,20 @@ exports.deleteStation = async (req, res, next) => {
   }
 }
 
+exports.deleteTripType = async (req, res, next) => {
+  db = getDb()
+  try {
+    let s = await db.collection('tripTypes').deleteOne({
+      _id: new ObjectId(req.body._id)
+    })
+    res.status(200).json(s)
+  } catch (err) {
+    return res.status(500).send({
+      errorMessage: err
+    })
+  }
+}
+
 exports.updatePanelUser = async (req, res, next) => {
   db = getDb()
   const errors = validationResult(req)
@@ -341,8 +386,7 @@ exports.updatePanelUser = async (req, res, next) => {
       })
     }
     let u = await db.collection('panel-users').findOne({
-      $and: [
-        {
+      $and: [{
           email: {
             $eq: req.body.email
           }
@@ -417,8 +461,7 @@ exports.updateStation = async (req, res, next) => {
     }
 
     let s = await db.collection('stations').findOne({
-      $and: [
-        {
+      $and: [{
           name: {
             $eq: req.body.name
           }
@@ -465,6 +508,96 @@ exports.updateStation = async (req, res, next) => {
     return res.status(200).json({
       error: false,
       message: 'Station updated successfully'
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}
+
+exports.updateTripType = async (req, res, next) => {
+  db = getDb()
+  const errors = validationResult(req)
+  try {
+    // * validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+
+    let tripType = new TripType({
+      name: req.body.name,
+      deck: req.body.deck,
+      ticketPrice: req.body.ticketPrice,
+      numberOfSeats: req.body.numberOfSeats
+    })
+
+    let s = await db.collection('tripTypes').findOne({
+      $and: [{
+          name: {
+            $eq: req.body.name
+          }
+        },
+        {
+          deck: {
+            $eq: req.body.deck
+          }
+        },
+        {
+          _id: {
+            $ne: new ObjectId(req.body._id)
+          }
+        }
+      ]
+    })
+    if (s) {
+      return res.json({ // ! status needed --important--
+        error: true,
+        validationErrors: [{
+            param: 'name',
+            msg: 'A Trip Type with the same name and deck already exists'
+          },
+          {
+            param: 'deck',
+            msg: 'A Trip Type with the same name and deck already exists'
+          }
+        ]
+      })
+    }
+
+    try {
+      // Update Station
+      let u = await db.collection('tripTypes').findOneAndUpdate({
+        _id: {
+          $eq: new ObjectId(req.body._id)
+        }
+      }, {
+        $set: {
+          name: tripType.name,
+          deck: tripType.deck,
+          ticketPrice: tripType.ticketPrice,
+          numberOfSeats: tripType.numberOfSeats
+        }
+      })
+      if (u.value === null) {
+        // response
+        return res.json({ // status needed --important--
+          error: false,
+          message: 'Trip Type not found'
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'Trip Type updated successfully'
     })
   } catch (err) {
     console.log(err)
@@ -554,6 +687,71 @@ exports.addStation = async (req, res, next) => {
     return res.status(200).json({
       error: false,
       message: 'Station added successfully'
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}
+
+// POST ADD STATION
+exports.addTripType = async (req, res, next) => {
+  db = getDb()
+  const errors = validationResult(req)
+  try {
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+    let tripType = new TripType({
+      name: req.body.name,
+      deck: req.body.deck,
+      ticketPrice: req.body.ticketPrice,
+      numberOfSeats: req.body.numberOfSeats
+    })
+    // check if email exists
+    let s = await db.collection('tripTypes').findOne({
+      $and: [{
+          name: {
+            $eq: tripType.name
+          }
+        },
+        {
+          deck: {
+            $eq: tripType.deck
+          }
+        }
+      ]
+    })
+    if (s) {
+      return res.json({ // status needed --important--
+        error: true,
+        validationErrors: [{
+          param: 'name',
+          msg: 'A Trip Type with the same name and deck already exists'
+        }]
+      })
+    }
+    try {
+      tripType = await db.collection('tripTypes').insertOne(tripType)
+      tripType = tripType.ops[0]
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json({
+        error: true,
+        errorMessage: err
+      })
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'Trip Type added successfully'
     })
   } catch (err) {
     console.log(err)

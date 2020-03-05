@@ -29,7 +29,6 @@ class Station {
         const db = getDb()
         try {
             let stations = await db.collection('stations').find({})
-            console.log(stations)
             return stations.toArray()
         } catch (err) {
             console.log(err)

@@ -132,6 +132,19 @@ router.get('/site/station/:stationId',
     auth.isAdmin,
     controller.getStation
 )
+
+router.get('/site/all-tripTypes',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.getAllTripTypes
+)
+
+router.get('/site/tripType/:tripTypeId',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.getTripType
+)
+
 // ------- POST -------
 
 router.post('/site/add-panel-user',
@@ -152,6 +165,32 @@ router.post('/site/add-station',
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.addStation
+)
+
+router.post('/site/add-tripType',
+    [
+        body('name')
+        .trim()
+        .isLength({
+            min: 3
+        })
+        .withMessage('Minimum 3 characters'),
+        body('deck')
+        .trim()
+        .custom((value) => (value === 'Upper' || value === 'Lower' || value === 'One level')),
+        body('ticketPrice')
+        .blacklist(' ')
+        .blacklist('LBP')
+        .blacklist(',')
+        .isNumeric()
+        .withMessage('The value is not numeric'),
+        body('numberOfSeats')
+        .isNumeric()
+        .withMessage('The value is not numeric')
+    ],
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.addTripType
 )
 
 
@@ -182,6 +221,31 @@ router.put('/site/update-station',
     auth.isAdmin,
     controller.updateStation
 )
+router.put('/site/update-tripType',
+    [
+        body('name')
+        .trim()
+        .isLength({
+            min: 3
+        })
+        .withMessage('Minimum 3 characters'),
+        body('deck')
+        .trim()
+        .custom((value) => (value === 'Upper' || value === 'Lower' || value === 'One level')),
+        body('ticketPrice')
+        .blacklist(' ')
+        .blacklist('LBP')
+        .blacklist(',')
+        .isNumeric()
+        .withMessage('The value is not numeric'),
+        body('numberOfSeats')
+        .isNumeric()
+        .withMessage('The value is not numeric')
+    ],
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.updateTripType
+)
 
 // ------- DELETE -------
 
@@ -195,6 +259,12 @@ router.delete('/site/delete-station',
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.deleteStation
+)
+
+router.delete('/site/delete-tripType',
+    auth.proceedIfLoggedIn,
+    auth.isAdmin,
+    controller.deleteTripType
 )
 
 router.get('*', (req, res) => res.redirect('/'))

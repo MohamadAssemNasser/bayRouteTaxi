@@ -7,8 +7,7 @@ $(document).ready(function () {
         clearModalValues()
         $('.modal-footer .btn-primary').attr('onClick', 'addTripType()')
         $('.modal-footer .btn-primary').html('Add tripType')
-        $('#hideme').css('display', 'flex')
-        $('.filter-option.pull-left').html('Data Entry')
+        // $('#hideme').css('display', 'flex')
         $('.modal-header .title').html('Add a tripType')
         $('#tripTypeModal').modal('toggle')
     })
@@ -17,6 +16,9 @@ $(document).ready(function () {
 function clearModalValues() {
     clearErrors()
     $('#tripTypeName').val('')
+    $('.filter-option.pull-left').html('')
+    $('#tripTypePrice').val('')
+    $('#tripTypeNumberOfSeats').val('')
 }
 
 function loadPanelTripTypes() {
@@ -38,17 +40,17 @@ function loadPanelTripTypes() {
     $('#tripTypesTable .loader-wrapper').css('display', 'block')
     axios.get('http://localhost:3000/site/all-tripTypes')
         .then((response) => {
-            console.log(response)
             let tripTypes = response.data
+            console.log(tripTypes)
             let tbody = ''
             $.each(tripTypes, (index, tripType) => {
                 tbody += `
                 <tr>
-                    <th scope="row">${index + 1}</th>
-                    <td>${tripType.name}</td>
-                    <td>${tripType.deck}</td>
-                    <td>${tripType.price}</td>
-                    <td>${tripType.numberOfSeats}</td>
+                    <th style="vertical-align: middle; text-align: center;" scope="row">${index + 1}</th>
+                    <td style="vertical-align: middle; text-align: center;">${tripType.name}</td>
+                    <td style="vertical-align: middle; text-align: center;">${tripType.deck}</td>
+                    <td style="vertical-align: middle; text-align: center;">${tripType.ticketPrice}</td>
+                    <td style="vertical-align: middle; text-align: center;">${tripType.numberOfSeats}</td>
                     <td style="padding-top: 0pt;padding-bottom: 0pt; vertical-align: middle; text-align: center;">
                         <button onclick="editTripTypeModal('${tripType._id}')" class="btn btn-sm btn-warning"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> EDIT</button>
                         <button onclick="deleteTripType('${tripType._id}')" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
@@ -63,7 +65,6 @@ function loadPanelTripTypes() {
             // handle error
             console.log(error)
         })
-
 }
 
 function validateTripType() {
@@ -74,20 +75,42 @@ function showErrors(errors) {
     $.each(errors, (i, e) => {
         if (e.param === 'name') {
             $('#tripTypeName').addClass('form-control-danger')
-            $('#tripTypeNameError').html('<p class="text-danger" style="margin-bottom: 0px;">tripType already exist</p>')
+            $('#tripTypeNameError').html(`${e.msg}`)
+            $('#tripTypeNameError').css('display', 'block')
+        } else if (e.param === 'deck') {
+            $('#tripTypeDeck').addClass('form-control-danger')
+            $('#tripTypeDeckError').html(`${e.msg}`)
+            $('#tripTypeDeckError').css('display', 'block')
+        } else if (e.param === 'ticketPrice') {
+            $('#tripTypePrice').addClass('form-control-danger')
+            $('#tripTypePriceError').html(`${e.msg}`)
+            $('#tripTypePriceError').css('display', 'block')
+        } else if (e.param === 'numberOfSeats') {
+            $('#tripTypeNumberOfSeats').addClass('form-control-danger')
+            $('#tripTypeNumberOfSeatsError').html(`${e.msg}`)
+            $('#tripTypeNumberOfSeatsError').css('display', 'block')
         }
     })
 }
 
 function clearErrors() {
     $('#tripTypeName').removeClass('form-control-danger')
-    $('#tripTypeNameError').html('')
+    $('#tripTypeNameError').css('display', 'none')
+    $('#tripTypeDeck').removeClass('form-control-danger')
+    $('#tripTypeDeckError').css('display', 'none')
+    $('#tripTypePrice').removeClass('form-control-danger')
+    $('#tripTypePriceError').css('display', 'none')
+    $('#tripTypeNumberOfSeats').removeClass('form-control-danger')
+    $('#tripTypeNumberOfSeatsError').css('display', 'none')
 }
 
 function addTripType() {
     validateTripType()
-    let name, csrfToken;
+    let name, deck, ticketPrice, numberOfSeats, csrfToken;
     name = $('#tripTypeName').val()
+    deck = $('#tripTypeDeck').val()
+    ticketPrice = $('#tripTypePrice').val()
+    numberOfSeats = $('#tripTypeNumberOfSeats').val()
     csrfToken = $('#csrfToken').val()
     $('#tripTypeModal .loader-wrapper').css('display', 'block')
     clearErrors()
@@ -96,6 +119,9 @@ function addTripType() {
             url: 'http://localhost:3000/site/add-tripType',
             data: {
                 name: name,
+                deck: deck,
+                ticketPrice: ticketPrice,
+                numberOfSeats: numberOfSeats,
                 _csrf: csrfToken
             }
         })
@@ -126,6 +152,9 @@ function updateTripType(id) {
             data: {
                 _id: id,
                 name: $('#tripTypeName').val(),
+                deck: $('#tripTypeDeck').val(),
+                ticketPrice: $('#tripTypePrice').val(),
+                numberOfSeats: $('#tripTypeNumberOfSeats').val(),
                 _csrf: $('#csrfToken').val()
             }
         })
@@ -150,21 +179,25 @@ function updateTripType(id) {
 async function editTripTypeModal(id) {
     $('.modal-footer .btn-primary').html('Save Changes')
     $('.modal-footer .btn-primary').attr('onClick', `updateTripType("${id}")`)
-    $('#hideme').css('display', 'none')
-    $('.modal-header .title').html('Edit tripType')
+    // $('#hideme').css('display', 'none')
+    $('.modal-header .title').html('Edit Trip Type')
     clearModalValues()
     $('#tripTypeModal').modal('toggle')
     $('#tripTypeModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://localhost:3000/site/tripType/${id}`)
-    data = data.data
-    $('#tripTypeName').val(data.name)
+    let trip = await axios.get(`http://localhost:3000/site/tripType/${id}`)
+    trip = trip.data
+    $('#tripTypeName').val(trip.name)
+    $('.filter-option.pull-left').html(trip.deck)
+    $('#tripTypeDeck').val(trip.deck)
+    $('#tripTypePrice').val(trip.ticketPrice)
+    $('#tripTypeNumberOfSeats').val(trip.numberOfSeats)
     $('#tripTypeModal .loader-wrapper').css('display', 'none')
 }
 
 function deleteTripType(_id) {
     swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this tripType!",
+            text: "Once deleted, you will not be able to recover this Trip Type!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -190,7 +223,7 @@ function deleteTripType(_id) {
             let data = response.data
             console.log(data['ok'])
             if (data['ok'] !== 1) {
-                return swal("Oh noes!", "No tripType was found.", "error");
+                return swal("Oh noes!", "No Trip Type was found.", "error");
             }
             swal('tripType deleted Successfully!', {
                 icon: "success",

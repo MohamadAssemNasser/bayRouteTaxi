@@ -9,7 +9,7 @@ class TripType {
         this._id = options._id
         this.name = options.name // Express or Standard
         this.deck = options.deck // lower, upper, deck
-        this.price = options.price
+        this.ticketPrice = options.ticketPrice
         this.numberOfSeats = options.numberOfSeats
     }
 
@@ -19,7 +19,7 @@ class TripType {
         }
         const db = getDb()
         try {
-            let trip = await db.collection('tripType').findOne({
+            let trip = await db.collection('tripTypes').findOne({
                 _id: new ObjectId(options.id)
             })
             return trip
@@ -32,9 +32,9 @@ class TripType {
     static async getAll() {
         const db = getDb()
         try {
-            let trips = await db.collection('tripType').find({})
+            let trips = await db.collection('tripTypes').find({})
             console.log(trips)
-            return trips
+            return trips.toArray()
         } catch (err) {
             console.log(err)
             return false
