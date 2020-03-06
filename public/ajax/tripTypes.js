@@ -106,7 +106,7 @@ function clearErrors() {
 
 function addTripType() {
     validateTripType()
-    let name, deck, ticketPrice, numberOfSeats, csrfToken;
+    let name, deck, ticketPrice, numberOfSeats, csrfToken
     name = $('#tripTypeName').val()
     deck = $('#tripTypeDeck').val()
     ticketPrice = $('#tripTypePrice').val()
@@ -214,18 +214,18 @@ function deleteTripType(_id) {
                     },
                 })
             } else {
-                return false;
+                return false
             }
         })
         .then((response) => {
             if (response === false)
-                return;
+                return
             let data = response.data
             console.log(data['ok'])
             if (data['ok'] !== 1) {
-                return swal("Oh noes!", "No Trip Type was found.", "error");
+                return swal("Oh noes!", "No Trip Type was found.", "error")
             }
-            swal('tripType deleted Successfully!', {
+            swal('Trip Type deleted Successfully!', {
                 icon: "success",
             }).then(loadPanelTripTypes())
         })

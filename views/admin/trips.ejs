@@ -81,24 +81,14 @@
                             <div class="header">
                                 <h2><strong>Add</strong> Trips</h2>
                                 <ul class="header-dropdown">
-                                    <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="javascript:void(0);">Action</a></li>
-                                            <li><a href="javascript:void(0);">Another action</a></li>
-                                            <li><a href="javascript:void(0);">Something else</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="remove">
-                                        <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                                    </li>
                                 </ul>
                             </div>
                             <div class="body">
                                 <p>Week Days</p>
-                                <div class="row clearfix">
+                                <div class="row clearfix ">
                                     <div class="col-12">
                                         <!-- Nav tabs -->
-                                        <ul id="weekDays" class="nav nav-tabs p-0 mb-3">
+                                        <ul id="weekDays" class="nav nav-tabs p-0 mb-3 justify-content-around">
                                             <li class="nav-item"><a style="cursor: pointer;" class="nav-link active"><strong>MONDAY</strong></a></li>
                                             <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>TUESDAY</strong></a></li>
                                             <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>WEDNESDAY</strong></a></li>
@@ -109,28 +99,30 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="row clearfix">
-                                    <div class="col-md-6">
+                                <div class="row clearfix justify-content-around">
+                                    <div class="col-lg-5 col-md-6">
                                         <p>From:</p>
                                         <div class="mb-3">
                                             <select class="form-control show-tick">
-                                                <option>Mustard</option>
-                                                <option>Ketchup</option>
-                                                <option>Relish</option>
+                                                <% stations.forEach( station => { %>
+                                                    <option><%= station.name %></option>
+                                                <% }) %>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-lg-5 col-md-6">
                                         <p>To:</p>
                                         <div class="mb-3">
                                             <select class="form-control show-tick">
-                                                <option>Mustard</option>
-                                                <option>Ketchup</option>
-                                                <option>Relish</option>
+                                                <% stations.forEach( station => { %>
+                                                    <option><%= station.name %></option>
+                                                <% }) %>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+                                <div class="row clearfix justify-content-around">
+                                    <div class="col-lg-5 col-md-6">
                                         <label>Departure Time</label>
                                         <div class="input-group masked-input mb-3">
                                             <div class="input-group-prepend">
@@ -139,7 +131,7 @@
                                             <input type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-lg-5 col-md-6">
                                         <label>Arrival time</label>
                                         <div class="input-group masked-input mb-3">
                                             <div class="input-group-prepend">
@@ -148,25 +140,26 @@
                                             <input type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+                                <div class="row clearfix justify-content-around">
+                                    <div class="col-lg-5 col-md-6">
                                         <p>Type:</p>
                                         <div class="mb-3">
                                             <select class="form-control show-tick">
-                                                <option>Mustard</option>
-                                                <option>Ketchup</option>
-                                                <option>Relish</option>
+                                                <% tripTypes.forEach( tripType => { %>
+                                                    <option><%= tripType %></option>
+                                                <% }) %>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <p>Level:</p>
-                                        <div class="mb-3">
-                                            <select class="form-control show-tick">
-                                                <option>Mustard</option>
-                                                <option>Ketchup</option>
-                                                <option>Relish</option>
-                                            </select>
-                                        </div>
+                                    <div class="col-lg-5 col-md-6"></div>
+                                </div>
+                                <div class="row clearfix justify-content-around">
+                                    <div class="col-lg-5 col-md-6"></div>
+                                    <div class="col-lg-5 col-md-6">
+                                        <button id="addTripType" class="btn btn-primary btn-lg float-right" style="font-size: 1rem;">
+                                            <i style="color: white; font-size: 1.3rem;" class="zmdi zmdi-hc-fw"></i> ADD
+                                        </button>
                                     </div>
                                 </div>
                             </div>

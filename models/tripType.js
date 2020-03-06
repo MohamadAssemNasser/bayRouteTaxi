@@ -41,6 +41,17 @@ class TripType {
         }
     }
 
+    static async getAllUnique() {
+        const db = getDb()
+        try {
+            let trips = await db.collection('tripTypes').distinct('name')
+            return trips
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    }
+
 }
 
 module.exports = TripType

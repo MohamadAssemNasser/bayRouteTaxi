@@ -132,13 +132,27 @@ exports.getDashboard = async (req, res, next) => {
 
 // GET TRIPS
 exports.getTrips = async (req, res, next) => {
+  db = getDb()
+  let stations, tripTypes
+  try {
+    stations = await Station.getAll()
+    tripTypes = await TripType.getAllUnique()
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
   return res.render('admin/trips', {
     pageTitle: 'BayRoute Taxi :: Trips',
     path: '/trips',
     user: {
       firstName: req.user.firstName,
       role: req.user.role,
-    }
+    },
+    stations: stations,
+    tripTypes: tripTypes
   })
 }
 
@@ -715,26 +729,24 @@ exports.addTripType = async (req, res, next) => {
       ticketPrice: req.body.ticketPrice,
       numberOfSeats: req.body.numberOfSeats
     })
-    // check if email exists
-    let s = await db.collection('tripTypes').findOne({
-      $and: [{
-          name: {
-            $eq: tripType.name
-          }
-        },
-        {
-          deck: {
-            $eq: tripType.deck
-          }
-        }
-      ]
+    // check if name exists
+    let t = await TripType.getAll(), errorMessage = ''
+    t.forEach(type => {
+      if(type.name === tripType.name){
+        if(type.deck === tripType.deck)
+          return errorMessage = 'A Trip Type with the same name and deck already exists'
+        if((tripType.deck === 'Upper' || tripType.deck === 'Lower') && type.deck === 'One level')
+          return errorMessage = 'A "One level" trip type already exists having this name'
+        if(tripType.deck === 'One level' && (type.deck === 'Upper' || type.deck === 'Lower'))
+          return errorMessage = 'An "Upper" or a "Lower" trip type already exists having this name'
+      }
     })
-    if (s) {
+    if (errorMessage.length > 1) {
       return res.json({ // status needed --important--
         error: true,
         validationErrors: [{
           param: 'name',
-          msg: 'A Trip Type with the same name and deck already exists'
+          msg: errorMessage
         }]
       })
     }
