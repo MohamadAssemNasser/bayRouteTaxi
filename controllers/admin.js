@@ -773,3 +773,85 @@ exports.addTripType = async (req, res, next) => {
     })
   }
 }
+
+exports.addTrip = async (req, res, next) => {
+  db = getDb()
+  const errors = validationResult(req)
+  try {
+    // validate req data
+    if (!errors.isEmpty()) {
+      return res.json({
+        error: true,
+        validationErrors: errors.array()
+      })
+    }
+    let trip = new Trip({
+      days: req.body.days,
+      from: req.body.from,
+      to: req.body.to,
+      departureTime: req.body.departureTime,
+      arrivalTime: req.body.arrivalTime,
+      typeId: req.body.typeId
+    })
+    // check if trip exists
+    let t = db.collection('trips').findOne({
+      $and: [
+        {
+          from: {
+            $eq: trip.from
+          }
+        },
+        {
+          to: {
+            $eq: trip.to
+          }
+        },
+        {
+          departureTime: {
+            $eq: trip.departureTime
+          }
+        },
+        {
+          arrivalTime: {
+            $eq: trip.arrivalTime
+          }
+        }
+      ]
+    })
+
+    if(t){
+
+    }
+    
+    if (errorMessage.length > 1) {
+      return res.json({ // status needed --important--
+        error: true,
+        validationErrors: [{
+          param: 'name',
+          msg: errorMessage
+        }]
+      })
+    }
+    try {
+      tripType = await db.collection('tripTypes').insertOne(tripType)
+      tripType = tripType.ops[0]
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json({
+        error: true,
+        errorMessage: err
+      })
+    }
+    // response
+    return res.status(200).json({
+      error: false,
+      message: 'Trip added successfully'
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      error: true,
+      errorMessage: err
+    })
+  }
+}

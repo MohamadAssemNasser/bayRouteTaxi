@@ -51,7 +51,6 @@ class TripType {
             return false
         }
     }
-
 }
 
 module.exports = TripType

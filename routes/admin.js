@@ -193,6 +193,12 @@ router.post('/site/add-tripType',
     controller.addTripType
 )
 
+router.post('/site/add-trip', 
+    [],
+    auth.proceedIfLoggedIn,
+    controller.addTrip
+)
+
 
 // ------- PUT -------
 
