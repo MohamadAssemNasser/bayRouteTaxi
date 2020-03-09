@@ -20,9 +20,25 @@ class TripType {
         const db = getDb()
         try {
             let trip = await db.collection('tripTypes').findOne({
-                _id: new ObjectId(options.id)
+                _id: new ObjectId(id)
             })
             return trip
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    }
+
+    static async findByName(name) {
+        if (name === undefined) {
+            throw 'Invalid name for a trip type'
+        }
+        const db = getDb()
+        try {
+            let trip = await db.collection('tripTypes').findOne({
+                name: name
+            })
+            return trip.toArray()
         } catch (err) {
             console.log(err)
             return false
