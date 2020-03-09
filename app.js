@@ -98,7 +98,6 @@ app.use((error, req, res, next) => {
     })
 })
 
-console.log(Trip.regularTimeToMilitaryTime('12:45 am'))
 
 mongoConnect(() => app.listen(3000))
 // mongoConnect(() => app.listen(3000, '172.31.0.89'))

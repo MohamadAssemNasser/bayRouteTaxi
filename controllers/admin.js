@@ -819,8 +819,9 @@ try {
     ]
   })
 
+  // ? merging 2 days arrays despite equality
   if(t){
-
+    t.days = mergeDates([t.days, req.body.days])
   }
   
   if (errorMessage.length > 1) {
@@ -854,4 +855,13 @@ try {
     errorMessage: err
   })
 }
+}
+
+function mergeDates(...arrays) {
+  let jointArray = []
+  arrays.forEach(array => {
+      jointArray = [...jointArray, ...array]
+  })
+  const uniqueArray = jointArray.filter((item,index) => jointArray.indexOf(item) === index)
+  return uniqueArray
 }
