@@ -10,6 +10,7 @@ const flash = require('connect-flash')
 const mongoConnect = require('./util/database').mongoConnect
 
 const User = require('./models/panel-user')
+const Trip = require('./models/trip')
 
 const app = express()
 
@@ -97,5 +98,7 @@ app.use((error, req, res, next) => {
     })
 })
 
-// mongoConnect(() => app.listen(3000))
-mongoConnect(() => app.listen(3000, '172.31.0.89'))
+console.log(Trip.regularTimeToMilitaryTime('12:45 am'))
+
+mongoConnect(() => app.listen(3000))
+// mongoConnect(() => app.listen(3000, '172.31.0.89'))

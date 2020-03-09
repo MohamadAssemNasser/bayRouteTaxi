@@ -13,3 +13,7 @@ $(document).ready(function () {
         })
     })
 })
+
+$('#addTrip').click(() => {
+    console.log($('#departureTime').val())
+})

@@ -734,37 +734,25 @@ exports.addTripType = async (req, res, next) => {
     t.forEach(type => {
       if(type.name === tripType.name){
         if(type.deck === tripType.deck)
-          return errorMessage = 'A Trip Type with the same name and deck already exists'
-        if((tripType.deck === 'Upper' || tripType.deck === 'Lower') && type.deck === 'One level')
-          return errorMessage = 'A "One level" trip type already exists having this name'
-        if(tripType.deck === 'One level' && (type.deck === 'Upper' || type.deck === 'Lower'))
-          return errorMessage = 'An "Upper" or a "Lower" trip type already exists having this name'
-      }
-    })
-    if (errorMessage.length > 1) {
-      return res.json({ // status needed --important--
-        error: true,
-        validationErrors: [{
-          param: 'name',
-          msg: errorMessage
-        }]
-      })
+        return errorMessage = 'A Trip Type with the same name and deck already exists'
+      if((tripType.deck === 'Upper' || tripType.deck === 'Lower') && type.deck === 'One level')
+        return errorMessage = 'A "One level" trip type already exists having this name'
+      if(tripType.deck === 'One level' && (type.deck === 'Upper' || type.deck === 'Lower'))
+        return errorMessage = 'An "Upper" or a "Lower" trip type already exists having this name'
     }
-    try {
-      tripType = await db.collection('tripTypes').insertOne(tripType)
-      tripType = tripType.ops[0]
-    } catch (err) {
-      console.log(err)
-      return res.status(500).json({
-        error: true,
-        errorMessage: err
-      })
-    }
-    // response
-    return res.status(200).json({
-      error: false,
-      message: 'Trip Type added successfully'
+  })
+  if (errorMessage.length > 1) {
+    return res.json({ // status needed --important--
+      error: true,
+      validationErrors: [{
+        param: 'name',
+        msg: errorMessage
+      }]
     })
+  }
+  try {
+    tripType = await db.collection('tripTypes').insertOne(tripType)
+    tripType = tripType.ops[0]
   } catch (err) {
     console.log(err)
     return res.status(500).json({
@@ -772,81 +760,81 @@ exports.addTripType = async (req, res, next) => {
       errorMessage: err
     })
   }
+  // response
+  return res.status(200).json({
+    error: false,
+    message: 'Trip Type added successfully'
+  })
+} catch (err) {
+  console.log(err)
+  return res.status(500).json({
+    error: true,
+    errorMessage: err
+  })
+}
 }
 
 exports.addTrip = async (req, res, next) => {
-  db = getDb()
-  const errors = validationResult(req)
-  try {
-    // validate req data
-    if (!errors.isEmpty()) {
-      return res.json({
-        error: true,
-        validationErrors: errors.array()
-      })
-    }
-    let trip = new Trip({
-      days: req.body.days,
-      from: req.body.from,
-      to: req.body.to,
-      departureTime: req.body.departureTime,
-      arrivalTime: req.body.arrivalTime,
-      typeId: req.body.typeId
+db = getDb()
+const errors = validationResult(req)
+try {
+  // validate req data
+  if (!errors.isEmpty()) {
+    return res.json({
+      error: true,
+      validationErrors: errors.array()
     })
-    // check if trip exists
-    let t = db.collection('trips').findOne({
-      $and: [
-        {
-          from: {
-            $eq: trip.from
-          }
-        },
-        {
-          to: {
-            $eq: trip.to
-          }
-        },
-        {
-          departureTime: {
-            $eq: trip.departureTime
-          }
-        },
-        {
-          arrivalTime: {
-            $eq: trip.arrivalTime
-          }
+  }
+  let trip = new Trip({
+    days: req.body.days,
+    from: req.body.from,
+    to: req.body.to,
+    departureTime: req.body.departureTime,
+    arrivalTime: req.body.arrivalTime,
+    typeId: req.body.typeId
+  })
+  // check if trip exists
+  let t = db.collection('trips').findOne({
+    $and: [
+      {
+        from: {
+          $eq: trip.from
         }
-      ]
-    })
+      },
+      {
+        to: {
+          $eq: trip.to
+        }
+      },
+      {
+        departureTime: {
+          $eq: trip.departureTime
+        }
+      },
+      {
+        arrivalTime: {
+          $eq: trip.arrivalTime
+        }
+      }
+    ]
+  })
 
-    if(t){
+  if(t){
 
-    }
-    
-    if (errorMessage.length > 1) {
-      return res.json({ // status needed --important--
-        error: true,
-        validationErrors: [{
-          param: 'name',
-          msg: errorMessage
-        }]
-      })
-    }
-    try {
-      tripType = await db.collection('tripTypes').insertOne(tripType)
-      tripType = tripType.ops[0]
-    } catch (err) {
-      console.log(err)
-      return res.status(500).json({
-        error: true,
-        errorMessage: err
-      })
-    }
-    // response
-    return res.status(200).json({
-      error: false,
-      message: 'Trip added successfully'
+  }
+  
+  if (errorMessage.length > 1) {
+    return res.json({ // status needed --important--
+      error: true,
+      validationErrors: [{
+        param: 'name',
+        msg: errorMessage
+      }]
     })
+  }
+  try {
+    tripType = await db.collection('tripTypes').insertOne(tripType)
+    tripType = tripType.ops[0]
   } catch (err) {
     console.log(err)
     return res.status(500).json({
@@ -854,4 +842,16 @@ exports.addTrip = async (req, res, next) => {
       errorMessage: err
     })
   }
+  // response
+  return res.status(200).json({
+    error: false,
+    message: 'Trip added successfully'
+  })
+} catch (err) {
+  console.log(err)
+  return res.status(500).json({
+    error: true,
+    errorMessage: err
+  })
+}
 }

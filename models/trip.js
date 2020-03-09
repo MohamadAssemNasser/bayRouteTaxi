@@ -39,6 +39,59 @@ class Trip {
             return false
         }
     }
+
+    static timeToNumber(time) {
+        return time.replace(':', '')
+    }
+
+    static numberToTime(number) {
+        return [number.slice(0, 2), ':', number.slice(2)].join('')
+    }
+
+    static timeIsValid(from, to){
+        if(from.length > 4 || to.length > 4){
+            from = this.timeToNumber(from)
+            to = this.timeToNumber(to)
+            console.log(from, to)
+        }
+        if((from <= 1800 && (from - to < 1800)) || (from - to) > 600)
+            return false
+        return true
+    }
+
+    static militaryTimeToRegularTime(time) {
+        time = this.timeToNumber(time)
+        if(Math.floor(time/100) == 24 || Math.floor(time/100) == 0){
+            return `12:${time%10}${Math.floor((time%100)/10)} am`
+        }
+        if(Math.floor(time/100) > 11){
+            time -= 1200
+            if(time < 999)
+                time = `0${time}`
+            time = this.numberToTime(`${time}`)
+            time += ' pm'
+            return time
+        }
+        return `${this.numberToTime(time)} am`
+    }
+
+    static regularTimeToMilitaryTime(time) {
+        let m = time.slice(6,8)
+        time = time.slice(0,5)
+        console.log(time)
+        if(m == 'pm'){
+            if(time.slice(0,2) == 12){
+                return time
+            }
+            time = parseInt(this.timeToNumber(time))
+            return this.numberToTime(`${time+=1200}`)
+        }
+        time = this.timeToNumber(time)
+        if(m == 'am' && time >= 1200){
+            return `00:${time%10}${Math.floor((time%100)/10)}`
+        }
+        return this.numberToTime(time)
+    }
 }
 
 module.exports = Trip

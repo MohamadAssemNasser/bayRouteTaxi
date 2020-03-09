@@ -79,13 +79,13 @@ router.get('/', auth.proceedIfLoggedIn, controller.getDashboard)
 
 router.get('/login', auth.preventIfLoggedIn, controller.getLogin)
 
-router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
-
 router.get('/trips', auth.proceedIfLoggedIn, controller.getTrips)
 
 router.get('/stations', auth.proceedIfLoggedIn, auth.isAdmin, controller.getStations)
 
 router.get('/tripTypes', auth.proceedIfLoggedIn, auth.isAdmin, controller.getTripTypes)
+
+router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
 
 // -------------- POST --------------
 router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
@@ -194,7 +194,12 @@ router.post('/site/add-tripType',
 )
 
 router.post('/site/add-trip', 
-    [],
+    [
+        body('departureTime')
+        .trim(),
+        body('arrivalTime')
+        .trim(),
+    ],
     auth.proceedIfLoggedIn,
     controller.addTrip
 )
