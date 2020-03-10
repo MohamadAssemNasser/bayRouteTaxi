@@ -4,6 +4,8 @@ const controller = require('../controllers/api');
 
 const router = express.Router();
 
+router.get('/', (req, res) => res.send('<h1>APII</h1>'))
+
 router.post('/login', controller.login)
 
 router.post('/signup', controller.signup)

@@ -47,8 +47,8 @@ app.use(
 )
 
 // api router
-//app.use(subdomain('api', apiRoutes))
-app.use('/api', apiRoutes)
+app.use(subdomain('api', apiRoutes))
+// app.use('/api', apiRoutes)
 
 app.use(csrf())
 app.use(flash())
@@ -78,18 +78,19 @@ app.use((req, res, next) => {
 })
 
 // admin router
-//app.use(subdomain('admin', adminRoutes))
-app.use(adminRoutes)
+app.use(subdomain('admin', adminRoutes))
+// app.use(adminRoutes)
 
 // standard router
-//app.use(websiteRoutes)
+app.use(subdomain('*', (req, res, next) => res.send('anyyayy')))
 
 
 // Error router
 app.use((error, req, res, next) => {
     // res.status(error.httpStatusCode).render(...)
     // res.redirect('/500')
-    console.log(error)
+    console.log(error
+        )
     res.status(500).render('500', {
         pageTitle: 'Error!',
         path: '/500',
