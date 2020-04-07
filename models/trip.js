@@ -9,7 +9,7 @@ class Trip {
         this.to = options.to
         this.departureTime = options.departureTime
         this.arrivalTime = options.arrivalTime
-        this.typeId = options.typeId
+        this.type = options.type
     }
 
     static async findById(id) {
@@ -54,7 +54,7 @@ class Trip {
             to = this.timeToNumber(to)
             console.log(from, to)
         }
-        if((from <= 1800 && (from - to < 1800)) || (from - to) > 600)
+        if((from <= 1800 && to <= 600 && (from - to < 1800)) || (to - from) > 600)
             return false
         return true
     }

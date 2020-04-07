@@ -14,9 +14,6 @@ class TripType {
     }
 
     static async findById(id) {
-        if (id === undefined) {
-            throw 'Invalid ID for a trip type'
-        }
         const db = getDb()
         try {
             let trip = await db.collection('tripTypes').findOne({
@@ -30,15 +27,17 @@ class TripType {
     }
 
     static async findByName(name) {
-        if (name === undefined) {
-            throw 'Invalid name for a trip type'
-        }
         const db = getDb()
+        if(name === undefined)
+            return false
         try {
             let trip = await db.collection('tripTypes').findOne({
                 name: name
             })
-            return trip.toArray()
+            if(!trip){
+                return false
+            }
+            return trip
         } catch (err) {
             console.log(err)
             return false

@@ -6,22 +6,24 @@ const router = express.Router();
 
 router.get('/', (req, res) => res.send('<h1>APII</h1>'))
 
-router.post('/login', controller.login)
+// router.post('/login', controller.login)
 
-router.post('/signup', controller.signup)
+// router.post('/signup', controller.signup)
 
-router.post('/forgotPassword', controller.forgotPassword)
+// router.post('/forgotPassword', controller.forgotPassword)
 
-router.post('/tickets/create', controller.postTickets)
+// router.post('/tickets/create', controller.postTickets)
 
-router.post('/schedule', )
+// router.post('/schedule', )
 
-router.post('/tradePoints', )
+// router.post('/tradePoints', )
 
-router.post('/contactUs', )
+// router.post('/contactUs', )
 
-router.post('/contactUs/feedback', )
+// router.post('/contactUs/feedback', )
 
-router.post('/tickets', )
+// router.post('/tickets', )
+
+router.get('*', (req, res, next) => next())
 
 module.exports = router

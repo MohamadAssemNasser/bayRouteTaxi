@@ -1,5 +1,5 @@
 // http://3.20.90.158 for production
-// http://localhost:3000 for development
+// http://admin.bayroute.taxi:3000 for development
 
 $(document).ready(function () {
     loadPanelTripTypes()
@@ -38,7 +38,7 @@ function loadPanelTripTypes() {
     </tr>
     `)
     $('#tripTypesTable .loader-wrapper').css('display', 'block')
-    axios.get('http://localhost:3000/site/all-tripTypes')
+    axios.get('http://admin.bayroute.taxi:3000/site/all-tripTypes')
         .then((response) => {
             let tripTypes = response.data
             console.log(tripTypes)
@@ -116,7 +116,7 @@ function addTripType() {
     clearErrors()
     axios({
             method: 'post',
-            url: 'http://localhost:3000/site/add-tripType',
+            url: 'http://admin.bayroute.taxi:3000/site/add-tripType',
             data: {
                 name: name,
                 deck: deck,
@@ -148,7 +148,7 @@ function updateTripType(id) {
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://localhost:3000/site/update-tripType',
+            url: 'http://admin.bayroute.taxi:3000/site/update-tripType',
             data: {
                 _id: id,
                 name: $('#tripTypeName').val(),
@@ -184,7 +184,7 @@ async function editTripTypeModal(id) {
     clearModalValues()
     $('#tripTypeModal').modal('toggle')
     $('#tripTypeModal .loader-wrapper').css('display', 'block')
-    let trip = await axios.get(`http://localhost:3000/site/tripType/${id}`)
+    let trip = await axios.get(`http://admin.bayroute.taxi:3000/site/tripType/${id}`)
     trip = trip.data
     $('#tripTypeName').val(trip.name)
     $('.filter-option.pull-left').html(trip.deck)
@@ -207,7 +207,7 @@ function deleteTripType(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://localhost:3000/site/delete-tripType',
+                    url: 'http://admin.bayroute.taxi:3000/site/delete-tripType',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

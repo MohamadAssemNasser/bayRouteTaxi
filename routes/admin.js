@@ -196,8 +196,8 @@ router.post('/site/add-tripType',
 router.post('/site/add-trip', 
     [
         body('from')
-        .custom((value) => {
-            return (value === req.body.to)
+        .custom((value, {req}) => {
+            return (value !== req.body.to)
         })
         .withMessage("Can't have the same station as a departure and arrival station"),
         body('departureTime')

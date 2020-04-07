@@ -34,7 +34,6 @@ class Station {
             console.log(err)
         }
     }
-
 }
 
 module.exports = Station

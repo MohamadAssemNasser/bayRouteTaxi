@@ -137,6 +137,7 @@ exports.getTrips = async (req, res, next) => {
   let stations, tripTypes
   try {
     stations = await Station.getAll()
+    console.log(stations)
     tripTypes = await TripType.getAllUnique()
   } catch (err) {
     console.log(err)
@@ -790,20 +791,27 @@ exports.addTrip = async (req, res, next) => {
     let trip = new Trip({
       days: req.body.days,
       from: req.body.from,
-      to: Trip.regularTimeToMilitaryTime(req.body.to),
+      to: req.body.to,
       departureTime: Trip.regularTimeToMilitaryTime(req.body.departureTime),
-      arrivalTime: req.body.arrivalTime,
-      typeName: req.body.typeId
+      arrivalTime: Trip.regularTimeToMilitaryTime(req.body.arrivalTime),
+      type: req.body.type
     })
 
-    if (Trip.timeIsValid(trip.departureTime, trip.arrivalTime)) {
-      return res.json({ 
+    if (!Trip.timeIsValid(trip.departureTime, trip.arrivalTime)) {
+      return res.json({
+        error: true,
+        validationErrors: [{
+          param: 'departureTime',
+          msg: 'Can\'t have more than 6 hours difference'
+        },
+        {
+          param: 'arrivalTime',
+          msg: 'Can\'t have more than 6 hours difference'
+        }
+      ]
       })
     }
-
-    let type = await TripType.findByName(trip.typeName)
-
-    console.log(type)
+    let type = await TripType.findByName(trip.type)
 
     if (!type) {
       return res.json({// ! status needed --important--
@@ -815,7 +823,6 @@ exports.addTrip = async (req, res, next) => {
         ]
       })
     }
-
     // check if trip exists
     let t = await db.collection('trips').findOne({
       $and: [{
@@ -840,21 +847,33 @@ exports.addTrip = async (req, res, next) => {
         }
       ]
     })
+    console.log('t: ', t)
 
     // ? merging 2 days arrays despite equality
     if (t) {
-      t.days = mergeDates([t.days, req.body.days])
-    }
-
-    try {
-      trip = await db.collection('trips').insertOne(trip)
-      trip = trip.ops[0]
-    } catch (err) {
-      console.log(err)
-      return res.status(500).json({
-        error: true,
-        errorMessage: err
+      t.days = mergeDates([t.days, trip.days])
+      console.log(t.days)
+      let u = await db.collection('trips').findOneAndUpdate({
+        _id: {
+          $eq: new ObjectId(t._id)
+        }
+      }, {
+        $set: {
+          days: t.days
+        }
       })
+
+    } else{
+      try {
+        trip = await db.collection('trips').insertOne(trip)
+        trip = trip.ops[0]
+      } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+          error: true,
+          errorMessage: err
+        })
+      }
     }
     // response
     return res.status(200).json({
@@ -876,5 +895,5 @@ function mergeDates(...arrays) {
     jointArray = [...jointArray, ...array]
   })
   const uniqueArray = jointArray.filter((item, index) => jointArray.indexOf(item) === index)
-  return uniqueArray
+  return uniqueArray[1]
 }
