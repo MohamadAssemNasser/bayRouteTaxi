@@ -48,7 +48,7 @@ app.use(
 
 // api router
 app.use(subdomain('api', apiRoutes))
-// app.use('/api', apiRoutes)
+    // app.use('/api', apiRoutes)
 
 app.use(csrf())
 app.use(flash())
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
     if (!req.session.user) {
         return next()
     }
-    User.findBy({ id : req.session.user._id})
+    User.findBy({ id: req.session.user._id })
         .then(user => {
             if (!user) {
                 return next()
@@ -79,18 +79,17 @@ app.use((req, res, next) => {
 
 // admin router
 app.use(subdomain('admin', adminRoutes))
-// app.use(adminRoutes)
+    // app.use(adminRoutes)
 
 // standard router
-app.use(subdomain('*', (req, res, next) => res.send('anyyayy')))
+app.use(subdomain('*', websiteRoutes))
 
 
 // Error router
 app.use((error, req, res, next) => {
     // res.status(error.httpStatusCode).render(...)
     // res.redirect('/500')
-    console.log(error
-        )
+    console.log(error)
     res.status(500).render('500', {
         pageTitle: 'Error!',
         path: '/500',
@@ -99,5 +98,5 @@ app.use((error, req, res, next) => {
     })
 })
 
-mongoConnect(() => app.listen(3000))
-// mongoConnect(() => app.listen(3000, '172.31.0.89'))
+mongoConnect(() => app.listen(80))
+    // mongoConnect(() => app.listen(3000, '172.31.0.89'))

@@ -1,0 +1,232 @@
+body {
+    font-family: supra genius curves brk;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    /*background-color: rgb(13, 66, 143); */
+    background-image: url("icons/blue bg.jpg");
+    background-size: 15%;
+}
+
+@font-face {
+    font-family: "supra genius curves brk";
+    src: url("supragc.ttf");
+}
+
+.uk-h1,
+h1 {
+    font-family: supra genius curves brk;
+}
+
+.uk-h3,
+h3 {
+    font-family: supra genius curves brk;
+}
+
+.uk-h4,
+h4 {
+    font-family: supra genius curves brk;
+}
+
+.container {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 3%;
+    padding-bottom: 2%;
+    font-family: "supra genius curves brk";
+    border: 1px dotted rgb(13, 66, 143);
+    border-radius: 25px;
+    background-color: white;
+}
+
+
+/*  Logo CSS*/
+
+#logo {
+    width: 30%;
+    height: 30%;
+}
+
+
+/* Trying with navbar css*/
+
+a {
+    color: rgb(13, 66, 143) !important;
+}
+
+
+/*  Done trying*/
+
+
+/* Points CSS*/
+
+#points {
+    font-size: 1.5em;
+    color: rgb(255, 209, 0);
+    border-width: 2px;
+    border-style: dashed;
+    border-color: rgb(13, 66, 143);
+    background-color: rgb(13, 66, 143);
+    border-radius: 5px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    animation: blinker 4s alternate infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+
+/*Footer CSS*/
+
+#footer {
+    background-color: rgb(13, 66, 143);
+    border-radius: 25px;
+}
+
+#footer>div {
+    text-align: center;
+}
+
+.center-text {
+    text-align: center;
+}
+
+#footer-contact {
+    text-align: justify;
+    color: rgb(255, 209, 0);
+}
+
+#social-btns {
+    text-align: right;
+    max-width: 100%;
+}
+
+#copyright {
+    margin-top: 50%;
+    color: rgb(255, 209, 0)
+}
+
+
+/*Media Query For Devices With Width> 576*/
+
+@media (min-width: 576px) {
+    html {
+        font-size: 1.2rem;
+    }
+    #points {
+        max-width: 40%;
+    }
+    .bg-light {
+        background-color: white !important;
+        border-width: 1px;
+        border-color: rgb(13, 66, 143);
+    }
+    a {
+        font-size: 1.05rem;
+    }
+}
+
+
+/*Media Query For Devices With Width> 768*/
+
+@media (min-width: 768px) {
+    html {
+        font-size: 1.4rem;
+    }
+    #points {
+        max-width: 40%;
+    }
+    .bg-light {
+        background-color: white !important;
+        border-width: 1px;
+        border-color: rgb(13, 66, 143);
+    }
+    a {
+        font-size: 1.05rem;
+    }
+    .nav-link {
+        padding: 0.2rem !important;
+    }
+}
+
+
+/*Media Query For Devices With Width> 992*/
+
+@media (min-width: 992px) {
+    html {
+        font-size: 1.6rem;
+    }
+    .nav-link {
+        padding: 0;
+    }
+    #points {
+        max-width: 40%;
+    }
+    .bg-light {
+        border-width: 1px;
+        border-color: rgb(13, 66, 143);
+    }
+    a {
+        font-size: 1.05rem;
+    }
+    /*FAQ CSS*/
+    .accordion .card {
+        background: none;
+        border: none;
+    }
+    .accordion .card .card-header {
+        background: none;
+        border: none;
+        padding: .4rem 1rem;
+    }
+    .accordion .card-header h2 span {
+        float: left;
+        margin-top: 10px;
+    }
+    .accordion .card-header .btn {
+        color: #2f2f31;
+        font-size: 1.04rem;
+        text-align: left;
+        position: relative;
+        font-weight: 500;
+        padding-left: 2rem;
+    }
+    .accordion .card-header i {
+        font-size: 1.2rem;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        top: 9px;
+    }
+    .accordion .card-header .btn:hover {
+        color: #ff8300;
+    }
+    .accordion .card-body {
+        color: #324353;
+        padding: 0.5rem 3rem;
+    }
+    .page-title {
+        margin: 3rem 0 3rem 1rem;
+        position: relative;
+    }
+    .page-title::after {
+        content: "";
+        width: 80px;
+        position: absolute;
+        height: 3px;
+        border-radius: 1px;
+        background: #73bb2b;
+        left: 0;
+        bottom: -15px;
+    }
+    .accordion .highlight .btn {
+        color: #74bd30;
+    }
+    .accordion .highlight i {
+        transform: rotate(180deg);
+    }
+}

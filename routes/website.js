@@ -1,31 +1,17 @@
 const express = require('express');
-
 const controller = require('../controllers/website');
-
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    res.send('<h1>HELLOOOOOOO</h1>')
-})
+router.get('/', controller.getHome)
 
-// router.get('/login', )
+router.get('/about-us', controller.getAboutUs)
 
-// router.get('/signup', )
+router.get('/tickets-and-offers', controller.getTicketsAndOffers)
 
-// router.get('/forgotUsername', )
+router.get('/destinations', controller.getDestinations)
 
-// router.get('/forgotPassword', )
+router.get('/schedule', controller.getSchedule)
 
-// router.get('/aboutUs', )
-
-// router.get('/tickets&offers', )
-
-// router.get('/schedule', )
-
-// router.get('/tradePoints', )
-
-// router.get('/contactUs', )
-
-// router.post('/contactUs/feedback', )
+router.get('/contact-us', controller.getContactUs)
 
 module.exports = router

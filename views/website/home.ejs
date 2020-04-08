@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>BayRoute Water Taxi</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="/website/home/home-stylesheet.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <!-- TICKETS POPUP MODEL
+    <div id="tickets-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="text-align: center;">Members Area Only</h2>
+            <br>
+            <h2 style="text-align: center;">
+                <a href="login.html">
+                    <h2>Login/ Sign Up</h2>
+                </a>
+            </h2>
+        </div>
+    </div> -->
+    <!--Destination Popup Modal-->
+    <div id="destination-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="destination-content">
+                <img src="/website/home/icons/map.png" style="width:70%; margin-left: 10%;">
+            </div>
+        </div>
+    </div>
+
+    <!---->
+    <div class="container">
+        <div style="text-align: center;">
+            <img id="logo" src="/website/home/icons/logo.png" alt="logo">
+        </div>
+        <br>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse nav-fill" id="collapsibleNavbar">
+                <a class="nav-link nav-item" href="/">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link nav-item" href="/about-us">About Us</a>
+                <a class="nav-link nav-item" href="/tickets-and-offers">Tickets & Offers</a>
+                <a class="nav-link nav-item" href="/destinations">Destinations</a>
+                <a class="nav-link nav-item" href="/schedule">Schedule</a>
+                <a class="nav-link nav-item" href="/contact-us">Contact Us</a>
+            </div>
+        </nav>
+        <br>
+        <!-- <div id="row justify-content-center ">
+            <div class="col-auto center-text ">
+                <p id="points"> You Have 2000 Points. Click Here To Redeem! </p>
+            </div>
+        </div> -->
+        <!-- Image Rawshe -->
+        <div>
+            <img id="rawshe-img" src="/website/home/icons/rawshe.png" alt="Rawshe">
+            <p id="rawshe-txt">It is the ultimate destination water taxi service, where one ticket is all you need to see the beautiful landscapes along the Lebanese coast stretching between Tyre & Tripoli!</p>
+        </div>
+        <br>
+        <!-- The 3 Cards -->
+        <div class="row">
+            <div class="col-md-4 col-12">
+                <a href="/tickets-and-offers">
+                    <div class="card hoverable" style="width: 18rem;">
+                        <img id="tickets-card" class="card-img-top" src="/website/home/icons/tickets2.png" alt="Tickets & Offers">
+                        <div class="card-body">
+                            <h5 class="card-title">Tickets & Offers</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 col-12">
+                <div id="destination-modal-trigger" class="card hoverable" style="width: 18rem;">
+                    <img id="destination-card" class="card-img-top" src="/website/home/icons/destiation2.png" alt="Destinations">
+                    <div class="card-body">
+                        <h5 class="card-title">Destinations</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <a href="/schedule">
+                    <div class="card hoverable" style="width: 18rem;">
+                        <img id="schedule-card" class="card-img-top" src="/website/home/icons/schedule2.png" alt="Schedule">
+                        <div class="card-body">
+                            <h5 class="card-title">Schedule</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div id="footer" class="row">
+            <div class="col">
+                <h4 style="text-align: justify; color: rgb(255, 209, 0);">Contact Us</h4>
+                <p id="footer-contact">Tel: 81739058 <br> Email: info@bayroutetaxi.com</p>
+            </div>
+            <div class="col">
+                <p id="copyright">&copy; Copyright 2020 BayRoute Water Taxi</p>
+            </div>
+            <div class="col">
+                <h4 style="text-align: right; color: rgb(255, 209, 0);">Follow Us</h4>
+                <div id="social-btns">
+                    <img src="/website/home/icons/fb.png" style=" width:10%; text-align: right;" alt="FB">
+                    <img src="/website/home/icons/insta.png" style=" width:10%; text-align: right;" alt="IG">
+                    <img src="/website/home/icons/twitter.png" style=" width:10%; text-align: right;" alt="Twitter">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="/ajax/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script>
+        $('#destination-modal-trigger').click(() => {
+            $('#destination-modal').toggle()
+        })
+
+        function closeModal() {
+            $('#destination-modal').css('display', 'none')
+        }
+    </script>
+</body>
+
+</html>

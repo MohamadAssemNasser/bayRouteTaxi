@@ -1,0 +1,113 @@
+            .card-img-top {
+                width: 10%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+            
+            @font-face {
+                font-family: "supra genius curves brk";
+                src: url("supragc.ttf");
+            }
+            
+            .btn-info {
+                color: #fff;
+                background-color: rgb(13, 66, 143);
+            }
+            
+            .card-title {
+                margin-left: 20%;
+                font-size: 1rem;
+            }
+            
+            .PositionRelative {
+                position: relative;
+            }
+            
+            .telephone {
+                font-size: 1rem;
+                ;
+            }
+            
+            .email {
+                font-size: 1.2rem;
+            }
+            
+            a {
+                color: rgb(13, 66, 200);
+            }
+            
+            .custom-select {
+                background-color: rgb(255, 209, 0);
+            }
+            
+            .form-control {
+                background-color: rgb(255, 209, 0);
+                color: rgb(13, 66, 143);
+            }
+            
+            .form-control:focus {
+                color: rgb(13, 66, 143);
+            }
+            
+            .placeholder {
+                color: red;
+                opacity: 1;
+            }
+            
+            .custom-control-label {
+                color: rgb(13, 66, 143);
+            }
+            
+            @media (min-width: 576px) {
+                textarea {
+                    overflow: auto;
+                    resize: vertical;
+                }
+                .email {
+                    font-size: 0.65rem;
+                }
+                .telephone {
+                    font-size: 0.6rem;
+                    ;
+                }
+                .card-title {
+                    font-size: 1.2rem;
+                }
+            }
+            
+            @media (min-width: 768px) {
+                textarea {
+                    overflow: auto;
+                    resize: vertical;
+                }
+                .email {
+                    font-size: 1rem;
+                }
+                .card-img-top {
+                    width: 15%;
+                }
+                .card-title {
+                    font-size: 1.2rem;
+                }
+                .telephone {
+                    font-size: 1rem;
+                    ;
+                }
+            }
+            
+            @media (min-width: 992px) {
+                .email {
+                    font-size: 1.1rem;
+                }
+                .card-img-top {
+                    width: 15%;
+                }
+                .card-title {
+                    font-size: 1.2rem;
+                }
+                .telephone {
+                    font-size: 1rem;
+                    ;
+                }
+            }
