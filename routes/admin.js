@@ -145,6 +145,11 @@ router.get('/site/tripType/:tripTypeId',
     controller.getTripType
 )
 
+router.get('/site/trips',
+    auth.proceedIfLoggedIn,
+    controller.getAllTrips
+)
+
 // ------- POST -------
 
 router.post('/site/add-panel-user',
@@ -154,8 +159,7 @@ router.post('/site/add-panel-user',
     controller.addPanelUser
 )
 
-router.post('/site/add-station',
-    [
+router.post('/site/add-station', [
         body('name')
         .trim()
         .isLength({
@@ -167,8 +171,7 @@ router.post('/site/add-station',
     controller.addStation
 )
 
-router.post('/site/add-tripType',
-    [
+router.post('/site/add-tripType', [
         body('name')
         .trim()
         .isLength({
@@ -193,10 +196,9 @@ router.post('/site/add-tripType',
     controller.addTripType
 )
 
-router.post('/site/add-trip', 
-    [
+router.post('/site/add-trip', [
         body('from')
-        .custom((value, {req}) => {
+        .custom((value, { req }) => {
             return (value !== req.body.to)
         })
         .withMessage("Can't have the same station as a departure and arrival station"),
@@ -225,8 +227,7 @@ router.put('/site/reset-password',
     controller.resetPanelUserPassword
 )
 
-router.put('/site/update-station',
-    [
+router.put('/site/update-station', [
         body('name')
         .trim()
         .isLength({
@@ -237,8 +238,7 @@ router.put('/site/update-station',
     auth.isAdmin,
     controller.updateStation
 )
-router.put('/site/update-tripType',
-    [
+router.put('/site/update-tripType', [
         body('name')
         .trim()
         .isLength({

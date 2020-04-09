@@ -8,49 +8,52 @@
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
     <% stations.forEach( station => { %>
         <meta name='<%= station.name %>' content='<%= station._id %>'>
-    <% }) %>
+        <% }) %>
 
 
-    <title><%= pageTitle %> </title>
-    <!-- Favicon-->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
-    <!-- Bootstrap Select Css -->
-    <link rel="stylesheet" href="/assets/plugins/bootstrap-select/css/bootstrap-select.css" />
-    <!-- Custom Css -->
-    <link rel="stylesheet" href="/assets/css/style.min.css">
-    <style>
-        .loader-wrapper {
-            z-index: 1;
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #eee;
-            opacity: 0.5;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .loader-wrapper p {
-            font-size: 13px;
-            font-weight: 700;
-            color: #777;
-            margin-top: 10px
-        }
-
-        .loader-wrapper .loader {
-            position: relative;
-            top: calc(40% - 30px)
-        }
-    </style>
+            <title>
+                <%= pageTitle %>
+            </title>
+            <!-- Favicon-->
+            <link rel="icon" href="favicon.ico" type="image/x-icon">
+            <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+            <!-- Calendar -->
+            <link rel="stylesheet" href="assets/plugins/fullcalendar/fullcalendar.min.css">
+            <!-- Bootstrap Select Css -->
+            <link rel="stylesheet" href="/assets/plugins/bootstrap-select/css/bootstrap-select.css" />
+            <!-- Custom Css -->
+            <link rel="stylesheet" href="/assets/css/style.min.css">
+            <style>
+                .loader-wrapper {
+                    z-index: 1;
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    background: #eee;
+                    opacity: 0.5;
+                    overflow: hidden;
+                    text-align: center;
+                }
+                
+                .loader-wrapper p {
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #777;
+                    margin-top: 10px
+                }
+                
+                .loader-wrapper .loader {
+                    position: relative;
+                    top: calc(40% - 30px)
+                }
+            </style>
 </head>
 
 <body class="theme-blue right_icon_toggle">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
-            <div class="m-t-30"><img class="zmdi-hc-spin" src="/assets/images/loader.svg" width="48" height="48"
-                    alt="/aero"></div>
+            <div class="m-t-30"><img class="zmdi-hc-spin" src="/assets/images/loader.svg" width="48" height="48" alt="/aero"></div>
             <p>Please wait...</p>
         </div>
     </div>
@@ -58,124 +61,144 @@
     <!-- Left Sidebar -->
     <%- include('../includes/side-panel.ejs') %>
 
-    <!-- Main Content -->
-    <section class="content">
-        <div class="body_scroll">
-            <div class="block-header">
-                <div class="row">
-                    <div class="col-lg-7 col-md-6 col-sm-12">
-                        <h2>Trips Page</h2>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Aero</a>
-                            </li>
-                            <li class="breadcrumb-item active">Pages</li>
-                            <li class="breadcrumb-item active">Trips Page</li>
-                        </ul>
-                        <button class="btn btn-primary btn-icon mobile_menu" type="button">
+        <!-- Main Content -->
+        <section class="content">
+            <div class="body_scroll">
+                <div class="block-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-6 col-sm-12">
+                            <h2>Trips Page</h2>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Aero</a>
+                                </li>
+                                <li class="breadcrumb-item active">Pages</li>
+                                <li class="breadcrumb-item active">Trips Page</li>
+                            </ul>
+                            <button class="btn btn-primary btn-icon mobile_menu" type="button">
                             <i class="zmdi zmdi-sort-amount-desc"></i>
                         </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="container-fluid">
-                <!-- Example Tab -->
-                <div class="row clearfix">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2><strong>Add</strong> Trips</h2>
-                                <ul class="header-dropdown">
-                                </ul>
-                            </div>
-                            <div class="body">
-                                <p>Week Days</p>
-                                <div class="row clearfix ">
-                                    <div class="col-12">
-                                        <!-- Nav tabs -->
-                                        <ul id="weekDays" class="nav nav-tabs p-0 mb-3 justify-content-around">
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>MONDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>TUESDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>WEDNESDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>THURSDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>FRIDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>SATURDAY</strong></a></li>
-                                            <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>SUNDAY</strong></a></li>
-                                        </ul>
-                                    </div>
+                <div class="container-fluid">
+                    <!-- Example Tab -->
+                    <div class="row clearfix">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2><strong>Add</strong> Trips</h2>
+                                    <ul class="header-dropdown">
+                                    </ul>
                                 </div>
-                                <div class="row clearfix justify-content-around">
-                                    <div class="col-lg-5 col-md-6">
-                                        <p>From:</p>
-                                        <div class="mb-3">
-                                            <select id="tripFrom" class="form-control show-tick">
+                                <div class="body">
+                                    <p>Week Days</p>
+                                    <div class="row clearfix ">
+                                        <div class="col-12">
+                                            <!-- Nav tabs -->
+                                            <ul id="weekDays" class="nav nav-tabs p-0 mb-3 justify-content-around">
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>MONDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>TUESDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>WEDNESDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>THURSDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>FRIDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>SATURDAY</strong></a></li>
+                                                <li class="nav-item"><a style="cursor: pointer;" class="nav-link"><strong>SUNDAY</strong></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix justify-content-around">
+                                        <div class="col-lg-5 col-md-6">
+                                            <p>From:</p>
+                                            <div class="mb-3">
+                                                <select id="tripFrom" class="form-control show-tick">
                                                 <% stations.forEach( station => { %>
                                                     <option><%= station.name %></option>
                                                 <% }) %>
                                             </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-5 col-md-6">
-                                        <p>To:</p>
-                                        <div class="mb-3">
-                                            <select id="tripTo" class="form-control show-tick">
+                                        <div class="col-lg-5 col-md-6">
+                                            <p>To:</p>
+                                            <div class="mb-3">
+                                                <select id="tripTo" class="form-control show-tick">
                                                 <% stations.forEach( station => { %>
                                                     <option><%= station.name %></option>
                                                 <% }) %>
                                             </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row clearfix justify-content-around">
-                                    <div class="col-lg-5 col-md-6">
-                                        <label>Departure Time</label>
-                                        <div class="input-group masked-input mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
                                             </div>
-                                            <input id="tripDepartureTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
                                         </div>
                                     </div>
-                                    <div class="col-lg-5 col-md-6">
-                                        <label>Arrival time</label>
-                                        <div class="input-group masked-input mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
+                                    <div class="row clearfix justify-content-around">
+                                        <div class="col-lg-5 col-md-6">
+                                            <label>Departure Time</label>
+                                            <div class="input-group masked-input mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
+                                                </div>
+                                                <input id="tripDepartureTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
                                             </div>
-                                            <input id="tripArrivalTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
+                                        </div>
+                                        <div class="col-lg-5 col-md-6">
+                                            <label>Arrival time</label>
+                                            <div class="input-group masked-input mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
+                                                </div>
+                                                <input id="tripArrivalTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row clearfix justify-content-around">
-                                    <div class="col-lg-5 col-md-6">
-                                        <p>Type:</p>
-                                        <div class="mb-3">
-                                            <select id="tripType" class="form-control show-tick">
+                                    <div class="row clearfix justify-content-around">
+                                        <div class="col-lg-5 col-md-6">
+                                            <p>Type:</p>
+                                            <div class="mb-3">
+                                                <select id="tripType" class="form-control show-tick">
                                                 <% tripTypes.forEach( tripType => { %>
                                                     <option><%= tripType %></option>
                                                 <% }) %>
                                             </select>
+                                            </div>
                                         </div>
+                                        <div class="col-lg-5 col-md-6"></div>
                                     </div>
-                                    <div class="col-lg-5 col-md-6"></div>
-                                </div>
-                                <div class="row clearfix justify-content-around">
-                                    <div class="col-lg-5 col-md-6"></div>
-                                    <div class="col-lg-5 col-md-6">
-                                        <button id="addTrip" class="btn btn-primary btn-lg float-right" style="font-size: 1rem;">
+                                    <div class="row clearfix justify-content-around">
+                                        <div class="col-lg-5 col-md-6"></div>
+                                        <div class="col-lg-5 col-md-6">
+                                            <button id="addTrip" class="btn btn-primary btn-lg float-right" style="font-size: 1rem;">
                                             <i style="color: white; font-size: 1.3rem;" class="zmdi zmdi-hc-fw"></i> ADD
                                         </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <button id="test">GET TRIPS</button>
+
+                <div class="container-fluid">
+                    <!-- Example Tab -->
+                    <div class="row clearfix">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2><strong>All</strong> Trips</h2>
+                                    <ul class="header-dropdown">
+                                    </ul>
+                                </div>
+                                <div class="body">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-    <!-- Jquery Core Js -->
-    <%- include('../includes/bottom-scripts.ejs') %>
-    <script src="/ajax/trips.js"></script>
+        </section>
+        <!-- Jquery Core Js -->
+        <%- include('../includes/bottom-scripts.ejs') %>
+            <script src="/ajax/trips.js"></script>
 </body>
 
 </html>

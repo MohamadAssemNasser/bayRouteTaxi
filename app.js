@@ -98,5 +98,5 @@ app.use((error, req, res, next) => {
     })
 })
 
-// mongoConnect(() => app.listen(80))
-mongoConnect(() => app.listen(3000, '172.31.0.89'))
+mongoConnect(() => app.listen(80))
+    // mongoConnect(() => app.listen(3000, '172.31.0.89'))
