@@ -1,5 +1,5 @@
 // http://3.20.90.158 for production
-// https://assem-nasser.com for development
+// https://admin.assem-nasser.com for development
 
 $(document).ready(function() {
     var weekDays = []
@@ -25,7 +25,7 @@ $(document).ready(function() {
             try {
                 let response = await axios({
                     method: 'post',
-                    url: 'https://assem-nasser.com/site/add-trip',
+                    url: 'https://admin.assem-nasser.com/site/add-trip',
                     data: {
                         days: weekDays,
                         from: from,

@@ -1,5 +1,5 @@
-// http://assem-nasser.com for production
-// https://admin.bayroute.taxi for development
+// https://admin.assem-nasser.com for production
+// http://admin.bayroute.taxi for development
 
 $(document).ready(function() {
     loadPanelStations()
@@ -36,7 +36,7 @@ function loadPanelStations() {
     </tr>
     `)
     $('#stationsTable .loader-wrapper').css('display', 'block')
-    axios.get('https://assem-nasser.com/site/all-stations')
+    axios.get('https://admin.assem-nasser.com/site/all-stations')
         .then((response) => {
             console.log(response)
             let stations = response.data
@@ -91,7 +91,7 @@ async function addStation() {
     try {
         let data = await axios({
             method: 'post',
-            url: 'https://assem-nasser.com/site/add-station',
+            url: 'https://admin.assem-nasser.com/site/add-station',
             data: {
                 name: name,
                 _csrf: csrfToken
@@ -119,7 +119,7 @@ async function updateStation(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'https://assem-nasser.com/site/update-station',
+            url: 'https://admin.assem-nasser.com/site/update-station',
             data: {
                 _id: id,
                 name: $('#stationName').val(),
@@ -151,7 +151,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`https://assem-nasser.com/site/station/${id}`)
+    let data = await axios.get(`https://admin.assem-nasser.com/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -170,7 +170,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'https://assem-nasser.com/site/delete-station',
+                    url: 'https://admin.assem-nasser.com/site/delete-station',
                     data: {
                         _id: _id,
                         _csrf: csrfToken
