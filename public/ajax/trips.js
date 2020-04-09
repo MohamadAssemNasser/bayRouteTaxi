@@ -1,18 +1,18 @@
 // http://3.20.90.158 for production
-// http://admin.bayroute.taxi:3000 for development
+// https://assem-nasser.com for development
 
-$(document).ready(function () {
+$(document).ready(function() {
     var weekDays = []
     $.each($('#weekDays > li > a'), (index, day) => {
         $(day).click(() => {
             $(day).toggleClass('active')
-            if($(day).hasClass('active'))
+            if ($(day).hasClass('active'))
                 weekDays.push($(day).find('strong').html())
             else
                 weekDays.splice(weekDays.indexOf($(day).find('strong').html()), 1)
         })
     })
-    $('#addTrip').click(async () => {
+    $('#addTrip').click(async() => {
         let from, to, departureTime, arrivalTime, type, csrfToken
         from = $(`meta[name=${$('#tripFrom').val()}]`).attr('content')
         to = $(`meta[name=${$('#tripTo').val()}]`).attr('content')
@@ -20,12 +20,12 @@ $(document).ready(function () {
         arrivalTime = $('#tripArrivalTime').val()
         type = $('#tripType').val()
         csrfToken = $('#csrfToken').val()
-    
-        if(validate()) {
-            try{
+
+        if (validate()) {
+            try {
                 let response = await axios({
                     method: 'post',
-                    url: 'http://admin.bayroute.taxi:3000/site/add-trip',
+                    url: 'https://assem-nasser.com/site/add-trip',
                     data: {
                         days: weekDays,
                         from: from,
@@ -37,12 +37,11 @@ $(document).ready(function () {
                     }
                 })
                 console.log(response)
-            }
-            catch(err){
+            } catch (err) {
                 console.log(err)
             }
         }
-    
+
     })
 })
 

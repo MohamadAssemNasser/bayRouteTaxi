@@ -1,7 +1,7 @@
 // http://3.20.90.158 for production
-// http://admin.bayroute.taxi:3000 for development
+// https://assem-nasser.com for development
 
-$(document).ready(function () {
+$(document).ready(function() {
     loadPanelUsers()
     $('#addUser').click(() => {
         clearModalValues()
@@ -41,7 +41,7 @@ function loadPanelUsers() {
     </tr>
     `)
     $('#usersTable .loader-wrapper').css('display', 'block')
-    axios.get('http://admin.bayroute.taxi:3000/site/all-panel-users')
+    axios.get('https://assem-nasser.com/site/all-panel-users')
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -84,7 +84,7 @@ async function resetPassword(id) {
             if (willReset) {
                 return axios({
                     method: 'put',
-                    url: 'http://admin.bayroute.taxi:3000/site/reset-password',
+                    url: 'https://assem-nasser.com/site/reset-password',
                     data: {
                         _id: id,
                         _csrf: $('#csrfToken').val()
@@ -156,45 +156,45 @@ function clearErrors() {
 }
 
 function addUser() {
-        validateUser()
-        let firstName, lastName, phone, email, password, role, csrfToken;
-        firstName = $('#userFirstName').val()
-        lastName = $('#userLastName').val()
-        phone = $('#userPhone').val()
-        phone = phone.split(/\s/).join('')
-        email = $('#userEmail').val()
-        password = $('#userPassword').val()
-        role = $('#userRole').val()
-        csrfToken = $('#csrfToken').val()
-        $('#userModal .loader-wrapper').css('display', 'block')
-        clearErrors()
-        axios({
-                method: 'post',
-                url: 'http://admin.bayroute.taxi:3000/site/add-panel-user',
-                data: {
-                    firstName: firstName,
-                    lastName: lastName,
-                    phone: phone,
-                    email: email,
-                    password: password,
-                    role: role,
-                    _csrf: csrfToken
-                }
-            })
-            .then((response) => {
-                let data = response.data
-                $('#userModal .loader-wrapper').css('display', 'none')
-                if (data.error) {
-                    return showErrors(data.validationErrors)
-                }
-                $('#userModal').modal('toggle')
-                swal("The User was deleted successfully!", {
-                    icon: "success",
-                }).then(loadPanelUsers())
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+    validateUser()
+    let firstName, lastName, phone, email, password, role, csrfToken;
+    firstName = $('#userFirstName').val()
+    lastName = $('#userLastName').val()
+    phone = $('#userPhone').val()
+    phone = phone.split(/\s/).join('')
+    email = $('#userEmail').val()
+    password = $('#userPassword').val()
+    role = $('#userRole').val()
+    csrfToken = $('#csrfToken').val()
+    $('#userModal .loader-wrapper').css('display', 'block')
+    clearErrors()
+    axios({
+            method: 'post',
+            url: 'https://assem-nasser.com/site/add-panel-user',
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                email: email,
+                password: password,
+                role: role,
+                _csrf: csrfToken
+            }
+        })
+        .then((response) => {
+            let data = response.data
+            $('#userModal .loader-wrapper').css('display', 'none')
+            if (data.error) {
+                return showErrors(data.validationErrors)
+            }
+            $('#userModal').modal('toggle')
+            swal("The User was deleted successfully!", {
+                icon: "success",
+            }).then(loadPanelUsers())
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 async function updateUser(id) {
@@ -204,7 +204,7 @@ async function updateUser(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'http://admin.bayroute.taxi:3000/site/update-panel-user',
+            url: 'https://assem-nasser.com/site/update-panel-user',
             data: {
                 _id: id,
                 firstName: $('#userFirstName').val(),
@@ -238,7 +238,7 @@ async function editUserModal(id) {
     clearModalValues()
     $('#userModal').modal('toggle')
     $('#userModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://admin.bayroute.taxi:3000/site/panel-user/${id}`)
+    let data = await axios.get(`https://assem-nasser.com/site/panel-user/${id}`)
     data = data.data
     $('#userFirstName').val(data.firstName)
     $('#userLastName').val(data.lastName)
@@ -263,7 +263,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://admin.bayroute.taxi:3000/site/delete-panel-user',
+                    url: 'https://assem-nasser.com/site/delete-panel-user',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

@@ -1,13 +1,13 @@
 // http://3.20.90.158 for production
-// http://admin.bayroute.taxi:3000 for development
+// https://assem-nasser.com for development
 
-$(document).ready(function () {
+$(document).ready(function() {
     loadPanelTripTypes()
     $('#addTripType').click(() => {
         clearModalValues()
         $('.modal-footer .btn-primary').attr('onClick', 'addTripType()')
         $('.modal-footer .btn-primary').html('Add tripType')
-        // $('#hideme').css('display', 'flex')
+            // $('#hideme').css('display', 'flex')
         $('.modal-header .title').html('Add a tripType')
         $('#tripTypeModal').modal('toggle')
     })
@@ -38,7 +38,7 @@ function loadPanelTripTypes() {
     </tr>
     `)
     $('#tripTypesTable .loader-wrapper').css('display', 'block')
-    axios.get('http://admin.bayroute.taxi:3000/site/all-tripTypes')
+    axios.get('https://assem-nasser.com/site/all-tripTypes')
         .then((response) => {
             let tripTypes = response.data
             console.log(tripTypes)
@@ -116,7 +116,7 @@ function addTripType() {
     clearErrors()
     axios({
             method: 'post',
-            url: 'http://admin.bayroute.taxi:3000/site/add-tripType',
+            url: 'https://assem-nasser.com/site/add-tripType',
             data: {
                 name: name,
                 deck: deck,
@@ -148,7 +148,7 @@ function updateTripType(id) {
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://admin.bayroute.taxi:3000/site/update-tripType',
+            url: 'https://assem-nasser.com/site/update-tripType',
             data: {
                 _id: id,
                 name: $('#tripTypeName').val(),
@@ -158,7 +158,7 @@ function updateTripType(id) {
                 _csrf: $('#csrfToken').val()
             }
         })
-        .then(async (data) => {
+        .then(async(data) => {
             data = data.data
             $('#tripTypeModal .loader-wrapper').css('display', 'none')
             if (data.error) {
@@ -179,12 +179,12 @@ function updateTripType(id) {
 async function editTripTypeModal(id) {
     $('.modal-footer .btn-primary').html('Save Changes')
     $('.modal-footer .btn-primary').attr('onClick', `updateTripType("${id}")`)
-    // $('#hideme').css('display', 'none')
+        // $('#hideme').css('display', 'none')
     $('.modal-header .title').html('Edit Trip Type')
     clearModalValues()
     $('#tripTypeModal').modal('toggle')
     $('#tripTypeModal .loader-wrapper').css('display', 'block')
-    let trip = await axios.get(`http://admin.bayroute.taxi:3000/site/tripType/${id}`)
+    let trip = await axios.get(`https://assem-nasser.com/site/tripType/${id}`)
     trip = trip.data
     $('#tripTypeName').val(trip.name)
     $('.filter-option.pull-left').html(trip.deck)
@@ -207,7 +207,7 @@ function deleteTripType(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://admin.bayroute.taxi:3000/site/delete-tripType',
+                    url: 'https://assem-nasser.com/site/delete-tripType',
                     data: {
                         _id: _id,
                         _csrf: csrfToken
