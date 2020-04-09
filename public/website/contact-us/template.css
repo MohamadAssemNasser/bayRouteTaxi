@@ -1,7 +1,7 @@
 body {
     padding-top: 2%;
     padding-bottom: 2%;
-    background-image: url('icons/blue bg.jpg');
+    background-image: url('../icons/blue bg.jpg');
     background-attachment: fixed;
     background-size: 30%;
 }
