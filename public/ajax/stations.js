@@ -1,7 +1,7 @@
 // http://assem-nasser.com for production
-// http://admin.bayroute.taxi:3000 for development
+// https://admin.bayroute.taxi for development
 
-$(document).ready(function () {
+$(document).ready(function() {
     loadPanelStations()
     $('#addStation').click(() => {
         clearModalValues()
@@ -36,7 +36,7 @@ function loadPanelStations() {
     </tr>
     `)
     $('#stationsTable .loader-wrapper').css('display', 'block')
-    axios.get('http://admin.bayroute.taxi:3000/site/all-stations')
+    axios.get('https://assem-nasser.com/site/all-stations')
         .then((response) => {
             console.log(response)
             let stations = response.data
@@ -82,34 +82,34 @@ function clearErrors() {
 }
 
 async function addStation() {
-        validateStation()
-        let name, csrfToken;
-        name = $('#stationName').val()
-        csrfToken = $('#csrfToken').val()
-        $('#stationModal .loader-wrapper').css('display', 'block')
-        clearErrors()
-        try {
-            let data = await axios({
-                method: 'post',
-                url: 'http://admin.bayroute.taxi:3000/site/add-station',
-                data: {
-                    name: name,
-                    _csrf: csrfToken
-                }
-            })
-            data = data.data
-            console.log(data)
-            $('#stationModal .loader-wrapper').css('display', 'none')
-            if (data.error) {
-                return showErrors(data.validationErrors)
+    validateStation()
+    let name, csrfToken;
+    name = $('#stationName').val()
+    csrfToken = $('#csrfToken').val()
+    $('#stationModal .loader-wrapper').css('display', 'block')
+    clearErrors()
+    try {
+        let data = await axios({
+            method: 'post',
+            url: 'https://assem-nasser.com/site/add-station',
+            data: {
+                name: name,
+                _csrf: csrfToken
             }
-            $('#stationModal').modal('toggle')
-            swal("The Station was deleted successfully!", {
-                icon: "success",
-            }).then(loadPanelStations())
-        } catch (error) {
-            console.log(error)
+        })
+        data = data.data
+        console.log(data)
+        $('#stationModal .loader-wrapper').css('display', 'none')
+        if (data.error) {
+            return showErrors(data.validationErrors)
         }
+        $('#stationModal').modal('toggle')
+        swal("The Station was deleted successfully!", {
+            icon: "success",
+        }).then(loadPanelStations())
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function updateStation(id) {
@@ -119,7 +119,7 @@ async function updateStation(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'http://admin.bayroute.taxi:3000/site/update-station',
+            url: 'https://assem-nasser.com/site/update-station',
             data: {
                 _id: id,
                 name: $('#stationName').val(),
@@ -151,7 +151,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://admin.bayroute.taxi:3000/site/station/${id}`)
+    let data = await axios.get(`https://assem-nasser.com/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -170,7 +170,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://admin.bayroute.taxi:3000/site/delete-station',
+                    url: 'https://assem-nasser.com/site/delete-station',
                     data: {
                         _id: _id,
                         _csrf: csrfToken
