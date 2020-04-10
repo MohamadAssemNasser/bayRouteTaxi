@@ -1,4 +1,4 @@
-// https://admin.nasser-byeeklu.com for production
+// http://admin.nasser-byeeklu.com for production
 // http://admin.bayroute.taxi for development
 
 $(document).ready(function() {
@@ -36,7 +36,7 @@ function loadPanelStations() {
     </tr>
     `)
     $('#stationsTable .loader-wrapper').css('display', 'block')
-    axios.get('https://admin.nasser-byeeklu.com/site/all-stations')
+    axios.get('http://admin.nasser-byeeklu.com/site/all-stations')
         .then((response) => {
             console.log(response)
             let stations = response.data
@@ -91,7 +91,7 @@ async function addStation() {
     try {
         let data = await axios({
             method: 'post',
-            url: 'https://admin.nasser-byeeklu.com/site/add-station',
+            url: 'http://admin.nasser-byeeklu.com/site/add-station',
             data: {
                 name: name,
                 _csrf: csrfToken
@@ -119,7 +119,7 @@ async function updateStation(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'https://admin.nasser-byeeklu.com/site/update-station',
+            url: 'http://admin.nasser-byeeklu.com/site/update-station',
             data: {
                 _id: id,
                 name: $('#stationName').val(),
@@ -151,7 +151,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`https://admin.nasser-byeeklu.com/site/station/${id}`)
+    let data = await axios.get(`http://admin.nasser-byeeklu.com/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -170,7 +170,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'https://admin.nasser-byeeklu.com/site/delete-station',
+                    url: 'http://admin.nasser-byeeklu.com/site/delete-station',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

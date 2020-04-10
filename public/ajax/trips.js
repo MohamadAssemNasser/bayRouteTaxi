@@ -28,7 +28,7 @@ $(document).ready(function() {
             try {
                 let response = await axios({
                     method: 'post',
-                    url: 'https://admin.nasser-byeeklu.comsite/add-trip',
+                    url: 'http://admin.nasser-byeeklu.comsite/add-trip',
                     data: {
                         days: weekDays,
                         from: from,
@@ -243,7 +243,7 @@ $('document').ready(() => {
         try {
             let response = await axios({
                 method: 'get',
-                url: 'https://admin.nasser-byeeklu.comsite/trips',
+                url: 'http://admin.nasser-byeeklu.comsite/trips',
             })
             renderCalendar(response.data)
         } catch (err) {
