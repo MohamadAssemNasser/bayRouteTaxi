@@ -140,12 +140,13 @@
                                         </div>
                                         <div class="col-lg-5 col-md-6">
                                             <label>Arrival time</label>
-                                            <div class="input-group masked-input mb-3">
+                                            <div class="input-group masked-input">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
                                                 </div>
-                                                <input id="tripArrivalTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
+                                                <input name="tripArrivalTime" id="tripArrivalTime" type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
                                             </div>
+                                            <label id="tripArrivalTimeError" class="error mb-3" for="tripArrivalTime">This field is required.</label>
                                         </div>
                                     </div>
                                     <div class="row clearfix justify-content-around">
@@ -188,6 +189,28 @@
                                     </ul>
                                 </div>
                                 <div class="body">
+                                    <div class="row clearfix justify-content-around">
+                                        <div class="col-lg-5 col-md-6">
+                                            <p>From:</p>
+                                            <div class="mb-3">
+                                                <select id="tripFrom" class="form-control show-tick">
+                                                <% stations.forEach( station => { %>
+                                                    <option><%= station.name %></option>
+                                                <% }) %>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5 col-md-6">
+                                            <p>To:</p>
+                                            <div class="mb-3">
+                                                <select id="tripTo" class="form-control show-tick">
+                                                <% stations.forEach( station => { %>
+                                                    <option><%= station.name %></option>
+                                                <% }) %>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div id="calendar"></div>
                                 </div>
                             </div>

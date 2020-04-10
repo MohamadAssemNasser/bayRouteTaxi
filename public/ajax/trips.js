@@ -1,6 +1,4 @@
-// https://admin.assem-nasser.com for production
-// http://admin.bayroute.taxi for development
-
+var from = {}
 $(document).ready(function() {
     var weekDays = []
     $.each($('#weekDays > li > a'), (index, day) => {
@@ -12,6 +10,11 @@ $(document).ready(function() {
                 weekDays.splice(weekDays.indexOf($(day).find('strong').html()), 1)
         })
     })
+
+    $.each($('#tripFrom option'), (index, e) => {
+        from[`${$(e).val()}`] = []
+    })
+
     $('#addTrip').click(async() => {
         let from, to, departureTime, arrivalTime, type, csrfToken
         from = $(`meta[name=${$('#tripFrom').val()}]`).attr('content')
@@ -36,7 +39,13 @@ $(document).ready(function() {
                         _csrf: csrfToken
                     }
                 })
-                console.log(response)
+                response = response.data
+                if (response.error) {
+                    return showErrors(response.validationErrors)
+                }
+                swal("The Trip was added successfully!", {
+                    icon: "success",
+                }).then(loadSchedule())
             } catch (err) {
                 console.log(err)
             }
@@ -44,6 +53,10 @@ $(document).ready(function() {
 
     })
 })
+
+function loadSchedule() {
+    return
+}
 
 function showErrors(errors) {
     $.each(errors, (i, e) => {
@@ -65,43 +78,18 @@ function validate(from, to, departureTime, arrivalTime, type) {
 }
 
 $(() => {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-
-    console.log(today)
+    const date = new Date();
+    let dd = date.getDate();
+    let mm = date.getMonth() + 1; //January is 0!
+    const yyyy = date.getFullYear();
 
     if (dd < 10) { dd = '0' + dd }
     if (mm < 10) { mm = '0' + mm }
 
-    var current = yyyy + '-' + mm + '-';
-    var calendar = $('#calendar');
-    console.log(current)
+    let current = yyyy + '-' + mm + '-'
+    const calendar = $('#calendar')
+    console.log('current', current)
 
-    // Add direct event to calendar
-    var newEvent = (start) => {
-            $('#addDirectEvent input[name="event-name"]').val("");
-            $('#addDirectEvent select[name="event-bg"]').val("");
-            $('#addDirectEvent').modal('show');
-            $('#addDirectEvent .save-btn').unbind();
-            $('#addDirectEvent .save-btn').on('click', () => {
-                var title = $('#addDirectEvent input[name="event-name"]').val();
-                var classes = 'bg-' + $('#addDirectEvent select[name="event-bg"]').val();
-                if (title) {
-                    var eventData = {
-                        title: title,
-                        start: start,
-                        className: classes
-                    };
-                    calendar.fullCalendar('renderEvent', eventData, true);
-                    $('#addDirectEvent').modal('hide');
-                } else {
-                    alert("Title can't be blank. Please try again.")
-                }
-            });
-        }
-        // initialize the calendar
     calendar.fullCalendar({
         header: {
             left: 'title',
@@ -112,27 +100,24 @@ $(() => {
             weeks: 1
         },
         defaultView: 'agendaWeek',
-        eventLimit: true, // allow "more" link when too many events
-        events: [{
-                title: 'Birthday Party',
-                start: current + '01',
-                className: 'bg-info'
-            },
-            {
-                title: 'Conference',
-                start: current + '05',
-                end: '2018-08-07',
-                className: 'bg-warning'
-            },
-            {
-                title: 'Meeting',
-                start: current + '09T12:30:00',
-                allDay: false, // will make the time show
-                className: 'bg-success',
-            }
-        ],
-    });
-    $('#event-list').append('<div class="fc-event bg-info" data-class="bg-info">Nasser</div>');
+        eventLimit: true,
+        events: [],
+        eventClick: function(calEvent, jsEvent, view) {
+            //var title = prompt('Event Title:', calEvent.title, { buttons: { Ok: true, Cancel: false} });
+            var eventModal = $('#eventEditModal');
+            eventModal.modal('show');
+            eventModal.find('input[name="event-name"]').val(calEvent.title);
+            eventModal.find('.save-btn').click(function() {
+                calEvent.title = eventModal.find("input[name='event-name']").val();
+                calendar.fullCalendar('updateEvent', calEvent);
+                eventModal.modal('hide');
+            });
+            // if (title){
+            //     calEvent.title = title;
+            //     calendar.fullCalendar('updateEvent',calEvent);
+            // }
+        }
+    })
 })
 
 function timeToNumber(time) {
@@ -161,31 +146,106 @@ function regularTimeToMilitaryTime(time) {
     return this.numberToTime(time)
 }
 
-function militaryTimeToMinutes(time) {
-    let minutes = parseInt(time.slice(2))
-    minutes += parseInt(time.slice(0, 2))
-    console.log(minutes)
+function regularTimeToMinutes(from, to) {
+    from = regularTimeToMilitaryTime(from)
+    from = timeToNumber(from)
+    to = regularTimeToMilitaryTime(to)
+    to = timeToNumber(to)
+    let minutes = parseInt(to.slice(2)) + parseInt(to.slice(0, 2)) * 60
+    minutes -= parseInt(from.slice(2)) + parseInt(from.slice(0, 2)) * 60
+    console.log('minutes', minutes)
+}
+
+function renderCalendar(data) {
+    var m, t, w, r, f, s, u // days
+
+    m = new Date()
+    t = new Date()
+    w = new Date()
+    r = new Date()
+    f = new Date()
+    s = new Date()
+    u = new Date()
+
+    const today = m.getDay()
+
+    m.setDate(m.getDate() - today + 1)
+    t.setDate(t.getDate() - today + 2)
+    w.setDate(w.getDate() - today + 3)
+    r.setDate(r.getDate() - today + 4)
+    f.setDate(f.getDate() - today + 5)
+    s.setDate(s.getDate() - today + 6)
+    u.setDate(u.getDate() - today)
+
+    m = `${m.getFullYear()}-${(m.getMonth()+1 < 10) ? `0${m.getMonth()+1}` : `${m.getMonth()+1}`}-${(m.getDate() < 10) ? `0${m.getDate()}` : `${m.getDate()}`}`
+    t = `${t.getFullYear()}-${(t.getMonth()+1 < 10) ? `0${t.getMonth()+1}` : `${t.getMonth()+1}`}-${(t.getDate() < 10) ? `0${t.getDate()}` : `${t.getDate()}`}`
+    w = `${w.getFullYear()}-${(w.getMonth()+1 < 10) ? `0${w.getMonth()+1}` : `${w.getMonth()+1}`}-${(w.getDate() < 10) ? `0${w.getDate()}` : `${w.getDate()}`}`
+    r = `${r.getFullYear()}-${(r.getMonth()+1 < 10) ? `0${r.getMonth()+1}` : `${r.getMonth()+1}`}-${(r.getDate() < 10) ? `0${r.getDate()}` : `${r.getDate()}`}`
+    f = `${f.getFullYear()}-${(f.getMonth()+1 < 10) ? `0${f.getMonth()+1}` : `${f.getMonth()+1}`}-${(f.getDate() < 10) ? `0${f.getDate()}` : `${f.getDate()}`}`
+    s = `${s.getFullYear()}-${(s.getMonth()+1 < 10) ? `0${s.getMonth()+1}` : `${s.getMonth()+1}`}-${(s.getDate() < 10) ? `0${s.getDate()}` : `${s.getDate()}`}`
+    u = `${u.getFullYear()}-${(u.getMonth()+1 < 10) ? `0${u.getMonth()+1}` : `${u.getMonth()+1}`}-${(u.getDate() < 10) ? `0${u.getDate()}` : `${u.getDate()}`}`
+
+    const calendar = $('#calendar')
+
+    data.forEach(element => {
+        element.days.forEach((day) => {
+            let d, date
+            switch (day) {
+                case 'MONDAY':
+                    d = 1
+                    date = m
+                    break
+                case 'TUESDAY':
+                    d = 2
+                    date = t
+                    break
+                case 'WEDNESDAY':
+                    d = 3
+                    date = w
+                    break
+                case 'THURSDAY':
+                    d = 4
+                    date = r
+                    break
+                case 'FRIDAY':
+                    d = 5
+                    date = f
+                    break
+                case 'SATURDAY':
+                    d = 6
+                    date = s
+                    break
+                case 'SUNDAY':
+                    d = 0
+                    date = u
+            }
+            from[`${element.from}`].push({
+                title: `${element.from} -> ${element.to}`,
+                start: `${date}T${element.departureTime}:00`,
+                end: `${date}T${element.arrivalTime}:00`,
+                allDay: false,
+                className: 'bg-success',
+            })
+
+            // console.log(from[`${element.from}`][0])
+
+        })
+    })
+
+    from['Sharhabeel'].forEach( element => {
+        calendar.fullCalendar('renderEvent', element, true)
+    })
 }
 
 $('document').ready(() => {
-    function addEvent(event) {
-        let days = $('.fc-content-skeleton tr')
-        let count = days[0]
-        let events = days[1]
-        console.log(days[1])
-            // console.log(days[1].html())
-    }
-    addEvent()
-
     $('#test').click(async() => {
         console.log('Hello')
         try {
-            // let response = await axios({
-            //     method: 'get',
-            //     url: 'http://admin.bayroute.taxi/site/trips',
-            // })
-            // console.log('response', response.data)
-            console.log(militaryTimeToMinutes('1600'))
+            let response = await axios({
+                method: 'get',
+                url: 'http://admin.bayroute.taxi/site/trips',
+            })
+            renderCalendar(response.data)
         } catch (err) {
             console.log(err)
         }
