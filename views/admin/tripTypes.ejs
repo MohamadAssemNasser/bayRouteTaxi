@@ -38,6 +38,10 @@
             position: relative;
             top: calc(40% - 30px)
         }
+
+        label {
+            margin-bottom: 0px;
+        }
     </style>
 </head>
 
@@ -97,7 +101,8 @@
                                                 <th style="vertical-align: middle; text-align: center;">NAME</th>
                                                 <th style="vertical-align: middle; text-align: center;">DECK</th>
                                                 <th style="vertical-align: middle; text-align: center;">PRICE</th>
-                                                <th style="vertical-align: middle; text-align: center;">NUMBER OF SEATS</th>
+                                                <th style="vertical-align: middle; text-align: center;">NUMBER OF SEATS
+                                                </th>
                                                 <th style="vertical-align: middle; text-align: center;">ACTIONS</th>
                                             </tr>
                                         </thead>
@@ -131,15 +136,16 @@
                 <div class="modal-body">
                     <div class="row clearfix">
                         <div class="col-sm-12">
-                            <p style="margin-bottom: 0px;">Trip Type Name:</p>
                             <div class="form-group">
-                                <input id="tripTypeName" type="text" class="form-control" placeholder="Trip Type Name" />
+                                <label>Trip Type Name:</label>
+                                <input id="tripTypeName" type="text" class="form-control"
+                                    placeholder="Trip Type Name" />
                                 <label id="tripTypeNameError" class="error" for="tripTypeName"></label>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group mb-1">
-                                <p style="margin-bottom: 0px;">Deck:</p>
+                            <div class="form-group">
+                                <label>Deck:</label>
                                 <select id="tripTypeDeck" class="form-control show-tick">
                                     <option>Upper</option>
                                     <option>Lower</option>
@@ -149,28 +155,24 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group mb-1">
-                                <p style="margin-bottom: 0px;">Ticket Price:</p>
+                            <div class="form-group">
+                                <label>Ticket Price:</label>
                                 <div class="input-group masked-input">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="zmdi zmdi-money"></i></span>
                                     </div>
-                                    <input id="tripTypePrice" type="text" class="form-control money-LBP" placeholder="Ex: 9,999 LBP">
+                                    <input id="tripTypePrice" type="text" class="form-control money-LBP"
+                                        placeholder="Ex: 9,999 LBP">
                                 </div>
                                 <label id="tripTypePriceError" class="error" for="tripTypePrice"></label>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group mb-1">
-                                <p style="margin-bottom: 0px;">Number of Seats:</p>
+                            <div class="form-group">
+                                <label>Number of Seats:</label>
                                 <div class="input-group spinner" data-trigger="spinner">
-                                    <input id="tripTypeNumberOfSeats" type="text" class="form-control text-center" value="0" data-rule="quantity">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <a href="javascript:void(0);" class="spin-up" data-spin="up"><i class="zmdi zmdi-caret-up"></i></a>
-                                            <a href="javascript:void(0);" class="spin-down" data-spin="down"><i class="zmdi zmdi-caret-down"></i></a>
-                                        </span>
-                                    </div>
+                                    <input id="tripTypeNumberOfSeats" type="number" class="form-control text-center"
+                                        placeholder="0" min="0">
                                 </div>
                                 <label id="tripTypeNumberOfSeatsError" class="error" for="name"></label>
                             </div>
