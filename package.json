@@ -5,8 +5,9 @@
     "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "pm2 start app.js --watch & pm2 logs",
-        "stop": "pm2 stop app"
+        "pstart": "pm2 start app.js --watch & pm2 logs",
+        "pstop": "pm2 stop app",
+        "start": "npx nodemon app.js"
     },
     "author": "",
     "license": "ISC",
@@ -27,6 +28,6 @@
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.5.2",
         "nodemailer": "^6.4.2",
-        "pm2": "^4.2.3"
+        "nodemon": "^2.0.3"
     }
 }

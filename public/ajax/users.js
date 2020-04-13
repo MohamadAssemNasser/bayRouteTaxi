@@ -1,5 +1,5 @@
 // http://3.20.90.158 for production
-// http://admin.nasser-byeeklu.com for development
+// http://admin.bayroute.taxi for development
 
 $(document).ready(function() {
     loadPanelUsers()
@@ -41,7 +41,7 @@ function loadPanelUsers() {
     </tr>
     `)
     $('#usersTable .loader-wrapper').css('display', 'block')
-    axios.get('http://admin.nasser-byeeklu.com/site/all-panel-users')
+    axios.get('http://admin.bayroute.taxi/site/all-panel-users')
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -84,7 +84,7 @@ async function resetPassword(id) {
             if (willReset) {
                 return axios({
                     method: 'put',
-                    url: 'http://admin.nasser-byeeklu.com/site/reset-password',
+                    url: 'http://admin.bayroute.taxi/site/reset-password',
                     data: {
                         _id: id,
                         _csrf: $('#csrfToken').val()
@@ -170,7 +170,7 @@ function addUser() {
     clearErrors()
     axios({
             method: 'post',
-            url: 'http://admin.nasser-byeeklu.com/site/add-panel-user',
+            url: 'http://admin.bayroute.taxi/site/add-panel-user',
             data: {
                 firstName: firstName,
                 lastName: lastName,
@@ -204,7 +204,7 @@ async function updateUser(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'http://admin.nasser-byeeklu.com/site/update-panel-user',
+            url: 'http://admin.bayroute.taxi/site/update-panel-user',
             data: {
                 _id: id,
                 firstName: $('#userFirstName').val(),
@@ -238,7 +238,7 @@ async function editUserModal(id) {
     clearModalValues()
     $('#userModal').modal('toggle')
     $('#userModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`http://admin.nasser-byeeklu.com/site/panel-user/${id}`)
+    let data = await axios.get(`http://admin.bayroute.taxi/site/panel-user/${id}`)
     data = data.data
     $('#userFirstName').val(data.firstName)
     $('#userLastName').val(data.lastName)
@@ -263,7 +263,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://admin.nasser-byeeklu.com/site/delete-panel-user',
+                    url: 'http://admin.bayroute.taxi/site/delete-panel-user',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

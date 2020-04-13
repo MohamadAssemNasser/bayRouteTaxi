@@ -16,6 +16,8 @@ $(document).ready(function() {
     })
 
     $('#addTrip').click(async() => {
+        clearErrors()
+        $(this).prop('disabled', true)
         let from, to, departureTime, arrivalTime, type, csrfToken
         from = $(`meta[name=${$('#tripFrom').val()}]`).attr('content')
         to = $(`meta[name=${$('#tripTo').val()}]`).attr('content')
@@ -28,7 +30,7 @@ $(document).ready(function() {
             try {
                 let response = await axios({
                     method: 'post',
-                    url: 'http://admin.nasser-byeeklu.comsite/add-trip',
+                    url: 'http://admin.bayroute.taxi/site/add-trip',
                     data: {
                         days: weekDays,
                         from: from,
@@ -40,36 +42,37 @@ $(document).ready(function() {
                     }
                 })
                 response = response.data
+                $(this).prop('disabled', false)
                 if (response.error) {
+                    console.log(response.validationErrors)
                     return showErrors(response.validationErrors)
                 }
                 swal("The Trip was added successfully!", {
                     icon: "success",
-                }).then(loadSchedule())
+                }).then(renderCalendar($('#scheduleFrom > div > div > ul > .selected > a > .text').html()))
             } catch (err) {
                 console.log(err)
             }
         }
-
     })
 })
 
-function loadSchedule() {
-    return
-}
-
 function showErrors(errors) {
     $.each(errors, (i, e) => {
-        if (e.param === 'name') {
-            $('#stationName').addClass('form-control-danger')
-            $('#stationNameError').html('<p class="text-danger" style="margin-bottom: 0px;">Station already exist</p>')
+        if (e.param === 'from') {
+            $('#tripFrom').parent().parent().append(`<p class="text-danger" style="margin-bottom: 0px;">${e.msg}</p>`)
+            $('#tripTo').parent().parent().append(`<p class="text-danger" style="margin-bottom: 0px;">${e.msg}</p>`)
+        } else if (e.param === 'days') {
+            $('#weekDays').parent().prepend(`<p class="text-danger" style="margin-bottom: 0px;">${e.msg}</p>`)
+        } else if (e.param === 'departureTime') {
+            $('#tripArrivalTime').parent().parent().append(`<p class="text-danger mb-1" style="margin-bottom: 0px;">${e.msg}</p>`)
+            $('#tripDepartureTime').parent().parent().append(`<p class="text-danger mb-1" style="margin-bottom: 0px;">${e.msg}</p>`)
         }
     })
 }
 
 function clearErrors() {
-    $('#stationName').removeClass('form-control-danger')
-    $('#stationNameError').html('')
+    $(".text-danger").remove()
 }
 
 
@@ -77,10 +80,10 @@ function validate(from, to, departureTime, arrivalTime, type) {
     return true
 }
 
-$(() => {
+function createCalendar() {
     const date = new Date();
     let dd = date.getDate();
-    let mm = date.getMonth() + 1; //January is 0!
+    let mm = date.getMonth() + 1; //January is 0
     const yyyy = date.getFullYear();
 
     if (dd < 10) { dd = '0' + dd }
@@ -101,23 +104,12 @@ $(() => {
         },
         defaultView: 'agendaWeek',
         eventLimit: true,
-        events: [],
-        eventClick: function(calEvent, jsEvent, view) {
-            //var title = prompt('Event Title:', calEvent.title, { buttons: { Ok: true, Cancel: false} });
-            var eventModal = $('#eventEditModal');
-            eventModal.modal('show');
-            eventModal.find('input[name="event-name"]').val(calEvent.title);
-            eventModal.find('.save-btn').click(function() {
-                calEvent.title = eventModal.find("input[name='event-name']").val();
-                calendar.fullCalendar('updateEvent', calEvent);
-                eventModal.modal('hide');
-            });
-            // if (title){
-            //     calEvent.title = title;
-            //     calendar.fullCalendar('updateEvent',calEvent);
-            // }
-        }
+        events: []
     })
+}
+
+$(() => {
+    createCalendar()
 })
 
 function timeToNumber(time) {
@@ -156,7 +148,7 @@ function regularTimeToMinutes(from, to) {
     console.log('minutes', minutes)
 }
 
-function renderCalendar(data) {
+function handleData(data) {
     var m, t, w, r, f, s, u // days
 
     m = new Date()
@@ -184,8 +176,6 @@ function renderCalendar(data) {
     f = `${f.getFullYear()}-${(f.getMonth()+1 < 10) ? `0${f.getMonth()+1}` : `${f.getMonth()+1}`}-${(f.getDate() < 10) ? `0${f.getDate()}` : `${f.getDate()}`}`
     s = `${s.getFullYear()}-${(s.getMonth()+1 < 10) ? `0${s.getMonth()+1}` : `${s.getMonth()+1}`}-${(s.getDate() < 10) ? `0${s.getDate()}` : `${s.getDate()}`}`
     u = `${u.getFullYear()}-${(u.getMonth()+1 < 10) ? `0${u.getMonth()+1}` : `${u.getMonth()+1}`}-${(u.getDate() < 10) ? `0${u.getDate()}` : `${u.getDate()}`}`
-
-    const calendar = $('#calendar')
 
     data.forEach(element => {
         element.days.forEach((day) => {
@@ -223,31 +213,42 @@ function renderCalendar(data) {
                 title: `${element.from} -> ${element.to}`,
                 start: `${date}T${element.departureTime}:00`,
                 end: `${date}T${element.arrivalTime}:00`,
+                from: `${element.from}`,
                 allDay: false,
                 className: 'bg-success',
             })
-
-            // console.log(from[`${element.from}`][0])
-
         })
     })
+}
 
-    from['Sharhabeel'].forEach( element => {
+function renderCalendar(departure){
+    const calendar = $('#calendar')
+    // calendar.fullCalendar('removeEventSources')
+    calendar.fullCalendar( 'removeEvents', function(e){ return e.from != departure});
+    from[`${departure}`].forEach( element => {
         calendar.fullCalendar('renderEvent', element, true)
     })
 }
 
 $('document').ready(() => {
-    $('#test').click(async() => {
-        console.log('Hello')
-        try {
-            let response = await axios({
-                method: 'get',
-                url: 'http://admin.nasser-byeeklu.comsite/trips',
-            })
-            renderCalendar(response.data)
-        } catch (err) {
-            console.log(err)
-        }
+    axios({
+        method: 'get',
+        url: 'http://admin.bayroute.taxi/site/trips',
+    }).then((response) => {
+        handleData(response.data)
+        renderCalendar($('#scheduleFrom > div > div > ul > .selected > a > .text').html())
+    }).catch((err) => {
+        console.log(err)
+    })
+
+    var before = $('#scheduleFrom > div > div > ul > .selected > a > .text').html()
+    $('#scheduleFrom > div > div > ul > li').click(()=>{
+        setTimeout(function(){ 
+            let after = $('#scheduleFrom > div > div > ul > .selected > a > .text').html()
+            if(before === after)
+            return
+            renderCalendar(after)
+            before = after 
+        }, 20);
     })
 })

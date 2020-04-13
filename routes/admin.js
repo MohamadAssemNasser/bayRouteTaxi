@@ -202,10 +202,23 @@ router.post('/site/add-trip', [
             return (value !== req.body.to)
         })
         .withMessage("Can't have the same station as a departure and arrival station"),
+        body('days')
+        .custom((value, { req }) => {
+            return (value.length > 0)
+        })
+        .withMessage("Choose at least one day"),
         body('departureTime')
-        .trim(),
+        .trim()
+        .custom((value, { req }) => {
+            return (value.length > 0)
+        })
+        .withMessage("Choose a valid Time"),
         body('arrivalTime')
-        .trim(),
+        .trim()
+        .custom((value, { req }) => {
+            return (value.length > 0)
+        })
+        .withMessage("Choose a valid Time")
     ],
     auth.proceedIfLoggedIn,
     controller.addTrip

@@ -841,6 +841,8 @@ exports.addTrip = async(req, res, next) => {
                 validationErrors: errors.array()
             })
         }
+        console.log('departureTime', req.body.departureTime)
+        console.log('arrivalTime', req.body.arrivalTime)
         let trip = new Trip({
             days: req.body.days,
             from: new ObjectId(req.body.from),
@@ -849,6 +851,21 @@ exports.addTrip = async(req, res, next) => {
             arrivalTime: Trip.regularTimeToMilitaryTime(req.body.arrivalTime),
             type: req.body.type
         })
+
+        if (trip.departureTime === trip.arrivalTime) {
+            return res.json({
+                error: true,
+                validationErrors: [{
+                        param: 'departureTime',
+                        msg: 'Can\'t have the same time for departure time and arrival time'
+                    },
+                    {
+                        param: 'arrivalTime',
+                        msg: 'Can\'t have the same time for departure time and arrival time'
+                    }
+                ]
+            })
+        }
 
         if (!Trip.timeIsValid(trip.departureTime, trip.arrivalTime)) {
             return res.json({
