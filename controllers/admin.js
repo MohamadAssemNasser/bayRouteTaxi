@@ -17,7 +17,7 @@ const ObjectId = mongodb.ObjectId
 let db
 
 // POST LOGOUT
-exports.postLogout = (req, res, next) => {
+exports.getLogout = (req, res, next) => {
     req.session.destroy(err => {
         console.log(err)
         res.redirect('/')
@@ -119,15 +119,15 @@ exports.postLogin = async(req, res, next) => {
     }
 }
 
-// GET DASHBOARD '/'
-exports.getDashboard = async(req, res, next) => {
-    return res.render('admin/dashboard', {
-        pageTitle: 'BayRoute Taxi :: Dashboard',
-        path: '/',
-        user: {
-            firstName: req.user.firstName,
-            role: req.user.role,
-        }
+exports.redirectToProfile = (req, res, next) => {
+    return res.redirect('/profile')
+}
+
+exports.getProfile = (req, res, next) => {
+    return res.render('admin/profile', {
+        pageTitle: 'BayRoute Taxi :: Profile',
+        path: '/profile',
+        user: req.user
     })
 }
 
@@ -137,7 +137,6 @@ exports.getTrips = async(req, res, next) => {
     let stations, tripTypes
     try {
         stations = await Station.getAll()
-        console.log(stations)
         tripTypes = await TripType.getAllUnique()
     } catch (err) {
         console.log(err)
@@ -159,7 +158,7 @@ exports.getTrips = async(req, res, next) => {
 }
 
 // GET USERS
-exports.getUsers = async(req, res, next) => {
+exports.getUsers = (req, res, next) => {
     return res.render('admin/users', {
         pageTitle: 'BayRoute Taxi :: Users',
         path: '/users',
@@ -171,7 +170,7 @@ exports.getUsers = async(req, res, next) => {
 }
 
 // GET STATIONS
-exports.getStations = async(req, res, next) => {
+exports.getStations = (req, res, next) => {
     return res.render('admin/stations', {
         pageTitle: 'BayRoute Taxi :: Stations',
         path: '/stations',
@@ -183,10 +182,21 @@ exports.getStations = async(req, res, next) => {
 }
 
 // * GET TRIP TYPES
-exports.getTripTypes = async(req, res, next) => {
+exports.getTripTypes = (req, res, next) => {
     return res.render('admin/tripTypes', {
         pageTitle: 'BayRoute Taxi :: Trip Types',
         path: '/tripTypes',
+        user: {
+            firstName: req.user.firstName,
+            role: req.user.role
+        }
+    })
+}
+
+exports.getFeedback = (req, res, next) => {
+    return res.render('admin/feedback', {
+        pageTitle: 'BayRoute Taxi :: Feedback',
+        path: '/feedback',
         user: {
             firstName: req.user.firstName,
             role: req.user.role
@@ -247,7 +257,6 @@ exports.getAllTripTypes = async(req, res, next) => {
     db = getDb()
     try {
         let tripTypes = await TripType.getAll()
-        console.log(tripTypes)
         res.json(tripTypes)
     } catch (err) {
         console.log(err)
@@ -332,7 +341,6 @@ exports.getAllTrips = async(req, res, next) => {
                 }
             }
         ]).toArray()
-        console.log(trips)
         return res.send(trips)
     } catch (err) {
         console.log(err)
@@ -467,8 +475,6 @@ exports.updatePanelUser = async(req, res, next) => {
                 }
             ]
         })
-        console.log(u)
-        console.log(req.body._id)
         if (u) {
             return res.json({ // status needed --important--
                 error: true,
@@ -491,6 +497,86 @@ exports.updatePanelUser = async(req, res, next) => {
                     email: req.body.email,
                     phone: req.body.phone,
                     role: req.body.role
+                }
+            })
+            if (u.value === null) {
+                // response
+                return res.json({ // status needed --important--
+                    error: false,
+                    message: 'User not found'
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        // response
+        return res.status(200).json({
+            error: false,
+            message: 'User updated successfully'
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            error: true,
+            errorMessage: err
+        })
+    }
+}
+
+exports.updateProfile = async(req, res, next) => {
+    if (req.user._id != req.params.userId) {
+        return res.status(403).json({
+            error: true,
+            validationErrors: [{
+                param: auth
+            }]
+        })
+    }
+    db = getDb()
+    const errors = validationResult(req)
+    try {
+        // validate req data
+        if (!errors.isEmpty()) {
+            // if (!errors[0].param === "role")
+            return res.json({
+                error: true,
+                validationErrors: errors.array()
+            })
+        }
+        let u = await db.collection('panel-users').findOne({
+            $and: [{
+                    email: {
+                        $eq: req.body.email
+                    }
+                },
+                {
+                    _id: {
+                        $ne: new ObjectId(req.params.userId)
+                    }
+                }
+            ]
+        })
+        if (u) {
+            return res.json({ // status needed --important--
+                error: true,
+                validationErrors: [{
+                    param: 'email',
+                    msg: 'An account with the same email address already exists'
+                }]
+            })
+        }
+        try {
+            // Update User
+            let u = await db.collection('panel-users').findOneAndUpdate({
+                _id: {
+                    $eq: new ObjectId(req.params.userId)
+                }
+            }, {
+                $set: {
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    phone: req.body.phone
                 }
             })
             if (u.value === null) {
@@ -677,6 +763,61 @@ exports.updateTripType = async(req, res, next) => {
     }
 }
 
+exports.updatePanelUserPassword = async(req, res, next) => {
+    console.log(req.params.userId)
+    if (req.user._id != req.params.userId) {
+        return res.status(403).json({
+            error: true,
+            validationErrors: [{
+                param: auth
+            }]
+        })
+    }
+    const errors = validationResult(req)
+        // * validate req data
+    if (!errors.isEmpty()) {
+        return res.json({
+            error: true,
+            validationErrors: errors.array()
+        })
+    }
+    db = getDb()
+    try {
+        // password hashing
+        bcrypt.hash(req.body.password, 12,
+            async(err, hash) => {
+                if (err) {
+                    throw err
+                }
+                try {
+                    let u = await db.collection('panel-users').findOneAndUpdate({
+                        _id: {
+                            $eq: new ObjectId(req.params.userId)
+                        }
+                    }, {
+                        $set: {
+                            password: hash
+                        }
+                    })
+                    return res.status(200).json({
+                        error: false,
+                        message: 'Passsword reset successfully'
+                    })
+                } catch (error) {
+                    console.log(error)
+                    res.status(500).json({
+                        error: true,
+                        errorMessage: 'Internal server error'
+                    })
+                }
+            })
+    } catch (err) {
+        return res.status(500).send({
+            errorMessage: err
+        })
+    }
+}
+
 exports.resetPanelUserPassword = async(req, res, next) => {
     db = getDb()
     try {
@@ -841,8 +982,6 @@ exports.addTrip = async(req, res, next) => {
                 validationErrors: errors.array()
             })
         }
-        console.log('departureTime', req.body.departureTime)
-        console.log('arrivalTime', req.body.arrivalTime)
         let trip = new Trip({
             days: req.body.days,
             from: new ObjectId(req.body.from),
@@ -894,34 +1033,31 @@ exports.addTrip = async(req, res, next) => {
         }
         // check if trip exists
         let t = await db.collection('trips').findOne({
-            $and: [{
-                    from: {
-                        $eq: trip.from
+                $and: [{
+                        from: {
+                            $eq: trip.from
+                        }
+                    },
+                    {
+                        to: {
+                            $eq: trip.to
+                        }
+                    },
+                    {
+                        departureTime: {
+                            $eq: trip.departureTime
+                        }
+                    },
+                    {
+                        arrivalTime: {
+                            $eq: trip.arrivalTime
+                        }
                     }
-                },
-                {
-                    to: {
-                        $eq: trip.to
-                    }
-                },
-                {
-                    departureTime: {
-                        $eq: trip.departureTime
-                    }
-                },
-                {
-                    arrivalTime: {
-                        $eq: trip.arrivalTime
-                    }
-                }
-            ]
-        })
-        console.log('t: ', t)
-
-        // ? merging 2 days arrays despite equality
+                ]
+            })
+            // ? merging 2 days arrays despite equality
         if (t) {
             t.days = mergeDates([t.days, trip.days])
-            console.log(t.days)
             let u = await db.collection('trips').findOneAndUpdate({
                 _id: {
                     $eq: new ObjectId(t._id)

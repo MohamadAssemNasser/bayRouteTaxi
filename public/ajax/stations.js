@@ -20,25 +20,10 @@ function clearModalValues() {
 }
 
 function loadPanelStations() {
-    $('#stationsTable > tbody').html('')
-    $('#stationsTable > tbody').html(`
-    <tr>
-        <td colspan="7">
-            <div class="loader-wrapper" style="display: none;">
-                <div class="loader">
-                    <div class="m-t-30">
-                        <img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48" alt="Aero">
-                    </div>
-                    <p>Please wait...</p>
-                </div>
-            </div>
-        </td>
-    </tr>
-    `)
-    $('#stationsTable .loader-wrapper').css('display', 'block')
+    $('#stationsTable > tbody').html('<tr><td></td></tr>')
+    $('.LW').css('display', 'block')
     axios.get('http://admin.bayroute.taxi/site/all-stations')
         .then((response) => {
-            console.log(response)
             let stations = response.data
             let tbody = ''
             $.each(stations, (index, station) => {
@@ -53,8 +38,8 @@ function loadPanelStations() {
                 </tr>
                 `
             })
-            $('#stationsTable .loader-wrapper').css('display', 'none')
             $('#stationsTable > tbody').html(tbody)
+            $('.LW').css('display', 'none')
         })
         .catch((error) => {
             // handle error

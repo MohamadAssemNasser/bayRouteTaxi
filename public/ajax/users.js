@@ -1,6 +1,5 @@
 // http://3.20.90.158 for production
 // http://admin.bayroute.taxi for development
-
 $(document).ready(function() {
     loadPanelUsers()
     $('#addUser').click(() => {
@@ -25,22 +24,8 @@ function clearModalValues() {
 }
 
 function loadPanelUsers() {
+    $('.LW').css('display', 'block')
     $('#usersTable > tbody').html('')
-    $('#usersTable > tbody').html(`
-    <tr>
-        <td colspan="7">
-            <div class="loader-wrapper" style="display: none;">
-                <div class="loader">
-                    <div class="m-t-30">
-                        <img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48" alt="Aero">
-                    </div>
-                    <p>Please wait...</p>
-                </div>
-            </div>
-        </td>
-    </tr>
-    `)
-    $('#usersTable .loader-wrapper').css('display', 'block')
     axios.get('http://admin.bayroute.taxi/site/all-panel-users')
         .then((response) => {
             let users = response.data
@@ -62,11 +47,17 @@ function loadPanelUsers() {
                 </tr>
                 `
             })
-            $('#usersTable .loader-wrapper').css('display', 'none')
             $('#usersTable > tbody').html(tbody)
+            $('.LW').css('display', 'none')
         })
         .catch((error) => {
-            // handle error
+            swal({
+                title: "Something went wrong",
+                text: error,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
             console.log(error)
         })
 

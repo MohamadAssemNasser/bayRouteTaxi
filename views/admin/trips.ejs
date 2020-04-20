@@ -23,39 +23,13 @@
             <link rel="stylesheet" href="/assets/plugins/bootstrap-select/css/bootstrap-select.css" />
             <!-- Custom Css -->
             <link rel="stylesheet" href="/assets/css/style.min.css">
-            <style>
-                .loader-wrapper {
-                    z-index: 1;
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
-                    background: #eee;
-                    opacity: 0.5;
-                    overflow: hidden;
-                    text-align: center;
-                }
-                
-                .loader-wrapper p {
-                    font-size: 13px;
-                    font-weight: 700;
-                    color: #777;
-                    margin-top: 10px
-                }
-                
-                .loader-wrapper .loader {
-                    position: relative;
-                    top: calc(40% - 30px)
-                }
-            </style>
+            <%- include('../includes/loader-style.ejs') %>
 </head>
 
 <body class="theme-blue right_icon_toggle">
     <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="m-t-30"><img class="zmdi-hc-spin" src="/assets/images/loader.svg" width="48" height="48" alt="/aero"></div>
-            <p>Please wait...</p>
-        </div>
+    <div class="LW">
+        <div class="L">Loading...</div>
     </div>
 
     <!-- Left Sidebar -->
@@ -69,7 +43,7 @@
                         <div class="col-lg-7 col-md-6 col-sm-12">
                             <h2>Trips Page</h2>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Aero</a>
+                                <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Admin Panel</a>
                                 </li>
                                 <li class="breadcrumb-item active">Pages</li>
                                 <li class="breadcrumb-item active">Trips Page</li>

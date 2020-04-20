@@ -13,12 +13,14 @@ let addPanelUserValidation = [
     .trim()
     .isLength({
         min: 2,
-    }),
+    })
+    .isAlpha(),
     body('lastName')
     .trim()
     .isLength({
         min: 2,
-    }),
+    })
+    .isAlpha(),
     body('phone', 'Invalid phone number')
     .blacklist(' ')
     .isLength({
@@ -73,9 +75,35 @@ let updatePanelUserValidation = [
     }) => (value === 'Check In' || value === 'Data Entry'))
 ]
 
+let updateProfileValidation = [
+    body('firstName')
+    .trim()
+    .isLength({
+        min: 2,
+    }),
+    body('lastName')
+    .trim()
+    .isLength({
+        min: 2,
+    }),
+    body('phone', 'Invalid phone number')
+    .blacklist(' ')
+    .isLength({
+        min: 8,
+    })
+    .isNumeric(),
+    body('email', 'Invalid email address')
+    .trim()
+    .isLength({
+        min: 7,
+    })
+    .isEmail()
+]
+
 
 // -------------- GET --------------
-router.get('/', auth.proceedIfLoggedIn, controller.getDashboard)
+
+router.get('/', auth.proceedIfLoggedIn, controller.redirectToProfile)
 
 router.get('/login', auth.preventIfLoggedIn, controller.getLogin)
 
@@ -87,8 +115,13 @@ router.get('/tripTypes', auth.proceedIfLoggedIn, auth.isAdmin, controller.getTri
 
 router.get('/users', auth.proceedIfLoggedIn, auth.isAdmin, controller.getUsers)
 
+router.get('/logout', auth.proceedIfLoggedIn, controller.getLogout)
+
+router.get('/profile', auth.proceedIfLoggedIn, controller.getProfile)
+
+router.get('/feedback', auth.proceedIfLoggedIn, controller.getFeedback)
+
 // -------------- POST --------------
-router.post('/logout', auth.proceedIfLoggedIn, controller.postLogout)
 
 router.post('/login', [
     body('email')
@@ -227,11 +260,33 @@ router.post('/site/add-trip', [
 
 // ------- PUT -------
 
+router.put('/site/update-panel-user/:userId',
+    updateProfileValidation,
+    auth.proceedIfLoggedIn,
+    controller.updateProfile
+)
+
 router.put('/site/update-panel-user',
     updatePanelUserValidation,
     auth.proceedIfLoggedIn,
     auth.isAdmin,
     controller.updatePanelUser
+)
+
+router.put('/site/reset-password/:userId',
+    auth.proceedIfLoggedIn, [
+        body('password')
+        .trim()
+        .isLength({
+            min: 7
+        })
+        .withMessage('Password should at least have 7 characters'),
+        body('confirmPassword', 'Passwords mut match')
+        .custom((value, {
+            req
+        }) => (value === req.body.password))
+    ],
+    controller.updatePanelUserPassword
 )
 
 router.put('/site/reset-password',

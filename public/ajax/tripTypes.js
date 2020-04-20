@@ -22,29 +22,14 @@ function clearModalValues() {
 }
 
 function loadPanelTripTypes() {
-    $('#tripTypesTable > tbody').html('')
-    $('#tripTypesTable > tbody').html(`
-    <tr>
-        <td colspan="7">
-            <div class="loader-wrapper" style="display: none;">
-                <div class="loader">
-                    <div class="m-t-30">
-                        <img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48" alt="Aero">
-                    </div>
-                    <p>Please wait...</p>
-                </div>
-            </div>
-        </td>
-    </tr>
-    `)
-    $('#tripTypesTable .loader-wrapper').css('display', 'block')
+    $('#stationsTable > tbody').html('<tr><td></td></tr>')
+    $('.LW').css('display', 'block')
     axios.get('http://admin.bayroute.taxi/site/all-tripTypes')
         .then((response) => {
             let tripTypes = response.data
             console.log(tripTypes)
-            let tbody = ''
             $.each(tripTypes, (index, tripType) => {
-                tbody += `
+                $('#tripTypesTable > tbody').append(`
                 <tr>
                     <th style="vertical-align: middle; text-align: center;" scope="row">${index + 1}</th>
                     <td style="vertical-align: middle; text-align: center;">${tripType.name}</td>
@@ -56,10 +41,11 @@ function loadPanelTripTypes() {
                         <button onclick="deleteTripType('${tripType._id}')" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
                     </td>
                 </tr>
-                `
+                `)
             })
-            $('#tripTypesTable .loader-wrapper').css('display', 'none')
-            $('#tripTypesTable > tbody').html(tbody)
+        })
+        .then(() => {
+            $('.LW').css('display', 'none')
         })
         .catch((error) => {
             // handle error

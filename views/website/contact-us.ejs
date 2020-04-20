@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="/website/contact-us/template.css" rel="stylesheet">
     <link href="/website/contact-us/contact-us-STYLESHEET.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
 </head>
 
 <body>
@@ -71,13 +72,13 @@
         </div>
         <br>
         <br>
-        <form class="text-center border border-light p-5" style="padding-top: 0% !important;">
+        <form class="text-center border border-light p-5" style="padding-top: 0% !important;" v-on:submit="sub" action="/feedback" method="POST">
             <p class="h1 mb-4" style="color:rgb(13,66,143);">Give Us Feedback!</p>
-            <input name="" type="text" placeholder="Name" class="form-control mb-4" required>
+            <input name="" type="text" placeholder="Name" class="form-control mb-4" v-model="name" required>
             <!-- Email -->
-            <input type="email" placeholder="E-mail" class="form-control mb-4" required>
+            <input type="email" placeholder="E-mail" class="form-control mb-4" v-model="email" required>
             <!-- Subject -->
-            <select class="browser-default custom-select mb-4">
+            <select class="browser-default custom-select mb-4" v-model="option">
                 <option value="" disabled selected>Choose Option</option>
                 <option value="1" >Feedback</option>
                 <option value="2">Report an issue</option>
@@ -86,12 +87,7 @@
             </select>
             <!-- Message -->
             <div class="form-group">
-                <textarea class="form-control rounded-0" rows="3" placeholder="Your Message..." required></textarea>
-            </div>
-            <!-- Copy -->
-            <div class="custom-control custom-checkbox mb-4">
-                <input type="checkbox" class="custom-control-input" id="defaultContactFormCopy" name="wantsACopy">
-                <label class="custom-control-label" for="defaultContactFormCopy">Send me a copy of this message</label>
+                <textarea class="form-control rounded-0" rows="3" placeholder="Your Message..." v-model.trim="message" required></textarea>
             </div>
             <!-- Send button -->
             <button class="btn btn-info btn-block" type="submit">Send</button>

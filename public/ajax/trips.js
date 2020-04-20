@@ -25,6 +25,7 @@ $(document).ready(function() {
         arrivalTime = $('#tripArrivalTime').val()
         type = $('#tripType').val()
         csrfToken = $('#csrfToken').val()
+        $('.LW').css('display', 'block')
 
         if (validate()) {
             try {
@@ -42,9 +43,9 @@ $(document).ready(function() {
                     }
                 })
                 response = response.data
+                $('.LW').css('display', 'none')
                 $(this).prop('disabled', false)
                 if (response.error) {
-                    console.log(response.validationErrors)
                     return showErrors(response.validationErrors)
                 }
                 swal("The Trip was added successfully!", {
@@ -222,12 +223,14 @@ function handleData(data) {
 }
 
 function renderCalendar(departure){
+    $('.LW').css('display', 'block')
     const calendar = $('#calendar')
     // calendar.fullCalendar('removeEventSources')
     calendar.fullCalendar( 'removeEvents', function(e){ return e.from != departure});
     from[`${departure}`].forEach( element => {
         calendar.fullCalendar('renderEvent', element, true)
     })
+    $('.LW').css('display', 'none')
 }
 
 $('document').ready(() => {
@@ -237,6 +240,7 @@ $('document').ready(() => {
     }).then((response) => {
         handleData(response.data)
         renderCalendar($('#scheduleFrom > div > div > ul > .selected > a > .text').html())
+        $('.LW').css('display', 'none')
     }).catch((err) => {
         console.log(err)
     })

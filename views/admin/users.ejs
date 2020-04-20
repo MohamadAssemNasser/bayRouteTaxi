@@ -7,7 +7,9 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
 
-    <title><%= pageTitle %> </title>
+    <title>
+        <%= pageTitle %>
+    </title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
@@ -15,95 +17,74 @@
     <link rel="stylesheet" href="assets/plugins/bootstrap-select/css/bootstrap-select.css" />
     <!-- Custom Css -->
     <link rel="stylesheet" href="/assets/css/style.min.css">
-    <style>
-        .loader-wrapper {
-            z-index: 1;
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #eee;
-            opacity: 0.5;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .loader-wrapper p {
-            font-size: 13px;
-            font-weight: 700;
-            color: #777;
-            margin-top: 10px
-        }
-
-        .loader-wrapper .loader {
-            position: relative;
-            top: calc(40% - 30px)
-        }
-    </style>
+    <%- include('../includes/loader-style.ejs') %>
 </head>
 
 <body class="theme-blue right_icon_toggle">
     <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="m-t-30"><img class="zmdi-hc-spin" src="/assets/images/loader.svg" width="48" height="48"
-                    alt="/aero"></div>
-            <p>Please wait...</p>
-        </div>
+    <div class="LW">
+        <div class="L">Loading...</div>
     </div>
 
     <!-- Left Sidebar -->
     <%- include('../includes/side-panel.ejs') %>
 
-    <!-- Main Content -->
-    <section class="content">
-        <div class="body_scroll">
-            <div class="block-header">
-                <div class="row">
-                    <div class="col-lg-7 col-md-6 col-sm-12">
-                        <h2>Users Page</h2>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Aero</a>
-                            </li>
-                            <li class="breadcrumb-item active">Pages</li>
-                            <li class="breadcrumb-item active">Users Page</li>
-                        </ul>
-                        <button class="btn btn-primary btn-icon mobile_menu" type="button">
+        <!-- Main Content -->
+        <section class="content">
+            <div class="body_scroll">
+                <div class="block-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-6 col-sm-12">
+                            <h2>Users Page</h2>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Admin Panel</a>
+                                </li>
+                                <li class="breadcrumb-item active">Pages</li>
+                                <li class="breadcrumb-item active">Users Page</li>
+                            </ul>
+                            <button class="btn btn-primary btn-icon mobile_menu" type="button">
                             <i class="zmdi zmdi-sort-amount-desc"></i>
                         </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="container-fluid">
-                <!-- Hover Rows -->
-                <div class="row clearfix">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2><strong>All</strong> Users</h2>
-                                <ul class="header-dropdown">
-                                    <li class="remove">
-                                        <button id="addUser" class="btn btn-primary"
-                                            style="position:relative;top:-1rem">
+                <div class="container-fluid">
+                    <!-- Hover Rows -->
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2><strong>All</strong> Users</h2>
+                                    <ul class="header-dropdown">
+                                        <li class="remove">
+                                            <button id="addUser" class="btn btn-primary" style="position:relative;top:-1rem">
                                             <i style="color: white;" class="zmdi zmdi-hc-fw"></i> ADD</button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="body">
-                                <div class="table-responsive">
-                                    <table id="usersTable" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>FIRST NAME</th>
-                                                <th>LAST NAME</th>
-                                                <th>EMAIL</th>
-                                                <th>PHONE</th>
-                                                <th>ROLE</th>
-                                                <th>ACTIONS</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="position: relative;"></tbody>
-                                    </table>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12">
+                                            <div class="card">
+                                                <div class="table-responsive">
+                                                    <table id="usersTable" class="table table-hover product_item_list c_table theme-color mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>FIRST NAME</th>
+                                                                <th>LAST NAME</th>
+                                                                <th>EMAIL</th>
+                                                                <th>PHONE</th>
+                                                                <th>ROLE</th>
+                                                                <th style="text-align: center;">ACTIONS</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,88 +92,85 @@
                 </div>
                 <!-- #END# Hover Rows -->
             </div>
-        </div>
-    </section>
-
-    <!-- Modal Dialogs ====== -->
-    <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="loader-wrapper" style="display: none; position: absolute;">
-                <div class="loader">
-                    <div class="m-t-30"><img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48"
-                            alt="Aero"></div>
-                    <p>Please wait...</p>
-                </div>
             </div>
-            <div class="modal-content">
+        </section>
 
-                <div class="modal-header text-center">
-                    <h4 class="title text-center" id="defaultModalLabel">Add a User</h4>
+        <!-- Modal Dialogs ====== -->
+        <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="loader-wrapper" style="display: none; position: absolute;">
+                    <div class="loader">
+                        <div class="m-t-30"><img class="zmdi-hc-spin" src="assets/images/loader.svg" width="48" height="48" alt="Aero"></div>
+                        <p>Please wait...</p>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div class="row clearfix">
-                        <div class="col-sm-6">
-                            <div id="firstNameError">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div id="lastNameError">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input id="userFirstName" type="text" class="form-control" placeholder="First Name" />
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input id="userLastName" type="text" class="form-control" placeholder="Last Name" />
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div id="phoneError"></div>
-                            <div class="input-group masked-input mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="zmdi zmdi-smartphone"></i></span>
+                <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                        <h4 class="title text-center" id="defaultModalLabel">Add a User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row clearfix">
+                            <div class="col-sm-6">
+                                <div id="firstNameError">
                                 </div>
-                                <input id="userPhone" type="text" class="form-control mobile-phone-number"
-                                    placeholder="Ex: 00 000 000">
                             </div>
-                            <div id="emailError"></div>
-                            <div class="input-group masked-input mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="zmdi zmdi-email"></i></span>
+                            <div class="col-sm-6">
+                                <div id="lastNameError">
                                 </div>
-                                <input id="userEmail" type="text" class="form-control email"
-                                    placeholder="Ex: example@example.com">
                             </div>
-                            <div id="passwordError"></div>
-                            <div id="hideme" class="input-group masked-input mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="zmdi zmdi-key"></i></span>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input id="userFirstName" type="text" class="form-control" placeholder="First Name" />
                                 </div>
-                                <input id="userPassword" type="text" class="form-control" placeholder="Password" />
                             </div>
-                            <div id="roleError"></div>
-                            <div class="mb-3">
-                                <select id="userRole" class="form-control show-tick">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input id="userLastName" type="text" class="form-control" placeholder="Last Name" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div id="phoneError"></div>
+                                <div class="input-group masked-input mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="zmdi zmdi-smartphone"></i></span>
+                                    </div>
+                                    <input id="userPhone" type="text" class="form-control mobile-phone-number" placeholder="Ex: 00 000 000">
+                                </div>
+                                <div id="emailError"></div>
+                                <div class="input-group masked-input mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="zmdi zmdi-email"></i></span>
+                                    </div>
+                                    <input id="userEmail" type="text" class="form-control email" placeholder="Ex: example@example.com">
+                                </div>
+                                <div id="passwordError"></div>
+                                <div id="hideme" class="input-group masked-input mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="zmdi zmdi-key"></i></span>
+                                    </div>
+                                    <input id="userPassword" type="text" class="form-control" placeholder="Password" />
+                                </div>
+                                <div id="roleError"></div>
+                                <div class="mb-3">
+                                    <select id="userRole" class="form-control show-tick">
                                     <option>Data Entry</option>
                                     <option>Check In</option>
                                 </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn waves-effect" data-dismiss="modal">CLOSE</button>
-                    <button type="button" class="btn btn-primary waves-effect">SAVE CHANGES</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn waves-effect" data-dismiss="modal">CLOSE</button>
+                        <button type="button" class="btn btn-primary waves-effect">SAVE CHANGES</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Jquery Core Js -->
-    <%- include('../includes/bottom-scripts.ejs') %>
-    <script src="/ajax/users.js"></script>
+        <!-- Jquery Core Js -->
+        <%- include('../includes/bottom-scripts.ejs') %>
+            <script src="/ajax/users.js"></script>
 </body>
 
 </html>
