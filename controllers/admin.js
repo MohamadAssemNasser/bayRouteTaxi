@@ -193,16 +193,50 @@ exports.getTripTypes = (req, res, next) => {
     })
 }
 
-exports.getFeedback = (req, res, next) => {
-    return res.render('admin/feedback', {
-        pageTitle: 'BayRoute Taxi :: Feedback',
-        path: '/feedback',
+exports.getFeedbacks = (req, res, next) => {
+    return res.render('admin/feedbacks', {
+        pageTitle: 'BayRoute Taxi :: Feedbacks',
+        path: '/feedbacks',
         user: {
             firstName: req.user.firstName,
             role: req.user.role
         }
     })
 }
+
+exports.getIssues = (req, res, next) => {
+    return res.render('admin/issues', {
+        pageTitle: 'BayRoute Taxi :: Issues',
+        path: '/issues',
+        user: {
+            firstName: req.user.firstName,
+            role: req.user.role
+        }
+    })
+}
+
+exports.getBusinessPurposes = (req, res, next) => {
+    return res.render('admin/business-purposes', {
+        pageTitle: 'BayRoute Taxi :: Business Purposes',
+        path: '/business-purposes',
+        user: {
+            firstName: req.user.firstName,
+            role: req.user.role
+        }
+    })
+}
+
+exports.getFeatureRequests = (req, res, next) => {
+    return res.render('admin/feature-requests', {
+        pageTitle: 'BayRoute Taxi :: Feature Requests',
+        path: '/feature-requests',
+        user: {
+            firstName: req.user.firstName,
+            role: req.user.role
+        }
+    })
+}
+
 
 // ------------- APIs -------------
 

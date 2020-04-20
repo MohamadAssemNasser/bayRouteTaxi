@@ -119,7 +119,13 @@ router.get('/logout', auth.proceedIfLoggedIn, controller.getLogout)
 
 router.get('/profile', auth.proceedIfLoggedIn, controller.getProfile)
 
-router.get('/feedback', auth.proceedIfLoggedIn, controller.getFeedback)
+router.get('/feedbacks', auth.proceedIfLoggedIn, controller.getFeedbacks)
+
+router.get('/issues', auth.proceedIfLoggedIn, controller.getIssues)
+
+router.get('/business-purposes', auth.proceedIfLoggedIn, controller.getBusinessPurposes)
+
+router.get('/feature-requests', auth.proceedIfLoggedIn, controller.getFeatureRequests)
 
 // -------------- POST --------------
 

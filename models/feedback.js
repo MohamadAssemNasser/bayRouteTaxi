@@ -43,7 +43,7 @@ class Feedback {
     static async addOne(f) {
         const db = getDb()
         try {
-            let feedbacks = await db.collection('feedbacks').InserOne(f)
+            let feedbacks = await db.collection('feedbacks').insertOne(f)
             console.log(feedbacks)
             return feedbacks
         } catch (err) {
