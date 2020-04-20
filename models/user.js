@@ -33,7 +33,7 @@ class User {
                 console.log(err)
             }
         }
-        if(options.email !== undefined) {
+        if (options.email !== undefined) {
             const db = getDb()
             try {
                 let u = await db.collection('users').findOne({ email: options.email })
@@ -41,8 +41,7 @@ class User {
             } catch (err) {
                 console.log(err)
             }
-        }
-        else {
+        } else {
             return 0;
         }
     }

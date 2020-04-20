@@ -11,6 +11,9 @@
 
 <body>
     <div class="container" id="google_translate_element">
+        <div class="LW">
+            <div class="L">Loading...</div>
+        </div>
         <div style="text-align: center;">
             <img id="logo" src="/website/icons/logo.png" alt="logo">
         </div>
@@ -72,13 +75,14 @@
         </div>
         <br>
         <br>
-        <form class="text-center border border-light p-5" style="padding-top: 0% !important;" v-on:submit="sub" action="/feedback" method="POST">
+        <form id="form" class="text-center border border-light p-5" style="padding-top: 0% !important;" v-on:submit="sendFeedback">
             <p class="h1 mb-4" style="color:rgb(13,66,143);">Give Us Feedback!</p>
+            <input id="csrfToken" type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input name="" type="text" placeholder="Name" class="form-control mb-4" v-model="name" required>
             <!-- Email -->
             <input type="email" placeholder="E-mail" class="form-control mb-4" v-model="email" required>
             <!-- Subject -->
-            <select class="browser-default custom-select mb-4" v-model="option">
+            <select class="browser-default custom-select mb-4" v-model="option" required>
                 <option value="" disabled selected>Choose Option</option>
                 <option value="1" >Feedback</option>
                 <option value="2">Report an issue</option>
@@ -114,9 +118,10 @@
     <script src="/ajax/jquery-3.4.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-    <script>
-        // AJAX CALL
-    </script>
+    <script src="/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="/assets/js/pages/ui/sweetalert.js"></script>
+    <script src="/ajax/axios.min.js"></script>
+    <script src="/website/contact-us/script.js"></script>
 </body>
 
 </html>
