@@ -28,7 +28,11 @@
                 <li class="<%= (path === '/users') ? 'active open' : '' %>"> <a href="/users"><i
                                         class="zmdi zmdi-assignment-account"></i><span>Users</span></a></li>
                 <% } %>
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment"></i><span>App</span></a>
+                    <li class="<%= (path === '/feedbacks' || path === '/issues' || path === '/business-purposes' || path === '/feature-requests') ? 'active open' : '' %>">
+                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                            <i class="zmdi zmdi-assignment"></i>
+                            <span>App</span>
+                        </a>
                         <ul class="ml-menu">
                             <li class="<%= (path === '/feedbacks') ? 'active open' : '' %>"><a href="/feedbacks">Feedbacks</a></li>
                             <li class="<%= (path === '/issues') ? 'active open' : '' %>"><a href="/issues">Issues</a></li>

@@ -48,6 +48,7 @@ function loadPanelUsers() {
                 `
             })
             $('#usersTable > tbody').html(tbody)
+            $('#usersTable > tbody td[colspan=7]').remove()
             $('.LW').css('display', 'none')
         })
         .catch((error) => {

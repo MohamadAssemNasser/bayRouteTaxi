@@ -20,7 +20,6 @@ function clearModalValues() {
 }
 
 function loadPanelStations() {
-    $('#stationsTable > tbody').html('<tr><td></td></tr>')
     $('.LW').css('display', 'block')
     axios.get('http://admin.bayroute.taxi/site/all-stations')
         .then((response) => {
@@ -39,6 +38,7 @@ function loadPanelStations() {
                 `
             })
             $('#stationsTable > tbody').html(tbody)
+            $('#stationsTable > tbody td[colspan=3]').remove()
             $('.LW').css('display', 'none')
         })
         .catch((error) => {

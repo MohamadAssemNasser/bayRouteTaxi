@@ -24,12 +24,13 @@ function clearModalValues() {
 function loadPanelTripTypes() {
     $('#stationsTable > tbody').html('<tr><td></td></tr>')
     $('.LW').css('display', 'block')
+    let html = ''
     axios.get('http://admin.bayroute.taxi/site/all-tripTypes')
         .then((response) => {
             let tripTypes = response.data
             console.log(tripTypes)
             $.each(tripTypes, (index, tripType) => {
-                $('#tripTypesTable > tbody').append(`
+                html += `
                 <tr>
                     <th style="vertical-align: middle; text-align: center;" scope="row">${index + 1}</th>
                     <td style="vertical-align: middle; text-align: center;">${tripType.name}</td>
@@ -41,10 +42,12 @@ function loadPanelTripTypes() {
                         <button onclick="deleteTripType('${tripType._id}')" class="btn btn-sm btn-danger"><i style="color: white;" class="zmdi zmdi-hc-fw"></i> DELETE</button>
                     </td>
                 </tr>
-                `)
+                `
             })
+            return html
         })
-        .then(() => {
+        .then((html) => {
+            $('#tripTypesTable > tbody').html(html)
             $('.LW').css('display', 'none')
         })
         .catch((error) => {
