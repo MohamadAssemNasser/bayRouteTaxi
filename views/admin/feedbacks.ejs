@@ -25,16 +25,14 @@
 
 <body class="theme-blue right_icon_toggle">
 
-    <!-- Page Loader -->
-    <div class="LW">
-        <div class="L">Loading...</div>
-    </div>
-
     <!-- Left Sidebar -->
     <%- include('../includes/side-panel.ejs') %>
 
         <!-- Main Content -->
-        <section class="content">
+        <section id="app" class="content">
+            <div v-if="isLoading" class="LW">
+                <div class="L">Loading...</div>
+            </div>
             <div class="body_scroll">
                 <div class="block-header">
                     <div class="row">
@@ -49,59 +47,110 @@
                         </div>
                     </div>
                 </div>
-                <div id="app" class="container-fluid">
+                <div class="container-fluid">
                     <div class="row clearfix">
                         <div class="col-12">
                             <div class="card">
                                 <div class="header">
                                     <h2><strong>View</strong> Feedbacks</h2>
                                 </div>
-                                <td class="body">
-                                    <td class="row clearfix">
-                                        <td class="col-lg-12">
-                                            <td class="card">
-                                                <td class="table-responsive">
-                                                    <table class="table table-hover product_item_list c_table theme-color mb-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Name</th>
-                                                                <th>Date</th>
-                                                                <th data-breakpoints="sm xs">Feedback</th>
-                                                                <th data-breakpoints="sm xs md">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td><img src="/assets/images/ecommerce/1.png" width="48" alt="Product img"></td>
-                                                                <td>
-                                                                    <h5>Simple Black Clock</h5>
-                                                                </td>
-                                                                <td>
-                                                                    <p class="text-muted">randomised words even slightly believable 52364185</p>
-                                                                </td>
-                                                                <td>$16.00</td>
-                                                                <td>
-                                                                    <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-green"><i class="zmdi zmdi-mail-reply"></i></a>
-                                                                    <a href="javascript:void(0);" class="btn btn-default waves-effect waves-float btn-sm waves-red"><i class="zmdi zmdi-delete"></i></a>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </td>
-                                        </td>
-                                    </td>
+                                <div class="body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered theme-color mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th>Name</th>
+                                                    <th>Date</th>
+                                                    <th data-breakpoints="sm xs">Message</th>
+                                                    <th data-breakpoints="sm xs md">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(f, index) in feedbacks">
+                                                    <td class="text-center">{{index + 1}}</td>
+                                                    <td>{{f.name}}</td>
+                                                    <td>{{f.date}}</td>
+                                                    <td><span class="text-muted">{{f.message.slice(0, 50)}}{{f.message.length > 50 ? '...' : ''}}</span></td>
+                                                    <td style="text-align: center; vertical-align: middle; padding: 0;">
+                                                        <button @click="reply(index)" class="btn btn-sm btn-info"><i class="zmdi zmdi-mail-reply col-white"></i></button>
+                                                        <!-- <button onclick="reply('${user._id}')" class="btn btn-sm btn-danger"><i class="zmdi zmdi-delete col-white"></i></button> -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-12">
+                            <div class="card">
+                                <div id="reply" class="header">
+                                    <h2><strong>Reply to</strong> Feedbacks</h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input v-model="name" name="name" type="text" class="form-control" placeholder="Name" disabled/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input v-model="email" name="email" type="text" class="form-control" placeholder="Email" disabled/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <label for="message">Client's Message</label>
+                                                    <textarea v-model="clientMessage" name="message" rows="12" class="form-control no-resize" placeholder="Client's message will appear here..." readonly></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="subject">Subject</label>
+                                                <input v-model="subject" name="subject" type="text" class="form-control" placeholder="Subject" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <label for="message">Message</label>
+                                                    <textarea v-model="message" name="message" rows="12" class="form-control no-resize" placeholder="Please type your reply here..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6 text-center">
+                                            <button @click="clear" type="button" class="btn waves-effect" data-dismiss="modal" v-if="canSend">Clear</button>
+                                        </div>
+                                        <div class="col-sm-6 text-center">
+                                            <button @click="sendReply" type="button" class="btn btn-primary waves-effect" :disabled="!canSend">Reply with Message</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
         </section>
         <!-- Jquery Core Js -->
         <%- include('../includes/bottom-scripts.ejs') %>
-            <script src="/ajax/feedback.js"></script>
+            <script src="/ajax/feedbacks.js"></script>
 </body>
 
 </html>

@@ -4,11 +4,13 @@ const jwt = require('jsonwebtoken')
 const {
     validationResult
 } = require('express-validator')
+const nodemailer = require('nodemailer')
 
 const User = require('../models/panel-user')
 const Station = require('../models/station')
 const TripType = require('../models/tripType')
 const Trip = require('../models/trip')
+const Feedback = require('../models/feedback')
 
 const getDb = require('../util/database').getDb
 
@@ -324,6 +326,19 @@ exports.getTripType = async(req, res, next) => {
             _id: new ObjectId(req.params.tripTypeId)
         })
         res.json(s)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            errorMessage: err
+        })
+    }
+}
+
+exports.getFeedbacksApi = async(req, res, next) => {
+    try {
+        let s = await Feedback.getAll(req.params.option)
+            // console.log(s)
+        return res.json(s)
     } catch (err) {
         console.log(err)
         return res.status(500).send({
@@ -1135,4 +1150,39 @@ function mergeDates(...arrays) {
     })
     const uniqueArray = jointArray.filter((item, index) => jointArray.indexOf(item) === index)
     return uniqueArray[1]
+}
+
+exports.replyToFeedbacks = async(req, res, next) => {
+    let data = req.body.data
+    let response = sendmail(data.receiver, data.subject, data.message)
+    await Feedback.addResponse(data.id, data.subject, data.message)
+    res.json(response)
+}
+
+let sendmail = (receiver, subject, message) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'bayroutetaxi@gmail.com',
+            pass: '07727010'
+        }
+    })
+
+    // setup e-mail data, even with unicode symbols
+    var mailOptions = {
+        from: '"BayRoute Taxi Support" <bayroutetaxi@gmail.com>', // sender address (who sends)
+        to: receiver, // list of receivers (who receives)
+        subject: subject, // Subject line
+        text: message, // plaintext body
+        // html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js' // html body
+    }
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+        return true
+    })
 }

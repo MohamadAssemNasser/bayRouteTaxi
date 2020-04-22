@@ -12,6 +12,46 @@ class Feedback {
         this.email = options.email
         this.option = options.option
         this.message = options.message
+        let date_ob = new Date();
+        // current date
+        // adjust 0 before single digit date
+        let date = ("0" + date_ob.getDate()).slice(-2)
+            // current month
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2)
+            // current year
+        let year = date_ob.getFullYear()
+            // current hours
+        let hours = date_ob.getHours()
+        hours = hours < 10 ? `0${hours}` : hours
+            // current minutes
+        let minutes = date_ob.getMinutes()
+        minutes = minutes < 10 ? `0${minutes}` : minutes
+            // current seconds
+        let seconds = date_ob.getSeconds()
+        seconds = seconds < 10 ? `0${seconds}` : seconds
+            // prints date & time in YYYY-MM-DD HH:MM:SS format
+        this.date = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds
+    }
+
+    static async addResponse(id, subject, message) {
+        const db = getDb()
+        try {
+            let u = await db.collection('feedbacks').findOneAndUpdate({
+                _id: {
+                    $eq: new ObjectId(id)
+                }
+            }, {
+                $set: {
+                    reponse: {
+                        subject: subject,
+                        message: message
+                    }
+                }
+            })
+            return u
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     static async findBy(options) {
@@ -28,12 +68,11 @@ class Feedback {
         }
     }
 
-    static async getAll() {
+    static async getAll(option) {
         const db = getDb()
         try {
-            let feedbacks = await db.collection('feedbacks').find({})
-            console.log(feedbacks)
-            return feedbacks
+            let feedbacks = await db.collection('feedbacks').find({ option: option })
+            return feedbacks.toArray()
         } catch (err) {
             console.log(err)
             return false

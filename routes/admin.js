@@ -100,7 +100,6 @@ let updateProfileValidation = [
     .isEmail()
 ]
 
-
 // -------------- GET --------------
 
 router.get('/', auth.proceedIfLoggedIn, controller.redirectToProfile)
@@ -189,6 +188,11 @@ router.get('/site/trips',
     controller.getAllTrips
 )
 
+router.get('/site/feedbacks/:option',
+    auth.proceedIfLoggedIn,
+    controller.getFeedbacksApi
+)
+
 // ------- POST -------
 
 router.post('/site/add-panel-user',
@@ -263,6 +267,7 @@ router.post('/site/add-trip', [
     controller.addTrip
 )
 
+router.post('/site/reply', auth.proceedIfLoggedIn, controller.replyToFeedbacks)
 
 // ------- PUT -------
 

@@ -27,7 +27,7 @@
         "install": "^0.13.0",
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.5.2",
-        "nodemailer": "^6.4.2",
+        "nodemailer": "^6.4.6",
         "nodemon": "^2.0.3",
         "vue": "^2.6.11"
     }
