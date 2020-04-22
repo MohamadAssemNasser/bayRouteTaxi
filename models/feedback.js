@@ -12,6 +12,7 @@ class Feedback {
         this.email = options.email
         this.option = options.option
         this.message = options.message
+        this.responded = false
         let date_ob = new Date();
         // current date
         // adjust 0 before single digit date
@@ -45,7 +46,8 @@ class Feedback {
                     reponse: {
                         subject: subject,
                         message: message
-                    }
+                    },
+                    responded: true
                 }
             })
             return u
@@ -71,7 +73,15 @@ class Feedback {
     static async getAll(option) {
         const db = getDb()
         try {
-            let feedbacks = await db.collection('feedbacks').find({ option: option })
+            let feedbacks = await db.collection('feedbacks').find({
+                $and: [{
+                        option: option
+                    },
+                    {
+                        responded: false
+                    }
+                ]
+            })
             return feedbacks.toArray()
         } catch (err) {
             console.log(err)

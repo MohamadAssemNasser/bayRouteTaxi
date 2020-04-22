@@ -1154,12 +1154,12 @@ function mergeDates(...arrays) {
 
 exports.replyToFeedbacks = async(req, res, next) => {
     let data = req.body.data
-    let response = sendmail(data.receiver, data.subject, data.message)
+    let response = sendmail(data.name, data.email, data.subject, data.message, data.oldMessage)
     await Feedback.addResponse(data.id, data.subject, data.message)
     res.json(response)
 }
 
-let sendmail = (receiver, subject, message) => {
+let sendmail = (name, email, subject, message, oldMessage) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -1171,10 +1171,14 @@ let sendmail = (receiver, subject, message) => {
     // setup e-mail data, even with unicode symbols
     var mailOptions = {
         from: '"BayRoute Taxi Support" <bayroutetaxi@gmail.com>', // sender address (who sends)
-        to: receiver, // list of receivers (who receives)
+        to: email, // list of receivers (who receives)
         subject: subject, // Subject line
-        text: message, // plaintext body
-        // html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js' // html body
+        // text: message, // plaintext body
+        html: ` <blockquote>
+                    <p>${oldMessage}</p>
+                    <footer>—${name}, <cite>${email}</cite></footer>
+                </blockquote>
+                <p>${message}</p>` // html body
     }
 
     // send mail with defined transport object

@@ -41,11 +41,10 @@ var app = new Vue({
 })
 
 function sendReply() {
-
     swal({
             title: "Are you sure?",
             text: "You cannot unsend what has been sent...",
-            icon: "warning",
+            icon: "information",
             buttons: true,
             dangerMode: true,
         })
@@ -58,23 +57,33 @@ function sendReply() {
                     data: {
                         _csrf: $('#csrfToken').val(),
                         data: {
-                            receiver: app.email,
+                            email: app.email,
+                            name: app.name,
                             subject: app.subject,
                             message: app.message,
+                            oldMessage: app.clientMessage,
                             id: app.id
                         }
                     }
                 })
                 response = response.data
-                app.feedbacks = response
                 app.isLoading = false
                 swal('Password reset successfully!', {
                     icon: "success",
+                }).then(() => {
+                    getFeedbacks()
                 })
-            } else {
-                return swal("Oh noes!", "No User was found.", "error")
             }
         })
+}
+
+function resetInputs() {
+    app.name = ''
+    app.email = ''
+    app.subject = ''
+    app.clientMessage = ''
+    app.message = ''
+    app.id = ''
 }
 
 function reply(index) {
