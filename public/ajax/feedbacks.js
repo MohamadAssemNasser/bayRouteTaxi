@@ -44,7 +44,7 @@ function sendReply() {
     swal({
             title: "Are you sure?",
             text: "You cannot unsend what has been sent...",
-            icon: "information",
+            icon: "info",
             buttons: true,
             dangerMode: true,
         })

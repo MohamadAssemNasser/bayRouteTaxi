@@ -1174,11 +1174,12 @@ let sendmail = (name, email, subject, message, oldMessage) => {
         to: email, // list of receivers (who receives)
         subject: subject, // Subject line
         // text: message, // plaintext body
-        html: ` <blockquote>
-                    <p>${oldMessage}</p>
-                    <footer>—${name}, <cite>${email}</cite></footer>
+        html: ` <pre>${message}</pre>
+                <blockquote>
+                <pre>${oldMessage}</pre>
+                <footer>—${name}, <cite>${email}</cite></footer>
                 </blockquote>
-                <p>${message}</p>` // html body
+        ` // html body
     }
 
     // send mail with defined transport object
