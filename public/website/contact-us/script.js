@@ -40,7 +40,7 @@ async function sendFeedback(event) {
         $('.LW').css('display', 'block')
         axios({
                 method: 'post',
-                url: 'http://bayroute.taxi/feedback',
+                url: 'https://assem-nasser.com/feedback',
                 data: f
             })
             .then((response) => {

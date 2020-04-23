@@ -1,5 +1,5 @@
 // http://3.20.90.158 for production
-// http://admin.bayroute.taxi for development
+// https://admin.assem-nasser.com for development
 
 $(document).ready(function() {
     loadPanelTripTypes()
@@ -25,7 +25,7 @@ function loadPanelTripTypes() {
     $('#stationsTable > tbody').html('<tr><td></td></tr>')
     $('.LW').css('display', 'block')
     let html = ''
-    axios.get('http://admin.bayroute.taxi/site/all-tripTypes')
+    axios.get('https://admin.assem-nasser.com/site/all-tripTypes')
         .then((response) => {
             let tripTypes = response.data
             console.log(tripTypes)
@@ -105,7 +105,7 @@ function addTripType() {
     clearErrors()
     axios({
             method: 'post',
-            url: 'http://admin.bayroute.taxi/site/add-tripType',
+            url: 'https://admin.assem-nasser.com/site/add-tripType',
             data: {
                 name: name,
                 deck: deck,
@@ -137,7 +137,7 @@ function updateTripType(id) {
     clearErrors()
     axios({
             method: 'put',
-            url: 'http://admin.bayroute.taxi/site/update-tripType',
+            url: 'https://admin.assem-nasser.com/site/update-tripType',
             data: {
                 _id: id,
                 name: $('#tripTypeName').val(),
@@ -173,7 +173,7 @@ async function editTripTypeModal(id) {
     clearModalValues()
     $('#tripTypeModal').modal('toggle')
     $('#tripTypeModal .loader-wrapper').css('display', 'block')
-    let trip = await axios.get(`http://admin.bayroute.taxi/site/tripType/${id}`)
+    let trip = await axios.get(`https://admin.assem-nasser.com/site/tripType/${id}`)
     trip = trip.data
     $('#tripTypeName').val(trip.name)
     $('.filter-option.pull-left').html(trip.deck)
@@ -196,7 +196,7 @@ function deleteTripType(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'http://admin.bayroute.taxi/site/delete-tripType',
+                    url: 'https://admin.assem-nasser.com/site/delete-tripType',
                     data: {
                         _id: _id,
                         _csrf: csrfToken

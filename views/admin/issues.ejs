@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html class="no-js " lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="userId" content="<%= user._id %>">
+    <meta name="email" content="<%= user.email %>">
+
+    <title>
+        <%= pageTitle %>
+    </title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="assets/plugins/footable-bootstrap/css/footable.bootstrap.min.css">
+    <link rel="stylesheet" href="assets/plugins/footable-bootstrap/css/footable.standalone.min.css">
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="/assets/css/style.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <%- include('../includes/loader-style.ejs') %>
+</head>
+
+<body class="theme-blue right_icon_toggle">
+
+    <!-- Left Sidebar -->
+    <%- include('../includes/side-panel.ejs') %>
+
+        <!-- Main Content -->
+        <section id="app" class="content">
+            <div v-if="isLoading" class="LW">
+                <div class="L">Loading...</div>
+            </div>
+            <div class="body_scroll">
+                <div class="block-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-6 col-sm-12">
+                            <h2>feedback Page</h2>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/"><i class="zmdi zmdi-home"></i> Admin Panel</a></li>
+                                <li class="breadcrumb-item active">Pages</li>
+                                <li class="breadcrumb-item active">Feedback Page</li>
+                            </ul>
+                            <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row clearfix">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2><strong>View</strong> Issues</h2>
+                                </div>
+                                <div class="body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered theme-color mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th>Name</th>
+                                                    <th>Date</th>
+                                                    <th data-breakpoints="sm xs">Message</th>
+                                                    <th data-breakpoints="sm xs md">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(f, index) in feedbacks">
+                                                    <td class="text-center">{{index + 1}}</td>
+                                                    <td>{{f.name}}</td>
+                                                    <td>{{f.date}}</td>
+                                                    <td><span class="text-muted">{{f.message.slice(0, 50)}}{{f.message.length > 50 ? '...' : ''}}</span></td>
+                                                    <td style="text-align: center; vertical-align: middle; padding: 0;">
+                                                        <button @click="reply(index)" class="btn btn-sm btn-info"><i class="zmdi zmdi-mail-reply col-white"></i></button>
+                                                        <!-- <button onclick="reply('${user._id}')" class="btn btn-sm btn-danger"><i class="zmdi zmdi-delete col-white"></i></button> -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-12">
+                            <div class="card">
+                                <div id="reply" class="header">
+                                    <h2><strong>Reply to</strong> Issues</h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input v-model="name" name="name" type="text" class="form-control" placeholder="Name" disabled/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input v-model="email" name="email" type="text" class="form-control" placeholder="Email" disabled/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <label for="message">Client's Message</label>
+                                                    <textarea v-model="clientMessage" name="message" rows="12" class="form-control no-resize" placeholder="Client's message will appear here..." readonly></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="subject">Subject</label>
+                                                <input v-model="subject" name="subject" type="text" class="form-control" placeholder="Subject" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <label for="message">Message</label>
+                                                    <textarea v-model="message" name="message" rows="12" class="form-control no-resize" placeholder="Please type your reply here..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6 text-center">
+                                            <button @click="clear" type="button" class="btn waves-effect" data-dismiss="modal" v-if="canSend">Clear</button>
+                                        </div>
+                                        <div class="col-sm-6 text-center">
+                                            <button @click="sendReply" type="button" class="btn btn-primary waves-effect" :disabled="!canSend">Reply with Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Jquery Core Js -->
+        <%- include('../includes/bottom-scripts.ejs') %>
+            <script src="/ajax/issues.js"></script>
+</body>
+
+</html>

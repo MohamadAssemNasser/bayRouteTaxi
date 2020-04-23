@@ -85,7 +85,7 @@ var app = new Vue({
 async function changePassword() {
     axios({
             method: 'put',
-            url: `http://admin.bayroute.taxi/site/reset-password/${$('meta[name=userId]').attr('content')}`,
+            url: `https://admin.assem-nasser.com/site/reset-password/${$('meta[name=userId]').attr('content')}`,
             data: {
                 password: app.password,
                 confirmPassword: app.confirmPassword,
@@ -124,14 +124,14 @@ async function updateUser() {
     try {
         let data = await axios({
             method: 'put',
-            url: `http://admin.bayroute.taxi/site/update-panel-user/${user._id}`,
+            url: `https://admin.assem-nasser.com/site/update-panel-user/${user._id}`,
             data: user
         })
         data = data.data
         if (data.error) {
             return showErrors(data.validationErrors)
         }
-        data = await axios.get(`http://admin.bayroute.taxi/site/panel-user/${user._id}`)
+        data = await axios.get(`https://admin.assem-nasser.com/site/panel-user/${user._id}`)
         data = data.data
         app.firstName = data.firstName
         app.lastName = data.lastName

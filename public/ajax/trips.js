@@ -31,7 +31,7 @@ $(document).ready(function() {
             try {
                 let response = await axios({
                     method: 'post',
-                    url: 'http://admin.bayroute.taxi/site/add-trip',
+                    url: 'https://admin.assem-nasser.com/site/add-trip',
                     data: {
                         days: weekDays,
                         from: from,
@@ -236,7 +236,7 @@ function renderCalendar(departure){
 $('document').ready(() => {
     axios({
         method: 'get',
-        url: 'http://admin.bayroute.taxi/site/trips',
+        url: 'https://admin.assem-nasser.com/site/trips',
     }).then((response) => {
         handleData(response.data)
         renderCalendar($('#scheduleFrom > div > div > ul > .selected > a > .text').html())
