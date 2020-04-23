@@ -67,6 +67,7 @@ function sendReply() {
                     }
                 })
                 response = response.data
+                resetInputs()
                 app.isLoading = false
                 swal('Password reset successfully!', {
                     icon: "success",
