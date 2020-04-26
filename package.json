@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "pstart": "pm2 start app.js --watch & pm2 logs",
         "pstop": "pm2 stop app",
-        "start": "npx nodemon app.js"
+        "start": "npx nodemon app.js",
+        "api": "npx nodemon api.js"
     },
     "author": "",
     "license": "ISC",

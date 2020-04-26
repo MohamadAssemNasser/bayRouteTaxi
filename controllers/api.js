@@ -1,6 +1,9 @@
 const mongodb = require('mongodb')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const {
+    validationResult
+} = require('express-validator')
 
 const User = require('../models/user')
 const getDb = require('../util/database').getDb

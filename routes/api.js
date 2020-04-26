@@ -3,6 +3,8 @@ const {
     body
 } = require('express-validator');
 
+const controller = require('../controllers/api');
+const router = express.Router();
 
 let registration = [
     body('name', 'Invalid Name')
@@ -30,13 +32,16 @@ let registration = [
     .notEmpty()
 ]
 
-const controller = require('../controllers/api');
-
-const router = express.Router();
-
 router.get('/', (req, res) => {
     res.status(200).json({
         api: 'BayRoute Taxi API'
+    })
+})
+
+router.post('/test', (req, res) => {
+    console.log('data', req.body.data)
+    res.status(201).json({
+        data: req.body.data
     })
 })
 
@@ -48,16 +53,6 @@ router.post('/register', registration, controller.register)
 
 // router.post('/tickets/create', controller.postTickets)
 
-// router.post('/schedule', )
-
-// router.post('/tradePoints', )
-
-// router.post('/contactUs', )
-
-// router.post('/contactUs/feedback', )
-
-// router.post('/tickets', )
-
-router.get('*', (req, res, next) => next())
+router.get('*', (req, res, next) => res.json({ error: 'Invalid Api Route' }))
 
 module.exports = router
