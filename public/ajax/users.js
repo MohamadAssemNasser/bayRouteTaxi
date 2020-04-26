@@ -1,5 +1,3 @@
-// http://3.20.90.158 for production
-// https://admin.assem-nasser.com for development
 $(document).ready(function() {
     loadPanelUsers()
     $('#addUser').click(() => {
@@ -26,7 +24,7 @@ function clearModalValues() {
 function loadPanelUsers() {
     $('.LW').css('display', 'block')
     $('#usersTable > tbody').html('')
-    axios.get('https://admin.assem-nasser.com/site/all-panel-users')
+    axios.get(`${adminLink}/site/all-panel-users`)
         .then((response) => {
             let users = response.data
             let tbody = ''
@@ -76,7 +74,7 @@ async function resetPassword(id) {
             if (willReset) {
                 return axios({
                     method: 'put',
-                    url: 'https://admin.assem-nasser.com/site/reset-password',
+                    url: `${adminLink}/site/reset-password`,
                     data: {
                         _id: id,
                         _csrf: $('#csrfToken').val()
@@ -162,7 +160,7 @@ function addUser() {
     clearErrors()
     axios({
             method: 'post',
-            url: 'https://admin.assem-nasser.com/site/add-panel-user',
+            url: `${adminLink}/site/add-panel-user`,
             data: {
                 firstName: firstName,
                 lastName: lastName,
@@ -196,7 +194,7 @@ async function updateUser(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'https://admin.assem-nasser.com/site/update-panel-user',
+            url: `${adminLink}/site/update-panel-user`,
             data: {
                 _id: id,
                 firstName: $('#userFirstName').val(),
@@ -230,7 +228,7 @@ async function editUserModal(id) {
     clearModalValues()
     $('#userModal').modal('toggle')
     $('#userModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`https://admin.assem-nasser.com/site/panel-user/${id}`)
+    let data = await axios.get(`${adminLink}/site/panel-user/${id}`)
     data = data.data
     $('#userFirstName').val(data.firstName)
     $('#userLastName').val(data.lastName)
@@ -255,7 +253,7 @@ function deleteUser(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'https://admin.assem-nasser.com/site/delete-panel-user',
+                    url: `${adminLink}/site/delete-panel-user`,
                     data: {
                         _id: _id,
                         _csrf: csrfToken

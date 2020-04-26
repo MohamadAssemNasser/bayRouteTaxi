@@ -40,7 +40,7 @@ async function sendFeedback(event) {
         $('.LW').css('display', 'block')
         axios({
                 method: 'post',
-                url: 'https://assem-nasser.com/feedback',
+                url: `${wwwLink}/feedback`,
                 data: f
             })
             .then((response) => {

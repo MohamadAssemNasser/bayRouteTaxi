@@ -31,7 +31,7 @@ $(document).ready(function() {
             try {
                 let response = await axios({
                     method: 'post',
-                    url: 'https://admin.assem-nasser.com/site/add-trip',
+                    url: `${adminLink}/site/add-trip`,
                     data: {
                         days: weekDays,
                         from: from,
@@ -236,7 +236,7 @@ function renderCalendar(departure){
 $('document').ready(() => {
     axios({
         method: 'get',
-        url: 'https://admin.assem-nasser.com/site/trips',
+        url: `${adminLink}/site/trips`,
     }).then((response) => {
         handleData(response.data)
         renderCalendar($('#scheduleFrom > div > div > ul > .selected > a > .text').html())
