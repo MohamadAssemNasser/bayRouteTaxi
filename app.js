@@ -10,7 +10,6 @@ const flash = require('connect-flash')
 const mongoConnect = require('./util/database').mongoConnect
 
 const User = require('./models/panel-user')
-const Trip = require('./models/trip')
 
 const app = express()
 
@@ -47,8 +46,7 @@ app.use(
 )
 
 // api router
-app.use(subdomain('api', apiRoutes))
-    // app.use('/api', apiRoutes)
+app.use('/api', apiRoutes)
 
 app.use(csrf())
 app.use(flash())
@@ -98,5 +96,5 @@ app.use((error, req, res, next) => {
     })
 })
 
-// mongoConnect(() => app.listen(80))
-mongoConnect(() => app.listen(3000, '172.31.0.89'))
+mongoConnect(() => app.listen(80))
+    // mongoConnect(() => app.listen(3000, '172.31.0.89'))

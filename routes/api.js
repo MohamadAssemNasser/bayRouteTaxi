@@ -4,7 +4,11 @@ const controller = require('../controllers/api');
 
 const router = express.Router();
 
-router.get('/', (req, res) => res.send('<h1>APII</h1>'))
+router.get('/', (req, res) => {
+    res.status(200).json({
+        api: 'BayRoute Taxi API'
+    })
+})
 
 // router.post('/login', controller.login)
 
