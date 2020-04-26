@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({
 }))
 
 // api router
+console.log('API IS RUNNING')
 app.use(subdomain('api', apiRoutes))
     // app.use('/api', apiRoutes)
 
