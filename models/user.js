@@ -7,8 +7,6 @@ class User {
     constructor(options) {
         if (options === undefined) options = {}
         if (options.token === undefined) options.token = null
-        if (options.tripsCount === undefined) options.tripsCount = 0
-        if (options.points === undefined) options.points = 0
         if (options.tickets === undefined) options.tickets = []
         if (options._id === undefined) options._id = null
         this.name = options.name
@@ -16,8 +14,6 @@ class User {
         this.email = options.email
         this.phone = options.phone
         this.token = options.token
-        this.tripsCount = options.tripsCount
-        this.points = options.points
         this.tickets = options.tickets
         this._id = options._id
     }

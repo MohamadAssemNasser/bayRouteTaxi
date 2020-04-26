@@ -52,14 +52,17 @@ exports.login = async(req, res, next) => {
     }
 }
 
-exports.signup = async(req, res, next) => {
+exports.register = async(req, res, next) => {
     db = getDb()
-    if (!req.body.name && !req.body.password && !req.body.email) {
-        return res.send({
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        return res.json({
             error: true,
-            errorMessage: 'Missing request parameters'
+            errors: errors
         })
     }
+
     try {
         let user = new User({ // validate data --important--
                 name: req.body.name,
