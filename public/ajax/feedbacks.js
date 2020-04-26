@@ -53,7 +53,7 @@ function sendReply() {
                 app.isLoading = true
                 let response = await axios({
                     method: 'POST',
-                    url: 'https://admin.assem-nasser.com/site/reply',
+                    url: `${adminLink}/site/reply`,
                     data: {
                         _csrf: $('#csrfToken').val(),
                         data: {
@@ -101,7 +101,7 @@ async function getFeedbacks() {
     try {
         let response = await axios({
             method: 'get',
-            url: 'https://admin.assem-nasser.com/site/feedbacks/1',
+            url: `${adminLink}/site/feedbacks/1`,
         })
         response = response.data
         app.feedbacks = response

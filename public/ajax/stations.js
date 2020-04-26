@@ -1,6 +1,3 @@
-// https://admin.assem-nasser.com for production
-// https://admin.assem-nasser.com for development
-
 $(document).ready(function() {
     loadPanelStations()
     $('#addStation').click(() => {
@@ -21,7 +18,7 @@ function clearModalValues() {
 
 function loadPanelStations() {
     $('.LW').css('display', 'block')
-    axios.get('https://admin.assem-nasser.com/site/all-stations')
+    axios.get(`${adminLink}/site/all-stations`)
         .then((response) => {
             let stations = response.data
             let tbody = ''
@@ -76,7 +73,7 @@ async function addStation() {
     try {
         let data = await axios({
             method: 'post',
-            url: 'https://admin.assem-nasser.com/site/add-station',
+            url: `${adminLink}/site/add-station`,
             data: {
                 name: name,
                 _csrf: csrfToken
@@ -104,7 +101,7 @@ async function updateStation(id) {
     try {
         let data = await axios({
             method: 'put',
-            url: 'https://admin.assem-nasser.com/site/update-station',
+            url: `${adminLink}/site/update-station`,
             data: {
                 _id: id,
                 name: $('#stationName').val(),
@@ -136,7 +133,7 @@ async function editStationModal(id) {
     clearModalValues()
     $('#stationModal').modal('toggle')
     $('#stationModal .loader-wrapper').css('display', 'block')
-    let data = await axios.get(`https://admin.assem-nasser.com/site/station/${id}`)
+    let data = await axios.get(`${adminLink}/site/station/${id}`)
     data = data.data
     $('#stationName').val(data.name)
     $('#stationModal .loader-wrapper').css('display', 'none')
@@ -155,7 +152,7 @@ function deleteStation(_id) {
                 let csrfToken = $('#csrfToken').val()
                 return axios({
                     method: 'delete',
-                    url: 'https://admin.assem-nasser.com/site/delete-station',
+                    url: `${adminLink}/site/delete-station`,
                     data: {
                         _id: _id,
                         _csrf: csrfToken
