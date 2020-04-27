@@ -15,7 +15,7 @@ var app = new Vue({
 
             if (this.login == "" || this.senha == "") {
 
-                this.log = "Preencha o campo para login.";
+                this.log = "Test";
                 event.preventDefault();
             } else {
                 this.log = "Go";
