@@ -33,7 +33,7 @@ h4 {
     padding-top: 3%;
     padding-bottom: 2%;
     font-family: "supra genius curves brk";
-    border: 1px dotted rgb(13, 66, 143);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 25px;
     background-color: white;
 }

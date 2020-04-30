@@ -11,6 +11,7 @@ class TripType {
         this.deck = options.deck // lower, upper, deck
         this.ticketPrice = options.ticketPrice
         this.numberOfSeats = options.numberOfSeats
+        this.colors = options.color
     }
 
     static async findById(id) {
@@ -28,13 +29,13 @@ class TripType {
 
     static async findByName(name) {
         const db = getDb()
-        if(name === undefined)
+        if (name === undefined)
             return false
         try {
             let trip = await db.collection('tripTypes').findOne({
                 name: name
             })
-            if(!trip){
+            if (!trip) {
                 return false
             }
             return trip

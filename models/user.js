@@ -9,12 +9,15 @@ class User {
         if (options.token === undefined) options.token = null
         if (options.tickets === undefined) options.tickets = []
         if (options._id === undefined) options._id = null
+        if (options.phone === undefined) options.phone = null
+        if (options.paymentMethods === undefined) options.paymentMethods = []
         this.name = options.name
         this.password = options.password
         this.email = options.email
         this.phone = options.phone
         this.token = options.token
         this.tickets = options.tickets
+        this.paymentMethods = options.paymentMethods
         this._id = options._id
     }
 

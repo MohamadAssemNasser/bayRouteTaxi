@@ -25,9 +25,9 @@ app.use(bodyParser.urlencoded({
 
 // api router
 console.log('API IS RUNNING')
-app.use(subdomain('api', apiRoutes))
-    // app.use('/api', apiRoutes)
+    // app.use(subdomain('api', apiRoutes))
+app.use('/api', apiRoutes)
 
-// mongoConnect(() => app.listen(80))
+mongoConnect(() => app.listen(80))
 
-mongoConnect(() => app.listen(3001, '172.31.0.89'))
+// mongoConnect(() => app.listen(3001, '172.31.0.89'))

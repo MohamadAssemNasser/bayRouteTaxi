@@ -14,4 +14,6 @@ router.get('/contact-us', controller.getContactUs)
 
 router.post('/feedback', controller.postFeedback)
 
+router.get('/trips', controller.getAllTrips)
+
 module.exports = router

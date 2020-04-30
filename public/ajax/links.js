@@ -1,7 +1,7 @@
-// var wwwLink = 'http://bayroute.taxi'
+var wwwLink = 'http://bayroute.taxi'
 
-var wwwLink = 'https://assem-nasser.com'
+// var wwwLink = 'https://assem-nasser.com'
 
-// var adminLink = 'http://admin.bayroute.taxi'
+var adminLink = 'http://admin.bayroute.taxi'
 
-var adminLink = 'https://admin.assem-nasser.com'
+// var adminLink = 'https://admin.assem-nasser.com'

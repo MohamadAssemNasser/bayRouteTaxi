@@ -7,29 +7,27 @@ const controller = require('../controllers/api');
 const router = express.Router();
 
 let registration = [
-    body('name', 'Invalid Name')
+    body('name')
     .trim()
     .notEmpty()
-    .isAlpha(),
-    body('email', 'Invalid email address')
+    .withMessage('Name must not be empty'),
+    body('email')
     .trim()
     .normalizeEmail()
     .isEmail()
-    .notEmpty(),
+    .withMessage('Must be a valid email')
+    .notEmpty()
+    .withMessage('Email must not be empty'),
     body('password', 'Invalid Password')
     .trim()
     .notEmpty()
+    .withMessage('Password must not be empty')
     .isAlphanumeric()
-    .isLength({
-        min: 8
-    }),
-    body('phone')
-    .trim()
-    .isNumeric()
+    .withMessage('Pasword must be alphanumeric')
     .isLength({
         min: 8
     })
-    .notEmpty()
+    .withMessage('Pasword must be at least 8 in length')
 ]
 
 router.get('/', (req, res) => {
@@ -38,18 +36,20 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/test', (req, res) => {
-    console.log('data', req.body.data)
-    res.status(201).json({
-        data: req.body.data
-    })
-})
-
-// router.post('/login', controller.login)
+router.get('/trips', controller.getTrips)
 
 router.post('/register', registration, controller.register)
 
-// router.post('/forgotPassword', controller.forgotPassword)
+router.post('/login', [
+    body('email')
+    .trim(),
+    body('password', 'Invalid Password')
+    .trim()
+], controller.login)
+
+router.post('/resetPassword', controller.resetPassword)
+
+router.get('/stations', controller.getStations)
 
 // router.post('/tickets/create', controller.postTickets)
 

@@ -972,7 +972,8 @@ exports.addTripType = async(req, res, next) => {
                 name: req.body.name,
                 deck: req.body.deck,
                 ticketPrice: req.body.ticketPrice,
-                numberOfSeats: req.body.numberOfSeats
+                numberOfSeats: req.body.numberOfSeats,
+                color: 'red'
             })
             // check if name exists
         let t = await TripType.getAll(),
